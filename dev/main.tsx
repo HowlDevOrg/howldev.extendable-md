@@ -1,13 +1,8 @@
 import { createRoot } from "react-dom/client";
-import { MarkdownDisplay } from "../lib/MarkdownDisplay.js";
-
-const text: string = `Hello! This is one paragraph.
-
-Another paragraph is here. 
-`
+import { App } from "./App.js";
 
 createRoot(document.getElementById("root")!).render(
   <>
-    <MarkdownDisplay text={text} />
+    <App />
   </>
 );
