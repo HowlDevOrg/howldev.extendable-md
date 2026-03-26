@@ -5,6 +5,7 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "private": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -12,6 +13,10 @@
       "require": "./dist/index.cjs"
     }
   },
+  "keywords": [
+    "markdown", 
+    "mermaid"
+  ],
   "files": ["dist"],
   "scripts": {
     "dev": "vite --config vite.dev.config.ts",
