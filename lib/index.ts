@@ -1,2 +1,1 @@
-export { MyComponent } from "./MyComponent";
-export { greet } from "./greet";
+export { MarkdownDisplay } from "./MarkdownDisplay";
