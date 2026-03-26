@@ -14,14 +14,21 @@
     }
   },
   "keywords": [
-    "markdown", 
+    "markdown",
     "mermaid"
   ],
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite --config vite.dev.config.ts",
     "build": "tsup",
     "test": "vitest"
+  },
+  "dependencies": {
+    "dompurify": "^3.3.3",
+    "katex": "^0.16.43",
+    "mermaid": "^11.13.0"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
