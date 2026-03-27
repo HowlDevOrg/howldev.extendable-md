@@ -1,27 +1,53 @@
 import mermaid from "mermaid";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SanitizedHTML } from "./SanitizedHTML";
-
 
 type Props = {
   text: string;
+  refreshInterval?: number | undefined;
 };
 
-export function MermaidDisplay({ text }: Props) {
+export function MermaidDisplay({ text, refreshInterval }: Props) {
   const [svgData, setSvgData] = useState<string>("");
-
-  mermaid.initialize({
-    securityLevel: "strict", 
-    htmlLabels: false
-  });
+  const queuedTextRef = useRef(text);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const renderCounterRef = useRef(0);
 
   useEffect(() => {
-    async function set() {
-      const { svg } = await mermaid.render("diagram-id", text);
-      setSvgData(svg);
+    mermaid.initialize({
+      securityLevel: "strict",
+      htmlLabels: false,
+    });
+
+    return () => {
+      if (timerRef.current !== null) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    queuedTextRef.current = text;
+
+    if (timerRef.current !== null) {
+      return;
     }
-    
-    setTimeout(set, 500);
+
+    timerRef.current = setTimeout(async () => {
+      timerRef.current = null;
+
+      const renderId = ++renderCounterRef.current;
+      const { svg } = await mermaid.render(
+        `diagram-${renderId}`,
+        queuedTextRef.current,
+      );
+
+      // Only commit the latest completed render in case async renders overlap.
+      if (renderId === renderCounterRef.current) {
+        setSvgData(svg);
+      }
+    }, refreshInterval ?? 100);
   }, [text]);
 
   return <SanitizedHTML html={svgData} />;
