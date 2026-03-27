@@ -1,4 +1,4 @@
-import { MermaidDisplay } from "./MermaidDisplay";
+import { MathDisplay } from "./MathDisplay";
 
 type Props = {
   text: string;
@@ -6,5 +6,5 @@ type Props = {
 
 export function MarkdownDisplay({ text }: Props) {
   // return <div>{separate(text).map(a => <p>{a}</p>)}</div>;
-  return <MermaidDisplay text={text} />;
+  return <MathDisplay text={text} displayAsBlock={true} />;
 }

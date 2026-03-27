@@ -4,12 +4,13 @@ import { SanitizedHTML } from "./SanitizedHTML";
 
 type MathDisplayProps = {
   text: string;
+  displayAsBlock: boolean;
 }
 
-export function MathDisplay({text}: MathDisplayProps) {
+export function MathDisplay({text, displayAsBlock}: MathDisplayProps) {
   var html = katex.renderToString(text, {
-    throwOnError: false
+    throwOnError: false,
+    displayMode: displayAsBlock
   });
-  // return <div>{separate(text).map(a => <p>{a}</p>)}</div>;
   return <SanitizedHTML html={html}/>;
 }
