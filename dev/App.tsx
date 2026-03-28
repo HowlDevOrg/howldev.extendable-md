@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { MarkdownDisplay } from "../lib/MarkdownDisplay.js";
+import "./App.css";
 
 export function App() {
   const [text, setText] = useState("");

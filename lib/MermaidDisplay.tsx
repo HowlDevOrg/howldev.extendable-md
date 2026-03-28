@@ -38,15 +38,20 @@ export function MermaidDisplay({ text, refreshInterval }: Props) {
       timerRef.current = null;
 
       const renderId = ++renderCounterRef.current;
-      const { svg } = await mermaid.render(
-        `diagram-${renderId}`,
-        queuedTextRef.current,
-      );
+      try {
+        const { svg } = await mermaid.render(
+          `diagram-${renderId}`,
+          queuedTextRef.current,
+        );
 
-      // Only commit the latest completed render in case async renders overlap.
-      if (renderId === renderCounterRef.current) {
-        setSvgData(svg);
+        // Only commit the latest completed render in case async renders overlap.
+        if (renderId === renderCounterRef.current) {
+          setSvgData(svg);
+        }
+      } catch (e: any) {
+        setSvgData(`Error: ${e}`)
       }
+        
     }, refreshInterval ?? 100);
   }, [text]);
 
