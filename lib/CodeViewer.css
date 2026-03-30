@@ -1,0 +1,32 @@
+
+.code-interface pre {
+  overflow-x: auto;
+  margin: 0;
+}
+.code-interface>div {
+  display: flex;
+  margin: 0;
+  padding: 5px;
+  border: 1px solid white;
+  border-radius: 5px;
+  vertical-align: middle;
+  justify-content: space-between;
+  background-color: black;
+}
+.code-interface div p {
+  margin: 0;
+  padding: 0;
+  color: white;
+}
+
+.preformatted {
+  font-family: monospace;
+  white-space: pre;
+}
+
+pre {
+  padding: 5px;
+  border: 1px solid white;
+  border-radius: 5px;
+  background-color: rgb(51, 51, 51);
+}

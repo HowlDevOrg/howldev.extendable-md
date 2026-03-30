@@ -1,14 +1,14 @@
 import { CodeViewer } from "./CodeViewer";
 import { MathDisplay } from "./MathDisplay";
 import { MermaidDisplay } from "./MermaidDisplay";
-import { separate } from "./separate";
+import { combine, separate } from "./stringfunc";
 
 type Props = {
   text: string;
 };
 
 export function MarkdownDisplay({ text }: Props) {
-  const items = separate(text);
+  const items = combine(separate(text));
 
   return (<div>
     {items.map(a => {

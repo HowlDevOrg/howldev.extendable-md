@@ -8,6 +8,7 @@ import yml from 'highlight.js/lib/languages/yaml';
 import css from 'highlight.js/lib/languages/css';
 import json from 'highlight.js/lib/languages/json';
 import sql from 'highlight.js/lib/languages/sql';
+import 'lib/CodeViewer.css';
 
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('typescript', typescript);
