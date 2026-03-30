@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "dompurify": "^3.3.3",
+    "highlight.js": "^11.11.1",
     "katex": "^0.16.43",
     "mermaid": "^11.13.0"
   },

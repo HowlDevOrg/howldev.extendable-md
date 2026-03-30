@@ -1,3 +1,4 @@
+import { CodeViewer } from "./CodeViewer";
 import { MathDisplay } from "./MathDisplay";
 import { MermaidDisplay } from "./MermaidDisplay";
 import { separate } from "./separate";
@@ -19,6 +20,8 @@ export function MarkdownDisplay({ text }: Props) {
             return <MathDisplay text={items.slice(1, -1).join('\n')} displayAsBlock={true} />
           } else if (type === "mermaid") {
             return <MermaidDisplay text={items.slice(1, -1).join('\n')} />
+          } else {
+            return <CodeViewer langauge={type} codeLines={items.slice(1, -1).join('\n')}/>
           }
         default: 
           return <p>{a}</p>

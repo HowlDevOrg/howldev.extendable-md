@@ -5,3 +5,151 @@ blockquote {
     padding-left: 10px;
     background-color: lightgray;
 }
+
+body, html {
+  padding: 0;
+  margin: 0;
+  margin-bottom: 10%;
+  font-family: "Inter", sans-serif;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+}
+
+:link, :visited {
+  color: hsl(285, 100%, 85%);
+}
+
+#app {
+  padding: 0 10%;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+.code-interface pre {
+  overflow-x: auto;
+  margin: 0;
+}
+.code-interface>div {
+  display: flex;
+  margin: 0;
+  padding: 5px;
+  border: 1px solid white;
+  border-radius: 5px;
+  vertical-align: middle;
+  justify-content: space-between;
+  background-color: black;
+}
+.code-interface div p {
+  margin: 0;
+  padding: 0;
+}
+
+.classDisplay {
+  padding: 0 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid gray;
+}
+
+.propertyDisplay {
+  border-bottom: 1px solid #aaaaaa;
+  padding: 0 0 2px 5px;
+}
+
+.propertyDisplay div {
+  margin-bottom: 10px;
+}
+
+.preformatted {
+  font-family: monospace;
+  white-space: pre;
+}
+
+pre {
+  padding: 5px;
+  border: 1px solid white;
+  border-radius: 5px;
+  background-color: rgb(51, 51, 51);
+}
+
+.bordered {
+  border: 1px solid white;
+  border-radius: 5px;
+}
+
+#typeHeader {
+  color: rgb(119, 3, 158);
+  background-color: white;
+  border: 1px solid white;
+  padding: 4px;
+  width: fit-content;
+  border-radius: 10px;
+  user-select: auto;
+  cursor: auto;
+}
+
+.smallPadded {
+  padding: 4px;
+}
+
+.ns {
+  user-select: none;
+  cursor: pointer;
+}
+
+.minPadded h2 {
+  padding: 0;
+}
+
+.textUl li {
+  margin-bottom: 3px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #aaaaaa;
+}
+
+b {
+  color: hsl(285, 100%, 70%);
+}
+
+#topicDisplay {
+  border: 1px solid white;
+  border-radius: 10px;
+  min-height: 50px;
+  max-height: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  overflow-y: auto;
+}
+#topicDisplay div {
+  border: 1px solid white;
+  border-radius: 10px;
+  margin: 3px;
+  display: flex;
+  cursor: pointer;
+  padding: 5px;
+}
+#topicDisplay div p {
+  margin: 7px 7px;
+  font-size: 20px;
+}
+
+.hljs-comment {color: rgb(199, 199, 199)}
+.hljs-meta {color: #747ea7}
+.hljs-tag {color: rgb(203, 203, 203)}
+
+.textbookNavigation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.textbookNavigation button {
+  color: black;
+  background-color: lightgray;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+}
