@@ -77,7 +77,7 @@ function InternalTopLevelMarkdownParser({
     return (
       <ul>
         {ulListItems.map((b) => {
-          if (b.match(/^[\-+\*]\s/g) || b.match(/^\d+\./g) || b === "---") {
+          if (b.match(/\s?[\-+\*]\s/g) || b.match(/\s?\d+\./g)) {
             return <InternalTopLevelMarkdownParser a={b} inline={true} />;
           }
           return (
@@ -93,7 +93,7 @@ function InternalTopLevelMarkdownParser({
     return (
       <ol>
         {olListItems.map((b) => {
-          if (b.match(/^[\-+\*]\s/g) || b.match(/^\d+\./g) || b === "---") {
+          if (b.match(/\s?[\-+\*]\s/g) || b.match(/\s?\d+\./g)) {
             return <InternalTopLevelMarkdownParser a={b} inline={true} />;
           }
           return (

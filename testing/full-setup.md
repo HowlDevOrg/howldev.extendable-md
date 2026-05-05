@@ -61,10 +61,12 @@ Some of the harder parts I need to worry about:
 
 - Nested ul
   - This is inside
+    - This is further inside
 - And *this is the outside*
 
 1. Nested ol
   1. this is inside
+  1. This is also inside
 1. These numbers are funny
 
 - Nested ul
