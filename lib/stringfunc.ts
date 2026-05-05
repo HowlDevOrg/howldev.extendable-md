@@ -68,6 +68,19 @@ export function semanticDiffuser(items: string): string[] {
       }
       i--;
       newItems.push(newItem.join("\n"));
+    } else if (item.startsWith("|")) {
+      const newItem: string[] = [];
+      newItem.push(item);
+      i++;
+      while (i < oldItems.length && oldItems[i].startsWith("|")) {
+        newItem.push(oldItems[i]);
+        i++;
+      }
+      if (i < oldItems.length && oldItems[i].startsWith("|")) {
+        i++;
+      }
+      i--;
+      newItems.push(newItem.join("\n"));
     } else {
       newItems.push(item);
     }

@@ -12,14 +12,14 @@ Here's an example of a _blockquote_. Note that you can insert __anything__ into 
 > this is a txt file
 > ```
 
-And I suppose I could test nested blockquote though I think they look ugly and can think of no practical use for them.. 
+And I suppose I could test ==nested blockquote== though I think they look kinda ugly and I'm not sure when typing out the MD for it would be worth it...
 
 > ## Start of block
 > > Internal quote
 ---
 There should be a horizontal line above here. 
 
-Let's see, what else ~have I implemented~ have I done... `Code blocks`! 
+Let's see, what else ~~have I implemented~~ have I done... `Code blocks`! 
 ```csharp
 /// <summary>
 /// Class <c>Rotation</c> stores a single RotationAngle as a double (rounded to 2 decimal places)
@@ -39,6 +39,8 @@ You can also do **Latex**, both inline $\text{like this} \sum_0^i{x^2 + 3}$ and 
 ```math
 \sum_0^i{x^2 + 3}
 ```
+
+A few misc items, such as subscript in H~2~O and super in x^2^.
 
 I support Mermaid diagrams, so...
 
@@ -76,3 +78,23 @@ Some of the harder parts I need to worry about:
 1. Nested _ol_
   - this is __inside__
 1. These numbers are funny
+
+--- 
+
+## Tables
+Tables are kinda hard. First we need one that just has the data within it: 
+
+| data | data2 | data3 |
+| data4 | data5 | **data6** |
+Then we need one with some headers that align to different directions: 
+
+| Syntax      | Description | Test Text     |
+| :---        |    :----:   |          ---: |
+| Header      | Title       | *Here's this* |
+| Paragraph   | Text        | And more      |
+
+And, the default table with simple headers: 
+| Syntax | _Description_ |
+| --- | ----------- |
+| Header | Title |
+| Paragraph | Text |

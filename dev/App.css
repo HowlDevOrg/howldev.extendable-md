@@ -1,11 +1,5 @@
 
 
-blockquote {
-    border-left: 2px solid black;
-    padding-left: 10px;
-    background-color: lightgray;
-}
-
 body, html {
   font-family: "Inter", sans-serif;
 

@@ -1,0 +1,26 @@
+@layer {
+    /* This format allows you to configure 
+    all defaults to make everything look nice, but @layer
+    makes it really easy to override. You can validate 
+    it by changing /dev/App.css for the "user" implementation. */
+    /* Note that I overrode the font family and color scheme in the 
+    dev view. (I also overrode some highlight-js stuff that you 
+    shouldn't need to worry about) */
+
+    blockquote {
+        background-color: gray;
+        border: 1px solid white;
+        padding: 5px;
+    }
+
+    table {
+        gap: 10px;
+    }
+    td {
+        border: 1px solid white;
+        padding: 5px;
+    }
+    th {
+        background-color: rgb(67, 67, 67);
+    }
+}

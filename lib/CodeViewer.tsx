@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
 import typescript from 'highlight.js/lib/languages/typescript';
 import csharp from 'highlight.js/lib/languages/csharp';
 import xml from 'highlight.js/lib/languages/xml';
 import yml from 'highlight.js/lib/languages/yaml';
-import css from 'highlight.js/lib/languages/css';
 import json from 'highlight.js/lib/languages/json';
 import sql from 'highlight.js/lib/languages/sql';
 import './CodeViewer.css';
@@ -16,15 +15,14 @@ hljs.registerLanguage('csharp', csharp);
 hljs.registerLanguage('xml', xml);
 hljs.registerLanguage('yaml', yml);
 hljs.registerLanguage('yml', yml);
-hljs.registerLanguage('css', css);
 hljs.registerLanguage('json', json);
 hljs.registerLanguage('sql', sql);
 
 /** 
- * Code Viewer takes in a language and an array of strings with the backtick(``) preferred for their definition. They use 
- * HighlightJS to do syntax highlighting for JS, TS, C#, XML, and YML. 
+ * Code Viewer takes in a language and a string separated by newlines. They use 
+ * HighlightJS to do syntax highlighting for JS, TS, C#, XML, YML, JSON, and SQL. 
  */
-export function CodeViewer(props: { langauge: string, codeLines: string }) {
+export function CodeViewer(props: { language: string, codeLines: string }) {
   const [buttonColor, setButtonColor] = useState("#242424");
   const codeRef = useRef<HTMLElement | null>(null);
 
@@ -51,7 +49,7 @@ export function CodeViewer(props: { langauge: string, codeLines: string }) {
   return (
     <div className="code-interface">
       <div>
-        <p>{props.langauge}</p>
+        <p>{props.language}</p>
         <button
           onClick={copyToClipboard}
           style={{
@@ -64,7 +62,7 @@ export function CodeViewer(props: { langauge: string, codeLines: string }) {
         >Copy</button>
       </div>
       <pre>
-        <code ref={codeRef} className={'language-' + props.langauge}>
+        <code ref={codeRef} className={'language-' + props.language}>
           {props.codeLines}
         </code>
       </pre>

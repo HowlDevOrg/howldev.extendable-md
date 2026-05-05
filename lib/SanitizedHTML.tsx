@@ -1,6 +1,5 @@
 import DOMPurify from 'dompurify';
-
-import parse from 'html-react-parser'
+import parse from 'html-react-parser';
 
 type SanitizedHTMLProps = {
   html: string;

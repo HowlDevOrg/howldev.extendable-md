@@ -14,6 +14,14 @@ export function InlineMD(input: string): string {
     return `<br/>`;
   });
 
+  // Math
+  rollingResult = rollingResult.replace(/\$(.+?)\$/g, (_, p1) => {
+    return katex.renderToString(p1, {
+      throwOnError: false,
+      displayMode: false,
+    });
+  });
+
   // Bold
   rollingResult = rollingResult.replace(/\*\*([^_*]+?)\*\*/g, (_, p1) => {
     return `<b>${p1}</b>`;
@@ -34,18 +42,25 @@ export function InlineMD(input: string): string {
   rollingResult = rollingResult.replace(/`(.+?)`/g, (_, p1) => {
     return `<code>${p1}</code>`;
   });
-
+  
   // Strikethrough
-  rollingResult = rollingResult.replace(/~(.+?)~/g, (_, p1) => {
+  rollingResult = rollingResult.replace(/~~(.+?)~~/g, (_, p1) => {
     return `<strike>${p1}</strike>`;
   });
-
-  // Math
-  rollingResult = rollingResult.replace(/\$(.+?)\$/g, (_, p1) => {
-    return katex.renderToString(p1, {
-      throwOnError: false,
-      displayMode: false,
+  
+    // Subscript
+    rollingResult = rollingResult.replace(/~(.+?)~/g, (_, p1) => {
+      return `<sub>${p1}</sub>`;
     });
+  
+    // Superscript
+    rollingResult = rollingResult.replace(/\^(.+?)\^/g, (_, p1) => {
+      return `<sup>${p1}</sup>`;
+    });
+
+  // Highlight
+  rollingResult = rollingResult.replace(/==(.+?)==/g, (_, p1) => {
+    return `<mark>${p1}</mark>`;
   });
 
   // Anchor

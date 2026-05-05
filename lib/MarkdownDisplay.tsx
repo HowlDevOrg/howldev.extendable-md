@@ -5,6 +5,7 @@ import { MathDisplay } from "./MathDisplay";
 import { MermaidDisplay } from "./MermaidDisplay";
 import { SanitizedHTML } from "./SanitizedHTML";
 import { semanticDiffuser } from "./stringfunc";
+import "./defaults.css";
 
 type Props = {
   text: string;
@@ -30,30 +31,33 @@ function InternalTopLevelMarkdownParser({
   inline: boolean;
 }): ReactNode {
   // Helper functions for rendering list items with indentation support
-  const renderULItems = (linesToProcess: string[], minIndent: number): ReactNode[] => {
+  const renderULItems = (
+    linesToProcess: string[],
+    minIndent: number,
+  ): ReactNode[] => {
     const items: ReactNode[] = [];
     let i = 0;
-    
+
     while (i < linesToProcess.length) {
       const line = linesToProcess[i];
       const indent = line.match(/^(\s*)/)?.[1].length ?? 0;
-      
+
       if (indent !== minIndent) {
         i++;
         continue;
       }
-      
+
       const content = line.slice(indent + 2);
       const nestedLines: string[] = [];
       let j = i + 1;
-      
+
       while (j < linesToProcess.length) {
         const nextIndent = linesToProcess[j].match(/^(\s*)/)?.[1].length ?? 0;
         if (nextIndent <= minIndent) break;
         nestedLines.push(linesToProcess[j]);
         j++;
       }
-      
+
       items.push(
         <li key={i}>
           <InternalTopLevelMarkdownParser a={content} inline={true} />
@@ -63,39 +67,42 @@ function InternalTopLevelMarkdownParser({
           {nestedLines.length > 0 && nestedLines[0].match(/\d+\./) && (
             <ol>{renderOLItems(nestedLines, minIndent + 2)}</ol>
           )}
-        </li>
+        </li>,
       );
-      
+
       i = j;
     }
-    
+
     return items;
   };
 
-  const renderOLItems = (linesToProcess: string[], minIndent: number): ReactNode[] => {
+  const renderOLItems = (
+    linesToProcess: string[],
+    minIndent: number,
+  ): ReactNode[] => {
     const items: ReactNode[] = [];
     let i = 0;
-    
+
     while (i < linesToProcess.length) {
       const line = linesToProcess[i];
       const indent = line.match(/^(\s*)/)?.[1].length ?? 0;
-      
+
       if (indent !== minIndent) {
         i++;
         continue;
       }
-      
-      const content = line.slice(indent).replace(/^\d+\.\s/, '');
+
+      const content = line.slice(indent).replace(/^\d+\.\s/, "");
       const nestedLines: string[] = [];
       let j = i + 1;
-      
+
       while (j < linesToProcess.length) {
         const nextIndent = linesToProcess[j].match(/^(\s*)/)?.[1].length ?? 0;
         if (nextIndent <= minIndent) break;
         nestedLines.push(linesToProcess[j]);
         j++;
       }
-      
+
       items.push(
         <li key={i}>
           <InternalTopLevelMarkdownParser a={content} inline={true} />
@@ -105,12 +112,12 @@ function InternalTopLevelMarkdownParser({
           {nestedLines.length > 0 && nestedLines[0].match(/\d+\./) && (
             <ol>{renderOLItems(nestedLines, minIndent + 2)}</ol>
           )}
-        </li>
+        </li>,
       );
-      
+
       i = j;
     }
-    
+
     return items;
   };
 
@@ -131,7 +138,7 @@ function InternalTopLevelMarkdownParser({
     } else {
       return (
         <CodeViewer
-          langauge={type}
+          language={type}
           codeLines={newLineItems.slice(1).join("\n")}
         />
       );
@@ -165,6 +172,83 @@ function InternalTopLevelMarkdownParser({
     const lines = a.split("\n");
     const baseIndent = lines[0].match(/^(\s*)/)?.[1].length ?? 0;
     return <ol>{renderOLItems(lines, baseIndent)}</ol>;
+  } else if (a.startsWith("|")) {
+    const lines = a.split("\n").map((a) =>
+      a
+        .split("|")
+        .slice(1, -1)
+        .map((b) => b.trim()),
+    );
+    const isHeader = lines[1][0].match(/^:?-+:?$/g);
+    if (isHeader) {
+      const alignment: number[] = lines[1].map((a) => {
+        if (a.startsWith(":") && a.endsWith(":")) {
+          return 0; // Center
+        } else if (a.endsWith(":")) {
+          return 1; // Right
+        } else {
+          return -1; // Left
+        }
+      });
+      return (
+        <table>
+          <thead>
+            <tr>
+              {lines[0].map((a, i) => (
+                <th
+                  style={{
+                    textAlign:
+                      alignment[i] !== -1
+                        ? alignment[i] === 0
+                          ? "center"
+                          : "end"
+                        : "start",
+                  }}
+                >
+                  <SanitizedHTML html={InlineMD(a)} />
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {lines.slice(2).map((a) => (
+              <tr>
+                {a.map((b, i) => (
+                  <td
+                    style={{
+                      textAlign:
+                        alignment[i] !== -1
+                          ? alignment[i] === 0
+                            ? "center"
+                            : "end"
+                          : "start",
+                    }}
+                  >
+                    <SanitizedHTML html={InlineMD(b)} />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      );
+    } else {
+      return (
+        <table>
+          <tbody>
+            {lines.map((a) => (
+              <tr>
+                {a.map((b) => (
+                  <td>
+                    <SanitizedHTML html={InlineMD(b)} />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      );
+    }
   } else {
     return inline ? (
       <SanitizedHTML html={InlineMD(a)} />
