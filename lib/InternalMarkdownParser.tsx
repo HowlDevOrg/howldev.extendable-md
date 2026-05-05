@@ -6,6 +6,8 @@ import { MermaidDisplay } from "./MermaidDisplay";
 import { SanitizedHTML } from "./SanitizedHTML";
 import { semanticDiffuser } from "./stringfunc";
 import { DisplayTable } from "./DisplayTable";
+import { renderOLItems, renderULItems } from "./ListHelpers";
+import { CollapsibleSystem } from "./CollapsibleSystem";
 
 export function InternalTopLevelMarkdownParser({
   a,
@@ -14,97 +16,6 @@ export function InternalTopLevelMarkdownParser({
   a: string;
   inline: boolean;
 }): ReactNode {
-  // Helper functions for rendering list items with indentation support
-  const renderULItems = (
-    linesToProcess: string[],
-    minIndent: number,
-  ): ReactNode[] => {
-    const items: ReactNode[] = [];
-    let i = 0;
-
-    while (i < linesToProcess.length) {
-      const line = linesToProcess[i];
-      const indent = line.match(/^(\s*)/)?.[1].length ?? 0;
-
-      if (indent !== minIndent) {
-        i++;
-        continue;
-      }
-
-      const content = line.slice(indent + 2);
-      const nestedLines: string[] = [];
-      let j = i + 1;
-
-      while (j < linesToProcess.length) {
-        const nextIndent = linesToProcess[j].match(/^(\s*)/)?.[1].length ?? 0;
-        if (nextIndent <= minIndent) break;
-        nestedLines.push(linesToProcess[j]);
-        j++;
-      }
-
-      items.push(
-        <li key={i}>
-          <InternalTopLevelMarkdownParser a={content} inline={true} />
-          {nestedLines.length > 0 && nestedLines[0].match(/[\-+\*]\s/) && (
-            <ul>{renderULItems(nestedLines, minIndent + 2)}</ul>
-          )}
-          {nestedLines.length > 0 && nestedLines[0].match(/\d+\./) && (
-            <ol>{renderOLItems(nestedLines, minIndent + 2)}</ol>
-          )}
-        </li>,
-      );
-
-      i = j;
-    }
-
-    return items;
-  };
-
-  const renderOLItems = (
-    linesToProcess: string[],
-    minIndent: number,
-  ): ReactNode[] => {
-    const items: ReactNode[] = [];
-    let i = 0;
-
-    while (i < linesToProcess.length) {
-      const line = linesToProcess[i];
-      const indent = line.match(/^(\s*)/)?.[1].length ?? 0;
-
-      if (indent !== minIndent) {
-        i++;
-        continue;
-      }
-
-      const content = line.slice(indent).replace(/^\d+\.\s/, "");
-      const nestedLines: string[] = [];
-      let j = i + 1;
-
-      while (j < linesToProcess.length) {
-        const nextIndent = linesToProcess[j].match(/^(\s*)/)?.[1].length ?? 0;
-        if (nextIndent <= minIndent) break;
-        nestedLines.push(linesToProcess[j]);
-        j++;
-      }
-
-      items.push(
-        <li key={i}>
-          <InternalTopLevelMarkdownParser a={content} inline={true} />
-          {nestedLines.length > 0 && nestedLines[0].match(/[\-+\*]\s/) && (
-            <ul>{renderULItems(nestedLines, minIndent + 2)}</ul>
-          )}
-          {nestedLines.length > 0 && nestedLines[0].match(/\d+\./) && (
-            <ol>{renderOLItems(nestedLines, minIndent + 2)}</ol>
-          )}
-        </li>,
-      );
-
-      i = j;
-    }
-
-    return items;
-  };
-
   if (!a[0]) {
     return;
   } else if (a[0] === "`") {
@@ -158,6 +69,21 @@ export function InternalTopLevelMarkdownParser({
     return <ol>{renderOLItems(lines, baseIndent)}</ol>;
   } else if (a.startsWith("|")) {
     return <DisplayTable text={a} />;
+  } else if (a.match(/^=[\^v]=/g)) {
+    const lines = a.split("\n");
+    const newSemantics = semanticDiffuser(lines.slice(1).join("\n"));
+    return (
+      <CollapsibleSystem
+        outerComponent={
+          <InternalTopLevelMarkdownParser
+            a={lines[0].slice(4)}
+            inline={false}
+          />
+        }
+        defaultOpen={lines[0][1] === "v" ? true : false}
+        innerComponent={newSemantics.map(a => <InternalTopLevelMarkdownParser a={a} inline={false} />)}
+      />
+    );
   } else {
     return inline ? (
       <SanitizedHTML html={InlineMD(a)} />

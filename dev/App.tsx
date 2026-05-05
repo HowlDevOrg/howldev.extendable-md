@@ -30,7 +30,7 @@ export function App() {
           flex: 1,
           padding: "16px",
           overflowY: "auto",
-          borderLeft: "1px solid #ccc",
+          borderLeft: "1px solid #ccc"
         }}
       >
         <MarkdownDisplay text={text} />

@@ -64,9 +64,8 @@ describe("list items get combined", () => {
   it("lists separated by blank line stay separate", () => {
     const value = "- item 1\n- item 2\n\n1. ordered 1\n2. ordered 2";
     const modified = semanticDiffuser(value);
-    expect(modified.length).toBe(3);
+    expect(modified.length).toBe(2);
     expect(modified[0]).toStrictEqual("- item 1\n- item 2");
-    expect(modified[1]).toStrictEqual(""); // This may be updated. 
-    expect(modified[2]).toStrictEqual("1. ordered 1\n2. ordered 2");
+    expect(modified[1]).toStrictEqual("1. ordered 1\n2. ordered 2");
   });
 });

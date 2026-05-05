@@ -10,6 +10,7 @@ export function semanticDiffuser(items: string): string[] {
 
   for (let i = 0; i < oldItems.length; i++) {
     const item = oldItems[i];
+    if (!item) continue;
     if (item.startsWith("```")) {
       const newItem: string[] = [];
       newItem.push(item);
@@ -80,6 +81,21 @@ export function semanticDiffuser(items: string): string[] {
         i++;
       }
       i--;
+      newItems.push(newItem.join("\n"));
+    } else if (item.match(/^=[\^v]=/g)) {
+      const newItem: string[] = [];
+      let queue = 0; // This is the depth of the stack of nestings
+      newItem.push(item);
+      i++;
+      while (i < oldItems.length) {
+        if (oldItems[i].match(/^=[\^v]=/g)) queue++;
+        if (oldItems[i] === "=") {
+          queue--;
+          if (queue < 0) break;
+        } 
+        newItem.push(oldItems[i]);
+        i++;
+      }
       newItems.push(newItem.join("\n"));
     } else {
       newItems.push(item);

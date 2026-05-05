@@ -78,12 +78,12 @@ describe("can get inline code", () => {
 
 describe("can strikethrough", () => {
   it("plain inline strike works correctly", () => {
-    const value = "~this is stricken~";
+    const value = "~~this is stricken~~";
     const modified = InlineMD(value);
     expect(modified).toStrictEqual("<strike>this is stricken</strike>");
   });
   it("inline strike in a sentence works correctly", () => {
-    const value = "this is outside. ~this is stricken~";
+    const value = "this is outside. ~~this is stricken~~";
     const modified = InlineMD(value);
     expect(modified).toStrictEqual(
       "this is outside. <strike>this is stricken</strike>",

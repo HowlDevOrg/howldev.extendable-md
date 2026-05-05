@@ -116,9 +116,9 @@ This is inside.
 =
 
 On top of that, you can also nest them. 
-=^= First level
-Here's some text, as if this paragraph mattered. 
-=v= Second level
+=^= ### First level
+Here's some text, ==as if== this paragraph mattered. 
+=^= Second level
 - Very internal list
 - part 2
 =
