@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { InlineMD } from "../lib/InlineMarkdown";
+import { InlineMD } from "../lib/logic/InlineMarkdown";
 
 describe("can get bold text", () => {
   it("plain bold text works correctly", () => {

@@ -124,3 +124,10 @@ Here's some text, ==as if== this paragraph mattered.
 =
 Now that that's over with... this is the end of the First Level section.
 =
+---
+
+Image below: 
+![My profile pic](https://avatars.githubusercontent.com/u/264075687?s=400&u=3169ff9669a03ae07419f84f711cf4180d96ca51&v=4)
+
+Clickable image below: 
+[![My profile pic](https://avatars.githubusercontent.com/u/264075687?s=400&u=3169ff9669a03ae07419f84f711cf4180d96ca51&v=4)](https://github.com/organizations/HowlDevOrg)

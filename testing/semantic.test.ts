@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { semanticDiffuser } from "../lib/stringfunc";
+import { semanticDiffuser } from "../lib/logic/stringfunc";
 
 describe("code display properly outputs", () => {
   it("mermaid blocks render correctly", () => {

@@ -1,13 +1,13 @@
 import { ReactNode } from "react";
-import { CodeViewer } from "./CodeViewer";
+import { CodeViewer } from "../components/CodeViewer";
 import { InlineMD } from "./InlineMarkdown";
-import { MathDisplay } from "./MathDisplay";
-import { MermaidDisplay } from "./MermaidDisplay";
-import { SanitizedHTML } from "./SanitizedHTML";
+import { MathDisplay } from "../components/MathDisplay";
+import { MermaidDisplay } from "../components/MermaidDisplay";
+import { SanitizedHTML } from "../components/SanitizedHTML";
 import { semanticDiffuser } from "./stringfunc";
-import { DisplayTable } from "./DisplayTable";
+import { DisplayTable } from "../components/DisplayTable";
 import { renderOLItems, renderULItems } from "./ListHelpers";
-import { CollapsibleSystem } from "./CollapsibleSystem";
+import { CollapsibleSystem } from "../components/CollapsibleSystem";
 
 export function InternalTopLevelMarkdownParser({
   a,

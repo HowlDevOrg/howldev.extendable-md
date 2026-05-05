@@ -1,6 +1,6 @@
-import { semanticDiffuser } from "./stringfunc";
+import { semanticDiffuser } from "./logic/stringfunc";
 import "./defaults.css";
-import { InternalTopLevelMarkdownParser } from "./InternalMarkdownParser";
+import { InternalTopLevelMarkdownParser } from "./logic/InternalMarkdownParser";
 
 export type Props = {
   text: string;

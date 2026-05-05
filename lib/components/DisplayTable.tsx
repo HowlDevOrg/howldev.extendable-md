@@ -1,4 +1,4 @@
-import { InlineMD } from "./InlineMarkdown";
+import { InlineMD } from "../logic/InlineMarkdown";
 import { SanitizedHTML } from "./SanitizedHTML";
 
 /**
