@@ -29,6 +29,91 @@ function InternalTopLevelMarkdownParser({
   a: string;
   inline: boolean;
 }): ReactNode {
+  // Helper functions for rendering list items with indentation support
+  const renderULItems = (linesToProcess: string[], minIndent: number): ReactNode[] => {
+    const items: ReactNode[] = [];
+    let i = 0;
+    
+    while (i < linesToProcess.length) {
+      const line = linesToProcess[i];
+      const indent = line.match(/^(\s*)/)?.[1].length ?? 0;
+      
+      if (indent !== minIndent) {
+        i++;
+        continue;
+      }
+      
+      const content = line.slice(indent + 2);
+      const nestedLines: string[] = [];
+      let j = i + 1;
+      
+      while (j < linesToProcess.length) {
+        const nextIndent = linesToProcess[j].match(/^(\s*)/)?.[1].length ?? 0;
+        if (nextIndent <= minIndent) break;
+        nestedLines.push(linesToProcess[j]);
+        j++;
+      }
+      
+      items.push(
+        <li key={i}>
+          <InternalTopLevelMarkdownParser a={content} inline={true} />
+          {nestedLines.length > 0 && nestedLines[0].match(/[\-+\*]\s/) && (
+            <ul>{renderULItems(nestedLines, minIndent + 2)}</ul>
+          )}
+          {nestedLines.length > 0 && nestedLines[0].match(/\d+\./) && (
+            <ol>{renderOLItems(nestedLines, minIndent + 2)}</ol>
+          )}
+        </li>
+      );
+      
+      i = j;
+    }
+    
+    return items;
+  };
+
+  const renderOLItems = (linesToProcess: string[], minIndent: number): ReactNode[] => {
+    const items: ReactNode[] = [];
+    let i = 0;
+    
+    while (i < linesToProcess.length) {
+      const line = linesToProcess[i];
+      const indent = line.match(/^(\s*)/)?.[1].length ?? 0;
+      
+      if (indent !== minIndent) {
+        i++;
+        continue;
+      }
+      
+      const content = line.slice(indent).replace(/^\d+\.\s/, '');
+      const nestedLines: string[] = [];
+      let j = i + 1;
+      
+      while (j < linesToProcess.length) {
+        const nextIndent = linesToProcess[j].match(/^(\s*)/)?.[1].length ?? 0;
+        if (nextIndent <= minIndent) break;
+        nestedLines.push(linesToProcess[j]);
+        j++;
+      }
+      
+      items.push(
+        <li key={i}>
+          <InternalTopLevelMarkdownParser a={content} inline={true} />
+          {nestedLines.length > 0 && nestedLines[0].match(/[\-+\*]\s/) && (
+            <ul>{renderULItems(nestedLines, minIndent + 2)}</ul>
+          )}
+          {nestedLines.length > 0 && nestedLines[0].match(/\d+\./) && (
+            <ol>{renderOLItems(nestedLines, minIndent + 2)}</ol>
+          )}
+        </li>
+      );
+      
+      i = j;
+    }
+    
+    return items;
+  };
+
   if (!a[0]) {
     return;
   } else if (a[0] === "`") {
@@ -73,37 +158,13 @@ function InternalTopLevelMarkdownParser({
   } else if (a === "---") {
     return <hr />;
   } else if (a.match(/^[\-+\*]\s/g)) {
-    const ulListItems = a.split("\n").map((a) => a.slice(2));
-    return (
-      <ul>
-        {ulListItems.map((b) => {
-          if (b.match(/\s?[\-+\*]\s/g) || b.match(/\s?\d+\./g)) {
-            return <InternalTopLevelMarkdownParser a={b} inline={true} />;
-          }
-          return (
-            <li>
-              <InternalTopLevelMarkdownParser a={b} inline={true} />
-            </li>
-          );
-        })}
-      </ul>
-    );
+    const lines = a.split("\n");
+    const baseIndent = lines[0].match(/^(\s*)/)?.[1].length ?? 0;
+    return <ul>{renderULItems(lines, baseIndent)}</ul>;
   } else if (a.match(/^\d+\./g)) {
-    const olListItems = a.split("\n").map((a) => a.slice(2));
-    return (
-      <ol>
-        {olListItems.map((b) => {
-          if (b.match(/\s?[\-+\*]\s/g) || b.match(/\s?\d+\./g)) {
-            return <InternalTopLevelMarkdownParser a={b} inline={true} />;
-          }
-          return (
-            <li>
-              <InternalTopLevelMarkdownParser a={b} inline={true} />
-            </li>
-          );
-        })}
-      </ol>
-    );
+    const lines = a.split("\n");
+    const baseIndent = lines[0].match(/^(\s*)/)?.[1].length ?? 0;
+    return <ol>{renderOLItems(lines, baseIndent)}</ol>;
   } else {
     return inline ? (
       <SanitizedHTML html={InlineMD(a)} />

@@ -61,7 +61,7 @@ Some of the harder parts I need to worry about:
 
 - Nested ul
   - This is inside
-    - This is further inside
+    1. This is further inside
 - And *this is the outside*
 
 1. Nested ol
