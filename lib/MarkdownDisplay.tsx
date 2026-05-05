@@ -1,44 +1,39 @@
 import { CodeViewer } from "./CodeViewer";
+import { InlineMD } from "./InlineMarkdown";
 import { MathDisplay } from "./MathDisplay";
 import { MermaidDisplay } from "./MermaidDisplay";
-import { combine, separate } from "./stringfunc";
+import { SanitizedHTML } from "./SanitizedHTML";
+import { semanticDiffuser } from "./stringfunc";
 
 type Props = {
   text: string;
 };
 
 export function MarkdownDisplay({ text }: Props) {
-  const items = combine(separate(text));
+  const items = semanticDiffuser(text);
 
   return (<div>
     {items.map(a => {
       switch (a[0]) {
         case '`':
-          const items = a.split('\n');
+          const newLineItems = a.split('\n');
           const type = items[0].slice(3).trimEnd();
           if (type === "math") {
-            return <MathDisplay text={items.slice(1, -1).join('\n')} displayAsBlock={true} />
+            return <MathDisplay text={newLineItems.slice(1).join('\n')} displayAsBlock={true} />
           } else if (type === "mermaid") {
-            return <MermaidDisplay text={items.slice(1, -1).join('\n')} />
+            return <MermaidDisplay text={newLineItems.slice(1).join('\n') + '     \n'} />
           } else {
-            return <CodeViewer langauge={type} codeLines={items.slice(1, -1).join('\n')}/>
+            return <CodeViewer langauge={type} codeLines={newLineItems.slice(1).join('\n')}/>
           }
+        case '#': 
+          const spaceItems = a.split(' '); 
+          let headerSize = spaceItems[0].length;
+          headerSize = headerSize > 6 ? 6 : headerSize;
+          const output = `<h${headerSize}>${spaceItems.slice(1).join(' ')}</h${headerSize}>`;
+          return <SanitizedHTML html={InlineMD(output)} />
         default: 
-          return <p>{a}</p>
+          return <SanitizedHTML html={InlineMD(a)} />
       }
     })}
   </div>);
-  // return <div>{separate(text).map(a => <p>{a}</p>)}</div>;
-  // return <MathDisplay text={text} displayAsBlock={true} />;
-  // return <MermaidDisplay text={text} />;
-  // return (<div>
-  //   <p>Compared to a normal p block:</p>
-  //   <blockquote>
-  //     This is a blockquote with some <i>italics</i> and <u>underlines</u>? <br/>
-  //     And this is a break.
-  //     <blockquote>
-  //       Inner blockquote.
-  //     </blockquote>
-  //   </blockquote>
-  // </div>)
 }

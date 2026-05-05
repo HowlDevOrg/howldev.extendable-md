@@ -8,7 +8,7 @@ import yml from 'highlight.js/lib/languages/yaml';
 import css from 'highlight.js/lib/languages/css';
 import json from 'highlight.js/lib/languages/json';
 import sql from 'highlight.js/lib/languages/sql';
-import 'lib/CodeViewer.css';
+import './CodeViewer.css';
 
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('typescript', typescript);
@@ -19,7 +19,6 @@ hljs.registerLanguage('yml', yml);
 hljs.registerLanguage('css', css);
 hljs.registerLanguage('json', json);
 hljs.registerLanguage('sql', sql);
-
 
 /** 
  * Code Viewer takes in a language and an array of strings with the backtick(``) preferred for their definition. They use 

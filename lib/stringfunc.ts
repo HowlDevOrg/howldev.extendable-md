@@ -1,22 +1,30 @@
-export function separate(name: string): string[] {
-  const splits = name.split('\n').map(a => a.trimEnd()).join('\n').split('\n\n');
-  return splits;
-}
-
-export function combine(items: string[]): string[] {
+/**
+ * Takes in a blob of text and parses with respect to code blocks, 
+ * block quotes, headers, horizontal lines, images, ol, and ul.
+ * @param items The text to parse (split by \n)
+ * @returns Split items according to semantics 
+ */
+export function semanticDiffuser(items: string): string[] {
+  const oldItems: string[] = items.split('\n').map(a => a.trimEnd());
   const newItems: string[] = [];
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i];
+
+  for (let i = 0; i < oldItems.length; i++) {
+    const item = oldItems[i];
     if (item.startsWith('```')) {
       const newItem: string[] = [];
       newItem.push(item);
       i++;
-      while (i < items.length) {
-        newItem.push(items[i]);
-        if (!items[i].includes('`')) break;
+      while (i < oldItems.length && oldItems[i] !== '```') {
+        newItem.push(oldItems[i]);
         i++;
       }
-      newItems.push(newItem.join('\n\n'))
+      if (i < oldItems.length && oldItems[i] === '```') {
+        i++;
+      }
+      i--;
+      newItems.push(newItem.join('\n'))
+    } else if (item.startsWith('#')) {
+      newItems.push(item);
     } else {
       newItems.push(item);
     }
