@@ -1,9 +1,10 @@
 import DOMPurify from 'dompurify';
 
+import parse from 'html-react-parser'
+
 type SanitizedHTMLProps = {
   html: string;
 };
 export function SanitizedHTML({ html }: SanitizedHTMLProps) {
-  const purified = DOMPurify.sanitize(html);
-  return <div dangerouslySetInnerHTML={{__html: purified}} />
+  return <>{parse(DOMPurify.sanitize(html))}</>
 }

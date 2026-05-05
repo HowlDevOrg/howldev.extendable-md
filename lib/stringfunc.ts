@@ -14,7 +14,8 @@ export function semanticDiffuser(items: string): string[] {
       const newItem: string[] = [];
       newItem.push(item);
       i++;
-      while (i < oldItems.length && oldItems[i] !== "```") { // These 7 lines are black magic that I don't understand. 
+      while (i < oldItems.length && oldItems[i] !== "```") {
+        // These 7 lines are black magic that I don't understand.
         newItem.push(oldItems[i]);
         i++;
       }
@@ -29,7 +30,8 @@ export function semanticDiffuser(items: string): string[] {
       const newItem: string[] = [];
       newItem.push(item);
       i++;
-      while (i < oldItems.length && oldItems[i].startsWith(">")) { // ditto
+      while (i < oldItems.length && oldItems[i].startsWith(">")) {
+        // ditto
         newItem.push(oldItems[i]);
         i++;
       }
@@ -39,7 +41,33 @@ export function semanticDiffuser(items: string): string[] {
       i--;
       newItems.push(newItem.join("\n"));
     } else if (item === "---") {
-      newItems.push("---")
+      newItems.push("---");
+    } else if (item.match(/^[\-+\*]\s/g)) {
+      const newItem: string[] = [];
+      newItem.push(item);
+      i++;
+      while (i < oldItems.length && oldItems[i].match(/[\-+\*]\s|\s+\d+./g)) {
+        newItem.push(oldItems[i]);
+        i++;
+      }
+      if (i < oldItems.length && oldItems[i].match(/[\-+\*]\s|\s+\d+./g)) {
+        i++;
+      }
+      i--;
+      newItems.push(newItem.join("\n"));
+    } else if (item.match(/^\d+\.\s/g)) {
+      const newItem: string[] = [];
+      newItem.push(item);
+      i++;
+      while (i < oldItems.length && oldItems[i].match(/\d+\.\s|\s[\-+\*]\s/g)) {
+        newItem.push(oldItems[i]);
+        i++;
+      }
+      if (i < oldItems.length && oldItems[i].match(/\d+\.\s|\s[\-+\*]\s/g)) {
+        i++;
+      }
+      i--;
+      newItems.push(newItem.join("\n"));
     } else {
       newItems.push(item);
     }

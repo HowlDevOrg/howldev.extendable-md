@@ -56,14 +56,21 @@ Some of the harder parts I need to worry about:
 
 - Simple ul
 - Part 2
-
 1. Simple ol
 2. part 2
 
 - Nested ul
   - This is inside
-- And this is the outside
+- And *this is the outside*
 
 1. Nested ol
   1. this is inside
+1. These numbers are funny
+
+- Nested ul
+  1. This is inside
+- And this is the **outside**
+
+1. Nested _ol_
+  - this is __inside__
 1. These numbers are funny
