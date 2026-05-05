@@ -9,6 +9,11 @@ import katex from "katex";
 export function InlineMD(input: string): string {
   let rollingResult = input;
 
+  // Newline
+  rollingResult = rollingResult.replace(/\\n/g, (_, p1) => {
+    return `<br/>`;
+  });
+
   // Bold
   rollingResult = rollingResult.replace(/\*\*([^_*]+?)\*\*/g, (_, p1) => {
     return `<b>${p1}</b>`;
