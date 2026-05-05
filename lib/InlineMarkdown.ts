@@ -21,10 +21,11 @@ export function InlineMD(input: string): string {
 
   // Math
   rollingResult = rollingResult.replace(/\$(.+?)\$/g, (_, p1) => {
-    return katex.renderToString(p1, {
+    const math = katex.renderToString(p1, {
       throwOnError: false,
       displayMode: false,
     });
+    return `<span class="inline-math">` + math + `</span>`
   });
 
   // Bold
@@ -45,23 +46,23 @@ export function InlineMD(input: string): string {
 
   // Code
   rollingResult = rollingResult.replace(/`(.+?)`/g, (_, p1) => {
-    return `<code>${p1}</code>`;
+    return `<code class="inline-code">${p1}</code>`;
   });
-  
+
   // Strikethrough
   rollingResult = rollingResult.replace(/~~(.+?)~~/g, (_, p1) => {
     return `<strike>${p1}</strike>`;
   });
-  
-    // Subscript
-    rollingResult = rollingResult.replace(/~(.+?)~/g, (_, p1) => {
-      return `<sub>${p1}</sub>`;
-    });
-  
-    // Superscript
-    rollingResult = rollingResult.replace(/\^(.+?)\^/g, (_, p1) => {
-      return `<sup>${p1}</sup>`;
-    });
+
+  // Subscript
+  rollingResult = rollingResult.replace(/~(.+?)~/g, (_, p1) => {
+    return `<sub>${p1}</sub>`;
+  });
+
+  // Superscript
+  rollingResult = rollingResult.replace(/\^(.+?)\^/g, (_, p1) => {
+    return `<sup>${p1}</sup>`;
+  });
 
   // Highlight
   rollingResult = rollingResult.replace(/==(.+?)==/g, (_, p1) => {
@@ -70,8 +71,8 @@ export function InlineMD(input: string): string {
 
   // Anchor
   rollingResult = rollingResult.replace(/\[(.*?)\]\((.*?)\)/g, (_, p1, p2) => {
-    const b: string[] = p2.split(' ');
-    return `<a href="${b[0]}"${(b.length > 1 ? ` title="${b.slice(1).join(' ')}"` : "")}>${p1}</a>`
+    const b: string[] = p2.split(" ");
+    return `<a href="${b[0]}"${b.length > 1 ? ` title="${b.slice(1).join(" ")}"` : ""}>${p1}</a>`;
   });
 
   return rollingResult;

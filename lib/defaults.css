@@ -1,31 +1,88 @@
 @layer {
-    /* This format allows you to configure 
+  /* This format allows you to configure 
     all defaults to make everything look nice, but @layer
     makes it really easy to override. You can validate 
     it by changing /dev/App.css for the "user" implementation. */
-    /* Note that I overrode the font family and color scheme in the 
+  /* Note that I overrode the font family and color scheme in the 
     dev view. (I also overrode some highlight-js stuff that you 
     shouldn't need to worry about) */
 
-    blockquote {
-        background-color: gray;
-        border: 1px solid white;
-        padding: 5px;
-    }
+  /* Erm.. and if you wanted, you could also practice making 
+    light and dark modes! That would go very well with a library
+    that we don't know how it will be used. But you don't have to, 
+    whatever you'd like to do. */
 
-    table {
-        gap: 10px;
-    }
-    td {
-        border: 1px solid white;
-        padding: 5px;
-    }
-    th {
-        background-color: rgb(67, 67, 67);
-    }
+  blockquote {
+    background-color: gray;
+    border: 1px solid white;
+    padding: 5px;
+  }
 
-    .collapsible-header {
-        font-size: 20px;
-        margin-right: 10px;
-    }
+  /* Tables */
+  .has-header {
+    background-color: darkgreen;
+  }
+  .no-header {
+    background-color: darkblue;
+  }
+  table {
+    gap: 10px;
+  }
+  td {
+    border: 1px solid white;
+    padding: 5px;
+  }
+  th {
+    background-color: rgb(67, 67, 67);
+  }
+
+  /* Highlights, if you've never used it (I haven't) */
+  mark {
+    background-color: yellow;
+  }
+
+  /* My collapsible syntax is =^= or =v=, then closing with one = */
+  .collapsible-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+  }
+  /* Kind of ugly but it's an option! */
+  .collapsible-header h1,
+  .collapsible-header h2,
+  .collapsible-header h3,
+  .collapsible-header h4,
+  .collapsible-header h5,
+  .collapsible-header h6 {
+    background-color: blue;
+  }
+  .collapsible-header p {
+    background-color: red;
+  }
+  .collapsible-icon {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+
+  /* Math and mermaid outer figures (though you can reach inside as well) */
+  .katex-figure {
+    border: 1px solid white;
+  }
+  .mermaid-figure {
+    border: 1px solid white;
+  }
+
+  /* Some inline items */
+  .inline-math {
+    border-radius: 5px;
+    border: 1px solid white;
+    padding: 10px;
+  }
+  .inline-code {
+    border-radius: 5px;
+    border: 1px solid white;
+    padding: 2px;
+    margin: 2px;
+  }
 }

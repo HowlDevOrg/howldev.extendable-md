@@ -118,9 +118,9 @@ This is inside.
 On top of that, you can also nest them. 
 =^= ### First level
 Here's some text, ==as if== this paragraph mattered. 
-=^= Second level
+=^= #### Second level
 - Very internal list
 - part 2
 =
-Now that that's over with...
+Now that that's over with... this is the end of the First Level section.
 =

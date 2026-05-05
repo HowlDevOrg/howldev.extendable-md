@@ -1,7 +1,5 @@
-
-
 body, html {
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", sans-serif; /* this is my brand font, but you can try with anything */ 
 
   color-scheme: light dark;
 }
