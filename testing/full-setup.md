@@ -51,6 +51,7 @@ lorem --> haha
 ```
 
 Here's a [link to the Org github](https://github.com/HowlDevOrg). You can also put a space and add in a title [for the hover effect](https://github.com/HowlDevOrg for the hover effect). 
+And if you just put it in angle brackets, it exists! <https://github.com/HowlDevOrg>
 
 ---
 
@@ -88,13 +89,38 @@ Tables are kinda hard. First we need one that just has the data within it:
 | data4 | data5 | **data6** |
 Then we need one with some headers that align to different directions: 
 
-| Syntax      | Description | Test Text     |
+| Syntax      | Center Aligned | Right Aligned |
 | :---        |    :----:   |          ---: |
 | Header      | Title       | *Here's this* |
-| Paragraph   | Text        | And more      |
+| Paragraph   | some really long text | And more |
 
 And, the default table with simple headers: 
 | Syntax | _Description_ |
 | --- | ----------- |
 | Header | Title |
 | Paragraph | Text |
+
+---
+
+And now my own thing, which is the primary reason why I made this! 
+
+=v= Collapsible paragraph, default open. 
+This is inside. 
+=
+
+=^= ## Header, default closed.
+This is inside.
+
+- Here's a list. 
+- Part 2. 
+=
+
+On top of that, you can also nest them. 
+=^= First level
+Here's some text, as if this paragraph mattered. 
+=v= Second level
+- Very internal list
+- part 2
+=
+Now that that's over with...
+=
