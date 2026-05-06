@@ -1,3 +1,56 @@
+// Pattern matchers for different block types
+const PATTERNS = {
+  CODE_START: /^```/,
+  CODE_END: "```",
+  HEADER: /^#/,
+  QUOTE: /^>/,
+  HORIZONTAL: "---",
+  UNORDERED_LIST: /^[\-+\*]\s/,
+  UNORDERED_NESTED: /[\-+\*]\s|\s+\d+\./,
+  ORDERED_LIST: /^\d+\.\s/,
+  ORDERED_NESTED: /\d+\.\s|\s[\-+\*]\s/,
+  TABLE: /^\|/,
+  COLLAPSIBLE: /^=[\^v]=/,
+  COLLAPSIBLE_END: "=",
+} as const;
+
+/**
+ * Collects consecutive lines matching a predicate from startIndex.
+ * Returns the collected lines and updates the index via the closure.
+ */
+function collectConsecutiveLines(
+  items: string[],
+  startIndex: number,
+  predicate: (line: string) => boolean,
+): string[] {
+  const collected = [items[startIndex]];
+  let i = startIndex + 1;
+
+  while (i < items.length && predicate(items[i])) {
+    collected.push(items[i]);
+    i++;
+  }
+
+  return collected;
+}
+
+/**
+ * Determines if a line is plaintext (not a special markdown element)
+ */
+function isPlaintext(line: string): boolean {
+  if (!line) return false;
+  return (
+    !line.match(PATTERNS.HEADER) &&
+    !line.match(PATTERNS.QUOTE) &&
+    line !== PATTERNS.HORIZONTAL &&
+    !line.match(PATTERNS.UNORDERED_LIST) &&
+    !line.match(PATTERNS.ORDERED_LIST) &&
+    !line.match(PATTERNS.TABLE) &&
+    !line.match(PATTERNS.COLLAPSIBLE) &&
+    !line.match(PATTERNS.CODE_START)
+  );
+}
+
 /**
  * Takes in a blob of text and parses with respect to code blocks,
  * block quotes, headers, horizontal lines, images, ol, and ul.
@@ -11,102 +64,94 @@ export function semanticDiffuser(items: string): string[] {
   for (let i = 0; i < oldItems.length; i++) {
     const item = oldItems[i];
     if (!item) continue;
-    if (item.startsWith("```")) {
-      // Code block
-      const newItem: string[] = [];
-      newItem.push(item);
-      i++;
-      while (i < oldItems.length && oldItems[i] !== "```") {
-        // These 7 lines are black magic that I don't understand.
-        newItem.push(oldItems[i]);
-        i++;
+
+    // Code block
+    if (item.match(PATTERNS.CODE_START)) {
+      const collected = collectConsecutiveLines(
+        oldItems,
+        i,
+        (line) => line !== PATTERNS.CODE_END,
+      );
+      // Check for closing backticks and skip them
+      let nextIdx = i + collected.length;
+      if (
+        nextIdx < oldItems.length &&
+        oldItems[nextIdx] === PATTERNS.CODE_END
+      ) {
+        i = nextIdx;
+      } else {
+        i = nextIdx - 1;
       }
-      if (i < oldItems.length && oldItems[i] === "```") {
-        i++;
-      }
-      i--;
-      newItems.push(newItem.join("\n"));
-    } else if (item.startsWith("#")) {
-      // Header
+      newItems.push(collected.join("\n"));
+    } else if (item.match(PATTERNS.HEADER)) {
+      // Header (single line, no collection)
       newItems.push(item);
-    } else if (item.startsWith(">")) {
-      // Quote
-      const newItem: string[] = [];
-      newItem.push(item);
-      i++;
-      while (i < oldItems.length && oldItems[i].startsWith(">")) {
-        // ditto
-        newItem.push(oldItems[i]);
-        i++;
-      }
-      if (i < oldItems.length && oldItems[i].startsWith(">")) {
-        i++;
-      }
-      i--;
-      newItems.push(newItem.join("\n"));
-    } else if (item === "---") {
+    } else if (item.match(PATTERNS.QUOTE)) {
+      // Quote block
+      const collected = collectConsecutiveLines(
+        oldItems,
+        i,
+        (line) => !!line.match(PATTERNS.QUOTE),
+      );
+      i += collected.length - 1;
+      newItems.push(collected.join("\n"));
+    } else if (item === PATTERNS.HORIZONTAL) {
       // Horizontal line
-      newItems.push("---");
-    } else if (item.match(/^[\-+\*]\s/g)) {
+      newItems.push(PATTERNS.HORIZONTAL);
+    } else if (item.match(PATTERNS.UNORDERED_LIST)) {
       // Unordered list
-      const newItem: string[] = [];
-      newItem.push(item);
-      i++;
-      while (i < oldItems.length && oldItems[i].match(/[\-+\*]\s|\s+\d+./g)) {
-        newItem.push(oldItems[i]);
-        i++;
-      }
-      if (i < oldItems.length && oldItems[i].match(/[\-+\*]\s|\s+\d+./g)) {
-        i++;
-      }
-      i--;
-      newItems.push(newItem.join("\n"));
-    } else if (item.match(/^\d+\.\s/g)) {
+      const collected = collectConsecutiveLines(
+        oldItems,
+        i,
+        (line) => !!line.match(PATTERNS.UNORDERED_NESTED),
+      );
+      i += collected.length - 1;
+      newItems.push(collected.join("\n"));
+    } else if (item.match(PATTERNS.ORDERED_LIST)) {
       // Ordered list
-      const newItem: string[] = [];
-      newItem.push(item);
-      i++;
-      while (i < oldItems.length && oldItems[i].match(/\d+\.\s|\s[\-+\*]\s/g)) {
-        newItem.push(oldItems[i]);
-        i++;
-      }
-      if (i < oldItems.length && oldItems[i].match(/\d+\.\s|\s[\-+\*]\s/g)) {
-        i++;
-      }
-      i--;
-      newItems.push(newItem.join("\n"));
-    } else if (item.startsWith("|")) {
+      const collected = collectConsecutiveLines(
+        oldItems,
+        i,
+        (line) => !!line.match(PATTERNS.ORDERED_NESTED),
+      );
+      i += collected.length - 1;
+      newItems.push(collected.join("\n"));
+    } else if (item.match(PATTERNS.TABLE)) {
       // Table
-      const newItem: string[] = [];
-      newItem.push(item);
-      i++;
-      while (i < oldItems.length && oldItems[i].startsWith("|")) {
-        newItem.push(oldItems[i]);
-        i++;
-      }
-      if (i < oldItems.length && oldItems[i].startsWith("|")) {
-        i++;
-      }
-      i--;
-      newItems.push(newItem.join("\n"));
-    } else if (item.match(/^=[\^v]=/g)) {
-      // Collapsible system
-      const newItem: string[] = [];
-      let queue = 0; // This is the depth of the stack of nestings
-      newItem.push(item);
-      i++;
-      while (i < oldItems.length) {
-        if (oldItems[i].match(/^=[\^v]=/g)) queue++;
-        if (oldItems[i] === "=") {
+      const collected = collectConsecutiveLines(
+        oldItems,
+        i,
+        (line) => !!line.match(PATTERNS.TABLE),
+      );
+      i += collected.length - 1;
+      newItems.push(collected.join("\n"));
+    } else if (item.match(PATTERNS.COLLAPSIBLE)) {
+      // Collapsible system (special nesting logic)
+      const collected = [item];
+      let queue = 0;
+      let j = i + 1;
+
+      while (j < oldItems.length) {
+        if (oldItems[j].match(PATTERNS.COLLAPSIBLE)) queue++;
+        if (oldItems[j] === PATTERNS.COLLAPSIBLE_END) {
           queue--;
           if (queue < 0) break;
-        } 
-        newItem.push(oldItems[i]);
-        i++;
+        }
+        collected.push(oldItems[j]);
+        j++;
       }
-      newItems.push(newItem.join("\n"));
+
+      i = j;
+      newItems.push(collected.join("\n"));
     } else {
-      newItems.push(item);
+      // Plain text - collect consecutive plaintext lines
+      const collected = collectConsecutiveLines(
+        oldItems,
+        i,
+        (line) => isPlaintext(line),
+      );
+      i += collected.length - 1;
+      newItems.push(collected.join("\n"));
     }
   }
 

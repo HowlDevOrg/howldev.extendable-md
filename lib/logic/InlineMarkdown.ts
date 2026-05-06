@@ -15,7 +15,7 @@ export function InlineMD(input: string): string {
   });
 
   // Newline
-  rollingResult = rollingResult.replace(/\\n/g, (_, p1) => {
+  rollingResult = rollingResult.replace(/\n/g, () => {
     return `<br/>`;
   });
 
