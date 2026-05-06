@@ -1,18 +1,4 @@
-// Pattern matchers for different block types
-const PATTERNS = {
-  CODE_START: /^```/,
-  CODE_END: "```",
-  HEADER: /^#/,
-  QUOTE: /^>/,
-  HORIZONTAL: "---",
-  UNORDERED_LIST: /^[\-+\*]\s/,
-  UNORDERED_NESTED: /[\-+\*]\s|\s+\d+\./,
-  ORDERED_LIST: /^\d+\.\s/,
-  ORDERED_NESTED: /\d+\.\s|\s[\-+\*]\s/,
-  TABLE: /^\|/,
-  COLLAPSIBLE: /^=[\^v]=/,
-  COLLAPSIBLE_END: "=",
-} as const;
+import { MARKDOWN_PATTERNS } from "./MarkdownPatterns";
 
 /**
  * Collects consecutive lines matching a predicate from startIndex.
@@ -34,20 +20,17 @@ function collectConsecutiveLines(
   return collected;
 }
 
-/**
- * Determines if a line is plaintext (not a special markdown element)
- */
 function isPlaintext(line: string): boolean {
   if (!line) return false;
   return (
-    !line.match(PATTERNS.HEADER) &&
-    !line.match(PATTERNS.QUOTE) &&
-    line !== PATTERNS.HORIZONTAL &&
-    !line.match(PATTERNS.UNORDERED_LIST) &&
-    !line.match(PATTERNS.ORDERED_LIST) &&
-    !line.match(PATTERNS.TABLE) &&
-    !line.match(PATTERNS.COLLAPSIBLE) &&
-    !line.match(PATTERNS.CODE_START)
+    !line.match(MARKDOWN_PATTERNS.HEADER) &&
+    !line.match(MARKDOWN_PATTERNS.QUOTE) &&
+    line !== MARKDOWN_PATTERNS.HORIZONTAL_LINE &&
+    !line.match(MARKDOWN_PATTERNS.UNORDERED_LIST) &&
+    !line.match(MARKDOWN_PATTERNS.ORDERED_LIST) &&
+    !line.match(MARKDOWN_PATTERNS.TABLE) &&
+    !line.match(MARKDOWN_PATTERNS.COLLAPSIBLE) &&
+    !line.match(MARKDOWN_PATTERNS.CODE_BLOCK)
   );
 }
 
@@ -65,75 +48,66 @@ export function semanticDiffuser(items: string): string[] {
     const item = oldItems[i];
     if (!item) continue;
 
-    // Code block
-    if (item.match(PATTERNS.CODE_START)) {
+    if (item.match(MARKDOWN_PATTERNS.CODE_BLOCK)) {
       const collected = collectConsecutiveLines(
         oldItems,
         i,
-        (line) => line !== PATTERNS.CODE_END,
+        (line) => line !== MARKDOWN_PATTERNS.CODE_END,
       );
-      // Check for closing backticks and skip them
       let nextIdx = i + collected.length;
       if (
         nextIdx < oldItems.length &&
-        oldItems[nextIdx] === PATTERNS.CODE_END
+        oldItems[nextIdx] === MARKDOWN_PATTERNS.CODE_END
       ) {
         i = nextIdx;
       } else {
         i = nextIdx - 1;
       }
       newItems.push(collected.join("\n"));
-    } else if (item.match(PATTERNS.HEADER)) {
-      // Header (single line, no collection)
+    } else if (item.match(MARKDOWN_PATTERNS.HEADER)) {
       newItems.push(item);
-    } else if (item.match(PATTERNS.QUOTE)) {
-      // Quote block
+    } else if (item.match(MARKDOWN_PATTERNS.QUOTE)) {
       const collected = collectConsecutiveLines(
         oldItems,
         i,
-        (line) => !!line.match(PATTERNS.QUOTE),
+        (line) => !!line.match(MARKDOWN_PATTERNS.QUOTE),
       );
       i += collected.length - 1;
       newItems.push(collected.join("\n"));
-    } else if (item === PATTERNS.HORIZONTAL) {
-      // Horizontal line
-      newItems.push(PATTERNS.HORIZONTAL);
-    } else if (item.match(PATTERNS.UNORDERED_LIST)) {
-      // Unordered list
+    } else if (item === MARKDOWN_PATTERNS.HORIZONTAL_LINE) {
+      newItems.push(MARKDOWN_PATTERNS.HORIZONTAL_LINE);
+    } else if (item.match(MARKDOWN_PATTERNS.UNORDERED_LIST)) {
       const collected = collectConsecutiveLines(
         oldItems,
         i,
-        (line) => !!line.match(PATTERNS.UNORDERED_NESTED),
+        (line) => !!line.match(MARKDOWN_PATTERNS.UNORDERED_NESTED),
       );
       i += collected.length - 1;
       newItems.push(collected.join("\n"));
-    } else if (item.match(PATTERNS.ORDERED_LIST)) {
-      // Ordered list
+    } else if (item.match(MARKDOWN_PATTERNS.ORDERED_LIST)) {
       const collected = collectConsecutiveLines(
         oldItems,
         i,
-        (line) => !!line.match(PATTERNS.ORDERED_NESTED),
+        (line) => !!line.match(MARKDOWN_PATTERNS.ORDERED_NESTED),
       );
       i += collected.length - 1;
       newItems.push(collected.join("\n"));
-    } else if (item.match(PATTERNS.TABLE)) {
-      // Table
+    } else if (item.match(MARKDOWN_PATTERNS.TABLE)) {
       const collected = collectConsecutiveLines(
         oldItems,
         i,
-        (line) => !!line.match(PATTERNS.TABLE),
+        (line) => !!line.match(MARKDOWN_PATTERNS.TABLE),
       );
       i += collected.length - 1;
       newItems.push(collected.join("\n"));
-    } else if (item.match(PATTERNS.COLLAPSIBLE)) {
-      // Collapsible system (special nesting logic)
+    } else if (item.match(MARKDOWN_PATTERNS.COLLAPSIBLE)) {
       const collected = [item];
       let queue = 0;
       let j = i + 1;
 
       while (j < oldItems.length) {
-        if (oldItems[j].match(PATTERNS.COLLAPSIBLE)) queue++;
-        if (oldItems[j] === PATTERNS.COLLAPSIBLE_END) {
+        if (oldItems[j].match(MARKDOWN_PATTERNS.COLLAPSIBLE)) queue++;
+        if (oldItems[j] === MARKDOWN_PATTERNS.COLLAPSIBLE_END) {
           queue--;
           if (queue < 0) break;
         }
@@ -144,7 +118,6 @@ export function semanticDiffuser(items: string): string[] {
       i = j;
       newItems.push(collected.join("\n"));
     } else {
-      // Plain text - collect consecutive plaintext lines
       const collected = collectConsecutiveLines(
         oldItems,
         i,
