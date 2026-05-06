@@ -19,6 +19,7 @@ export function InternalTopLevelMarkdownParser({
   if (!a[0]) {
     return;
   } else if (a[0] === "`") {
+    // Code blocks
     const newLineItems = a.split("\n");
     const type = newLineItems[0].slice(3).trimEnd();
     if (type === "math") {
@@ -39,12 +40,14 @@ export function InternalTopLevelMarkdownParser({
       );
     }
   } else if (a[0] === "#") {
+    // Headers
     const spaceItems = a.split(" ");
     let headerSize = spaceItems[0].length;
     headerSize = headerSize > 6 ? 6 : headerSize;
     const output = `<h${headerSize}>${spaceItems.slice(1).join(" ")}</h${headerSize}>`;
     return <SanitizedHTML html={InlineMD(output)} />;
   } else if (a[0] === ">") {
+    // Quotes
     const quoteItems = a
       .split("\n")
       .map((a) => a.slice(2))
@@ -58,18 +61,23 @@ export function InternalTopLevelMarkdownParser({
       </blockquote>
     );
   } else if (a === "---") {
+    // Horizontal line
     return <hr />;
   } else if (a.match(/^[\-+\*]\s/g)) {
+    // Unordered list
     const lines = a.split("\n");
     const baseIndent = lines[0].match(/^(\s*)/)?.[1].length ?? 0;
     return <ul>{renderULItems(lines, baseIndent)}</ul>;
   } else if (a.match(/^\d+\./g)) {
+    // Ordered list
     const lines = a.split("\n");
     const baseIndent = lines[0].match(/^(\s*)/)?.[1].length ?? 0;
     return <ol>{renderOLItems(lines, baseIndent)}</ol>;
   } else if (a.startsWith("|")) {
+    // Table
     return <DisplayTable text={a} />;
   } else if (a.match(/^=[\^v]=/g)) {
+    // Collapsible
     const lines = a.split("\n");
     const newSemantics = semanticDiffuser(lines.slice(1).join("\n"));
     return (
@@ -85,6 +93,7 @@ export function InternalTopLevelMarkdownParser({
       />
     );
   } else {
+    // Plaintext
     return inline ? (
       <SanitizedHTML html={InlineMD(a)} />
     ) : (

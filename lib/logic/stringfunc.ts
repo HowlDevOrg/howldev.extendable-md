@@ -12,6 +12,7 @@ export function semanticDiffuser(items: string): string[] {
     const item = oldItems[i];
     if (!item) continue;
     if (item.startsWith("```")) {
+      // Code block
       const newItem: string[] = [];
       newItem.push(item);
       i++;
@@ -26,8 +27,10 @@ export function semanticDiffuser(items: string): string[] {
       i--;
       newItems.push(newItem.join("\n"));
     } else if (item.startsWith("#")) {
+      // Header
       newItems.push(item);
     } else if (item.startsWith(">")) {
+      // Quote
       const newItem: string[] = [];
       newItem.push(item);
       i++;
@@ -42,8 +45,10 @@ export function semanticDiffuser(items: string): string[] {
       i--;
       newItems.push(newItem.join("\n"));
     } else if (item === "---") {
+      // Horizontal line
       newItems.push("---");
     } else if (item.match(/^[\-+\*]\s/g)) {
+      // Unordered list
       const newItem: string[] = [];
       newItem.push(item);
       i++;
@@ -57,6 +62,7 @@ export function semanticDiffuser(items: string): string[] {
       i--;
       newItems.push(newItem.join("\n"));
     } else if (item.match(/^\d+\.\s/g)) {
+      // Ordered list
       const newItem: string[] = [];
       newItem.push(item);
       i++;
@@ -70,6 +76,7 @@ export function semanticDiffuser(items: string): string[] {
       i--;
       newItems.push(newItem.join("\n"));
     } else if (item.startsWith("|")) {
+      // Table
       const newItem: string[] = [];
       newItem.push(item);
       i++;
@@ -83,6 +90,7 @@ export function semanticDiffuser(items: string): string[] {
       i--;
       newItems.push(newItem.join("\n"));
     } else if (item.match(/^=[\^v]=/g)) {
+      // Collapsible system
       const newItem: string[] = [];
       let queue = 0; // This is the depth of the stack of nestings
       newItem.push(item);
