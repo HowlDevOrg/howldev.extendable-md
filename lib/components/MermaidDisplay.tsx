@@ -33,27 +33,30 @@ export function MermaidDisplay({ text, refreshInterval }: Props) {
     if (timerRef.current !== null) {
       return;
     }
-    
+
     timerRef.current = setTimeout(async () => {
       timerRef.current = null;
-      
+
       const renderId = ++renderCounterRef.current;
       try {
         const { svg } = await mermaid.render(
           `diagram-${renderId}`,
           queuedTextRef.current,
         );
-        
+
         // Only commit the latest completed render in case async renders overlap.
         if (renderId === renderCounterRef.current) {
           setSvgData(svg);
         }
       } catch (e: any) {
-        setSvgData(`Error: ${e}`)
+        setSvgData(`Error: ${e}`);
       }
-        
     }, refreshInterval ?? 100);
   }, [text]);
 
-  return <SanitizedHTML html={svgData} />;
+  return (
+    <figure className="mermaid-figure">
+      <SanitizedHTML html={svgData} />
+    </figure>
+  );
 }

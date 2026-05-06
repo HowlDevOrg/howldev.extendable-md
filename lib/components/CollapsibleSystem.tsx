@@ -15,8 +15,8 @@ export function CollapsibleSystem({
 
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", cursor: "pointer" }} onClick={() => setOpen(a => !a)}>
-        <span className="collapsible-header">{open ? "⯆" : "⯈"}</span>
+      <div className="collapsible-header" onClick={() => setOpen(a => !a)}>
+        <span className="collapsible-icon">{open ? "⯆" : "⯈"}</span>
         {outerComponent}
       </div>
       {open && innerComponent}

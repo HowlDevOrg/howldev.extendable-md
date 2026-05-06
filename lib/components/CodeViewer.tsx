@@ -7,7 +7,7 @@ import xml from 'highlight.js/lib/languages/xml';
 import yml from 'highlight.js/lib/languages/yaml';
 import json from 'highlight.js/lib/languages/json';
 import sql from 'highlight.js/lib/languages/sql';
-import './CodeViewer.css';
+import '../styling/CodeViewer.css';
 
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('typescript', typescript);

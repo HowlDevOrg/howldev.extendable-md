@@ -1,4 +1,4 @@
-import { InlineMD } from "./InlineMarkdown";
+import { InlineMD } from "../logic/InlineMarkdown";
 import { SanitizedHTML } from "./SanitizedHTML";
 
 /**
@@ -7,11 +7,12 @@ import { SanitizedHTML } from "./SanitizedHTML";
  * @param text Newline and Pipe table
  * @returns React component
  */
-export function DisplayTable({ text }: { text: string; }) {
-  const lines = text.split("\n").map((a) => a
-    .split("|")
-    .slice(1, -1)
-    .map((b) => b.trim())
+export function DisplayTable({ text }: { text: string }) {
+  const lines = text.split("\n").map((a) =>
+    a
+      .split("|")
+      .slice(1, -1)
+      .map((b) => b.trim()),
   );
   const isHeader = lines[1][0].match(/^:?-+:?$/g);
   if (isHeader) {
@@ -25,17 +26,19 @@ export function DisplayTable({ text }: { text: string; }) {
       }
     });
     return (
-      <table>
+      <table className="has-header">
         <thead>
           <tr>
             {lines[0].map((a, i) => (
               <th
+                scope="col"
                 style={{
-                  textAlign: alignment[i] !== -1
-                    ? alignment[i] === 0
-                      ? "center"
-                      : "end"
-                    : "start",
+                  textAlign:
+                    alignment[i] !== -1
+                      ? alignment[i] === 0
+                        ? "center"
+                        : "end"
+                      : "start",
                 }}
               >
                 <SanitizedHTML html={InlineMD(a)} />
@@ -49,11 +52,12 @@ export function DisplayTable({ text }: { text: string; }) {
               {a.map((b, i) => (
                 <td
                   style={{
-                    textAlign: alignment[i] !== -1
-                      ? alignment[i] === 0
-                        ? "center"
-                        : "end"
-                      : "start",
+                    textAlign:
+                      alignment[i] !== -1
+                        ? alignment[i] === 0
+                          ? "center"
+                          : "end"
+                        : "start",
                   }}
                 >
                   <SanitizedHTML html={InlineMD(b)} />
@@ -66,7 +70,7 @@ export function DisplayTable({ text }: { text: string; }) {
     );
   } else {
     return (
-      <table>
+      <table className="no-header">
         <tbody>
           {lines.map((a) => (
             <tr>

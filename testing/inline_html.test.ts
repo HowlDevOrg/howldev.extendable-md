@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { InlineMD } from "../lib/InlineMarkdown";
+import { InlineMD } from "../lib/logic/InlineMarkdown";
 
 describe("can get bold text", () => {
   it("plain bold text works correctly", () => {
@@ -65,13 +65,13 @@ describe("can get inline code", () => {
   it("plain inline code works correctly", () => {
     const value = "`this is code`";
     const modified = InlineMD(value);
-    expect(modified).toStrictEqual("<code>this is code</code>");
+    expect(modified).toStrictEqual(`<code class="inline-code">this is code</code>`);
   });
   it("inline code in a sentence works correctly", () => {
     const value = "this is outside. `this is code`";
     const modified = InlineMD(value);
     expect(modified).toStrictEqual(
-      "this is outside. <code>this is code</code>",
+      `this is outside. <code class="inline-code">this is code</code>`,
     );
   });
 });
@@ -96,14 +96,14 @@ describe("can get anchor elements", () => {
     const value = "[this is a link](https://example.com)";
     const modified = InlineMD(value);
     expect(modified).toStrictEqual(
-      '<a href="https://example.com">this is a link</a>',
+      '<a href="https://example.com" target="_blank" rel="noreferrer">this is a link</a>',
     );
   });
   it("anchor text in a sentence works correctly", () => {
     const value = "Check out [this link](https://example.com) for more info.";
     const modified = InlineMD(value);
     expect(modified).toStrictEqual(
-      'Check out <a href="https://example.com">this link</a> for more info.',
+      'Check out <a href="https://example.com" target="_blank" rel="noreferrer">this link</a> for more info.',
     );
   });
 });
