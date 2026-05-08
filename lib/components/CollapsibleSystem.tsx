@@ -14,12 +14,12 @@ export function CollapsibleSystem({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <>
+    <div className={`collapsible-system ${open ? "open" : ""}` }>
       <div className="collapsible-header" onClick={() => setOpen(a => !a)}>
         <span className="collapsible-icon">{open ? "⯆" : "⯈"}</span>
         {outerComponent}
       </div>
       {open && innerComponent}
-    </>
+    </div>
   );
 }

@@ -42,6 +42,16 @@
   }
 
   /* My collapsible syntax is =^= or =v=, then closing with one = */
+  .collapsible-system {
+      border-top: 2px solid royalblue;
+      border-bottom: 5px solid royalblue;
+      padding: 0 5px;
+      margin-bottom: 3px;
+  }
+  .collapsible-system.open {
+        border-top: 2px solid indianred;
+        border-bottom: 5px solid indianred;
+    }
   .collapsible-header {
     display: flex;
     flex-direction: row;
