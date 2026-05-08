@@ -3,7 +3,7 @@ import "./defaults.css";
 import { InternalTopLevelMarkdownParser } from "./logic/InternalMarkdownParser";
 import { ReactNode } from "react";
 
-export type Props = {
+type Props = {
   text: string;
   codeOverload?: (language: string, code: string, overload: (language: string, code: string) => ReactNode) => ReactNode;
   inlineOverload?: (input: string) => string;
@@ -28,7 +28,7 @@ export type Props = {
  * ```js
  * function ExampleCodeOverride(language: string, content: string, overload: (language: string, code: string) => ReactNode): ReactNode {
  *   if (language === "my-custom-block") {
- *     return <p className="my-block">{ content}</p>
+ *     return <p className="my-block">{content}</p>
  *   } 
  *   return overload(language, content);
  * }
@@ -56,7 +56,7 @@ export function MarkdownDisplay({ text, codeOverload, inlineOverload }: Props) {
   return (
     <div id="extendable-md-container"> {/* This feels verbose but I do want a top-level id */}
       {items.map((a) => (
-        <InternalTopLevelMarkdownParser a={a} inline={false} />
+        <InternalTopLevelMarkdownParser a={a} inline={false} codeOverload={codeOverload} inlineOverload={inlineOverload} />
       ))}
     </div>
   );

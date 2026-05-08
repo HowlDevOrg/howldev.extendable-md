@@ -42,8 +42,8 @@ export function App() {
         >
           <MarkdownDisplay
             text={text}
-            codeOverload={ExampleCodeOverride}
-            inlineOverload={ExampleInlineOverride}
+            // codeOverload={ExampleCodeOverride}
+            // inlineOverload={ExampleInlineOverride}
           />
         </div>
       </div>
@@ -51,15 +51,19 @@ export function App() {
   );
 }
 
-function ExampleCodeOverride(language: string, content: string, overload: (language: string, code: string) => ReactNode): ReactNode {
-  if (language === "my-custom-block") {
-    return <p className="my-block">{ content}</p>
-  } 
-  return overload(language, content);
-}
+// function ExampleCodeOverride(
+//   language: string,
+//   content: string,
+//   overload: (language: string, code: string) => ReactNode,
+// ): ReactNode {
+//   if (language === "my-custom-block") {
+//     return <p className="my-block">{content}</p>;
+//   }
+//   return overload(language, content);
+// }
 
-function ExampleInlineOverride(text: string): string {
-  return text.replace(/\^\^(.+?)\^\^/g, (_, p1) => {
-    return `<span class="my-content">${p1}</span>`;
-  });
-}
+// function ExampleInlineOverride(text: string): string {
+//   return text.replace(/\^\^(.+?)\^\^/g, (_, p1) => {
+//     return `<span class="my-content">${p1}</span>`;
+//   });
+// }

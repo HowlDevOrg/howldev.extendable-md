@@ -52,7 +52,7 @@ export function MermaidDisplay({ text, refreshInterval }: Props) {
         setSvgData(`Error: ${e}`);
       }
     }, refreshInterval ?? 100);
-  }, [text]);
+  }, [text, refreshInterval]);
 
   return (
     <figure className="mermaid-figure">

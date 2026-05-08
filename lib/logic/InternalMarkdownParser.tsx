@@ -22,9 +22,13 @@ import {
 export function InternalTopLevelMarkdownParser({
   a,
   inline,
+  codeOverload,
+  inlineOverload,
 }: {
   a: string;
   inline: boolean;
+  codeOverload?: (language: string, code: string, overload: (language: string, code: string) => ReactNode) => ReactNode;
+  inlineOverload?: (input: string) => string;
 }): ReactNode {
   if (!a[0]) {
     return;
@@ -33,13 +37,13 @@ export function InternalTopLevelMarkdownParser({
     const type = newLineItems[0].slice(3).trimEnd();
     const codeText = newLineItems.slice(1).join("\n");
     // AI: If function exists, return that instead
-    return InternalCodeDisplay(type, codeText);
+    return InternalCodeDisplay(type, codeText, codeOverload);
   } else if (isHeader(a)) {
     const spaceItems = a.split(" ");
     let headerSize = spaceItems[0].length;
     headerSize = headerSize > 6 ? 6 : headerSize;
     const output = `<h${headerSize}>${spaceItems.slice(1).join(" ")}</h${headerSize}>`;
-    return <SanitizedHTML html={InlineMD(output)} />;
+    return <SanitizedHTML html={InlineMD(output, inlineOverload)} />;
   } else if (isQuote(a)) {
     const quoteItems = a
       .split("\n")
@@ -49,7 +53,7 @@ export function InternalTopLevelMarkdownParser({
     return (
       <blockquote>
         {newItems.map((a) => (
-          <InternalTopLevelMarkdownParser a={a} inline={false} />
+          <InternalTopLevelMarkdownParser a={a} inline={false} codeOverload={codeOverload} inlineOverload={inlineOverload} />
         ))}
       </blockquote>
     );
@@ -58,11 +62,11 @@ export function InternalTopLevelMarkdownParser({
   } else if (isUnorderedList(a)) {
     const lines = a.split("\n");
     const baseIndent = lines[0].match(/^(\s*)/)?.[1].length ?? 0;
-    return <ul>{renderULItems(lines, baseIndent)}</ul>;
+    return <ul>{renderULItems(lines, baseIndent, codeOverload, inlineOverload)}</ul>;
   } else if (isOrderedList(a)) {
     const lines = a.split("\n");
     const baseIndent = lines[0].match(/^(\s*)/)?.[1].length ?? 0;
-    return <ol>{renderOLItems(lines, baseIndent)}</ol>;
+    return <ol>{renderOLItems(lines, baseIndent, codeOverload, inlineOverload)}</ol>;
   } else if (isTable(a)) {
     return <DisplayTable text={a} />;
   } else if (isCollapsible(a)) {
@@ -74,39 +78,53 @@ export function InternalTopLevelMarkdownParser({
           <InternalTopLevelMarkdownParser
             a={lines[0].slice(4)}
             inline={false}
+            codeOverload={codeOverload}
+            inlineOverload={inlineOverload}
           />
         }
         defaultOpen={lines[0][1] === "v" ? true : false}
-        innerComponent={newSemantics.map(a => <InternalTopLevelMarkdownParser a={a} inline={false} />)}
+        innerComponent={newSemantics.map(a => <InternalTopLevelMarkdownParser a={a} inline={false} codeOverload={codeOverload} inlineOverload={inlineOverload} />)}
       />
     );
   } else {
     return inline ? (
-      <SanitizedHTML html={InlineMD(a)} />
+      <SanitizedHTML html={InlineMD(a, inlineOverload)} />
     ) : (
       <p>
-        <SanitizedHTML html={InlineMD(a)} />
+        <SanitizedHTML html={InlineMD(a, inlineOverload)} />
       </p>
     );
   }
 }
 
-function InternalCodeDisplay(type: string, codeText: string): ReactNode {
-  if (type === "math") {
-    return (
-      <MathDisplay
-        text={codeText}
-        displayAsBlock={true}
-      />
-    );
-  } else if (type === "mermaid") {
-    return <MermaidDisplay text={codeText} />;
-  } else {
-    return (
-      <CodeViewer
-        language={type}
-        codeLines={codeText}
-      />
-    );
+function InternalCodeDisplay(
+  type: string,
+  codeText: string,
+  codeOverload?: (language: string, code: string, overload: (language: string, code: string) => ReactNode) => ReactNode,
+): ReactNode {
+  const defaultDisplay = (): ReactNode => {
+    if (type === "math") {
+      return (
+        <MathDisplay
+          text={codeText}
+          displayAsBlock={true}
+        />
+      );
+    } else if (type === "mermaid") {
+      return <MermaidDisplay text={codeText} />;
+    } else {
+      return (
+        <CodeViewer
+          language={type}
+          codeLines={codeText}
+        />
+      );
+    }
+  };
+
+  if (codeOverload) {
+    return codeOverload(type, codeText, defaultDisplay);
   }
+
+  return defaultDisplay();
 }

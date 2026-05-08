@@ -54,7 +54,7 @@ export function semanticDiffuser(items: string): string[] {
         i,
         (line) => line !== MARKDOWN_PATTERNS.CODE_END,
       );
-      let nextIdx = i + collected.length;
+      const nextIdx = i + collected.length;
       if (
         nextIdx < oldItems.length &&
         oldItems[nextIdx] === MARKDOWN_PATTERNS.CODE_END

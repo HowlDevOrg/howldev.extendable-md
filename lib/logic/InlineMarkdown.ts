@@ -5,11 +5,15 @@ import katex from "katex";
  * italics, anchor elements, strikethrough, inline code, and inline
  * Math.
  * @param input String to be modified.
+ * @param inlineOverload Optional function to process the input before built-in inline markdown.
  */
-export function InlineMD(input: string): string {
+export function InlineMD(input: string, inlineOverload?: (input: string) => string): string {
   let rollingResult = input;
 
   // AI: If function exists, run rollingResult through that function
+  if (inlineOverload) {
+    rollingResult = inlineOverload(rollingResult);
+  }
 
   // Solo link
   rollingResult = rollingResult.replace(/<http(.*)>/g, (_, p1) => {

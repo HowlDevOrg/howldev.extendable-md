@@ -7,7 +7,7 @@ type MathDisplayProps = {
 };
 
 export function MathDisplay({ text, displayAsBlock }: MathDisplayProps) {
-  var html = katex.renderToString(text, {
+  const html = katex.renderToString(text, {
     throwOnError: false,
     displayMode: displayAsBlock,
   });

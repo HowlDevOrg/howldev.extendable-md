@@ -7,6 +7,12 @@ function renderListItems(
   linesToProcess: string[],
   minIndent: number,
   listType: ListType,
+  codeOverload?: (
+    language: string,
+    code: string,
+    overload: (language: string, code: string) => ReactNode,
+  ) => ReactNode,
+  inlineOverload?: (input: string) => string,
 ): ReactNode[] {
   const items: ReactNode[] = [];
   let i = 0;
@@ -23,11 +29,31 @@ function renderListItems(
     if (nestedLines.length === 0) return null;
     const firstMarker = nestedLines[0];
 
-    if (firstMarker.match(/[\-+\*]\s/)) {
-      return <ul>{renderListItems(nestedLines, minIndent + 2, "ul")}</ul>;
+    if (firstMarker.match(/[-+*]\s/)) {
+      return (
+        <ul>
+          {renderListItems(
+            nestedLines,
+            minIndent + 2,
+            "ul",
+            codeOverload,
+            inlineOverload,
+          )}
+        </ul>
+      );
     }
     if (firstMarker.match(/\d+\./)) {
-      return <ol>{renderListItems(nestedLines, minIndent + 2, "ol")}</ol>;
+      return (
+        <ol>
+          {renderListItems(
+            nestedLines,
+            minIndent + 2,
+            "ol",
+            codeOverload,
+            inlineOverload,
+          )}
+        </ol>
+      );
     }
     return null;
   };
@@ -54,7 +80,12 @@ function renderListItems(
 
     items.push(
       <li key={i}>
-        <InternalTopLevelMarkdownParser a={content} inline={true} />
+        <InternalTopLevelMarkdownParser
+          a={content}
+          inline={true}
+          codeOverload={codeOverload}
+          inlineOverload={inlineOverload}
+        />
         {renderNested(nestedLines)}
       </li>,
     );
@@ -65,8 +96,24 @@ function renderListItems(
   return items;
 }
 
-export const renderULItems = (lines: string[], indent: number) =>
-  renderListItems(lines, indent, "ul");
+export const renderULItems = (
+  lines: string[],
+  indent: number,
+  codeOverload?: (
+    language: string,
+    code: string,
+    overload: (language: string, code: string) => ReactNode,
+  ) => ReactNode,
+  inlineOverload?: (input: string) => string,
+) => renderListItems(lines, indent, "ul", codeOverload, inlineOverload);
 
-export const renderOLItems = (lines: string[], indent: number) =>
-  renderListItems(lines, indent, "ol");
+export const renderOLItems = (
+  lines: string[],
+  indent: number,
+  codeOverload?: (
+    language: string,
+    code: string,
+    overload: (language: string, code: string) => ReactNode,
+  ) => ReactNode,
+  inlineOverload?: (input: string) => string,
+) => renderListItems(lines, indent, "ol", codeOverload, inlineOverload);
