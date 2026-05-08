@@ -31,23 +31,9 @@ export function InternalTopLevelMarkdownParser({
   } else if (isCodeBlock(a)) {
     const newLineItems = a.split("\n");
     const type = newLineItems[0].slice(3).trimEnd();
-    if (type === "math") {
-      return (
-        <MathDisplay
-          text={newLineItems.slice(1).join("\n")}
-          displayAsBlock={true}
-        />
-      );
-    } else if (type === "mermaid") {
-      return <MermaidDisplay text={newLineItems.slice(1).join("\n")} />;
-    } else {
-      return (
-        <CodeViewer
-          language={type}
-          codeLines={newLineItems.slice(1).join("\n")}
-        />
-      );
-    }
+    const codeText = newLineItems.slice(1).join("\n");
+    // AI: If function exists, return that instead
+    return InternalCodeDisplay(type, codeText);
   } else if (isHeader(a)) {
     const spaceItems = a.split(" ");
     let headerSize = spaceItems[0].length;
@@ -101,6 +87,26 @@ export function InternalTopLevelMarkdownParser({
       <p>
         <SanitizedHTML html={InlineMD(a)} />
       </p>
+    );
+  }
+}
+
+function InternalCodeDisplay(type: string, codeText: string): ReactNode {
+  if (type === "math") {
+    return (
+      <MathDisplay
+        text={codeText}
+        displayAsBlock={true}
+      />
+    );
+  } else if (type === "mermaid") {
+    return <MermaidDisplay text={codeText} />;
+  } else {
+    return (
+      <CodeViewer
+        language={type}
+        codeLines={codeText}
+      />
     );
   }
 }

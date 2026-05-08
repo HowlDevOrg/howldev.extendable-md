@@ -7,3 +7,10 @@ body, html {
 .hljs-comment {color: rgb(199, 199, 199)}
 .hljs-meta {color: #747ea7}
 .hljs-tag {color: rgb(203, 203, 203)}
+
+.my-block {
+    background-color: pink;
+}
+.my-content {
+    background-color: pink;
+}

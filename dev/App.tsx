@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { MarkdownDisplay } from "../lib/MarkdownDisplay.js";
 import "./App.css";
 
@@ -40,9 +40,26 @@ export function App() {
             borderLeft: "1px solid #ccc",
           }}
         >
-          <MarkdownDisplay text={text} />
+          <MarkdownDisplay
+            text={text}
+            codeOverload={ExampleCodeOverride}
+            inlineOverload={ExampleInlineOverride}
+          />
         </div>
       </div>
     </>
   );
+}
+
+function ExampleCodeOverride(language: string, content: string, overload: (language: string, code: string) => ReactNode): ReactNode {
+  if (language === "my-custom-block") {
+    return <p className="my-block">{ content}</p>
+  } 
+  return overload(language, content);
+}
+
+function ExampleInlineOverride(text: string): string {
+  return text.replace(/\^\^(.+?)\^\^/g, (_, p1) => {
+    return `<span class="my-content">${p1}</span>`;
+  });
 }

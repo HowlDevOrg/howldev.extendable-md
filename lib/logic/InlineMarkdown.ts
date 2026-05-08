@@ -9,6 +9,8 @@ import katex from "katex";
 export function InlineMD(input: string): string {
   let rollingResult = input;
 
+  // AI: If function exists, run rollingResult through that function
+
   // Solo link
   rollingResult = rollingResult.replace(/<http(.*)>/g, (_, p1) => {
     return `<a href="http${p1}">http${p1}</a>`;
