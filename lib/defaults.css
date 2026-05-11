@@ -19,12 +19,12 @@
   }
 
   /* Tables */
-  .has-header {
+  /* .has-header {
     background-color: darkgreen;
   }
   .no-header {
     background-color: darkblue;
-  }
+  } */
   table {
     gap: 10px;
   }
@@ -43,14 +43,14 @@
 
   /* My collapsible syntax is =^= or =v=, then closing with one = */
   .collapsible-system {
-      border-top: 2px solid royalblue;
-      border-bottom: 5px solid royalblue;
+      border-top: 2px solid gray;
+      border-bottom: 5px solid gray;
       padding: 0 5px;
       margin-bottom: 3px;
   }
   .collapsible-system.open {
-        border-top: 2px solid indianred;
-        border-bottom: 5px solid indianred;
+        border-top: 2px solid white;
+        border-bottom: 5px solid white;
     }
   .collapsible-header {
     display: flex;
@@ -59,7 +59,7 @@
     cursor: pointer;
   }
   /* Kind of ugly but it's an option! */
-  .collapsible-header h1,
+  /* .collapsible-header h1,
   .collapsible-header h2,
   .collapsible-header h3,
   .collapsible-header h4,
@@ -69,7 +69,7 @@
   }
   .collapsible-header p {
     background-color: red;
-  }
+  } */
   .collapsible-icon {
     font-size: 20px;
     margin-right: 10px;

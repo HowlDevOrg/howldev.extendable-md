@@ -15,7 +15,7 @@ type Props = {
  * - Mermaid support
  * - LaTeX support (inline with $ and math code blocks)
  * - Collapsible systems (with =^= and =v=, closed with = alone on a line)
- * - Many markdown features (check wiki)
+ * - Many (not all) markdown features (check wiki)
  * 
  * Everything is run through DOMPurify so you don't have to worry about scripts or whatever. 
  * 
