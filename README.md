@@ -12,6 +12,8 @@ What makes it extendable is the overrides you pass into the one exposed componen
 
 ## Install
 
+<https://www.npmjs.com/package/@howldev/extendable-md>
+
 Run with: 
 
 ```bash
