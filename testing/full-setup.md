@@ -19,6 +19,8 @@ And I suppose I could test ==nested blockquote== though I think they look kinda 
 ---
 There should be a horizontal line above here. 
 
+As an update, I need an asterisk here\* but also *some italic text after*. And this \_underscore then _some more italics_. 
+
 Let's see, what else ~~have I implemented~~ have I done... `Code blocks`! 
 ```csharp
 /// <summary>

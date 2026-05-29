@@ -42,11 +42,12 @@ export function InlineMD(input: string, inlineOverload?: (input: string) => stri
     return `<b>${p1}</b>`;
   });
 
+    // (?<!\\)\*([^_*]+?)(?!\\)\*
   // Italic
-  rollingResult = rollingResult.replace(/\*([^_*]+?)\*/g, (_, p1) => {
+  rollingResult = rollingResult.replace(/(?<!\\)\*([^_*]+?)(?!\\)\*/g, (_, p1) => {
     return `<em>${p1}</em>`;
   });
-  rollingResult = rollingResult.replace(/_([^_*]+?)_/g, (_, p1) => {
+  rollingResult = rollingResult.replace(/(?<!\\)_([^_*]+?)(?!\\)_/g, (_, p1) => {
     return `<em>${p1}</em>`;
   });
 
@@ -79,12 +80,18 @@ export function InlineMD(input: string, inlineOverload?: (input: string) => stri
   rollingResult = rollingResult.replace(/!\[(.*?)\]\((.*?)\)/g, (_, p1, p2) => {
     return `<img src="${p2}" alt="${p1}"/>`;
   });
-
+  
   // Anchor
   rollingResult = rollingResult.replace(/\[(.*?)\]\((.*?)\)/g, (_, p1, p2) => {
     const b: string[] = p2.split(" ");
     return `<a href="${b[0]}"${b.length > 1 ? ` title="${b.slice(1).join(" ")}"` : ""} target="_blank" rel="noreferrer">${p1}</a>`;
   });
+  
+  // \-Cleanup
+  rollingResult = rollingResult.replace(/\\([_*])/g, (_, p1, p2) => {
+    return `${p1}`;
+  });
+
 
   return rollingResult;
 }

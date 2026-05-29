@@ -1,4 +1,8 @@
-0.1.0 (??)
+0.1.1 (??)
+
+- I now support inline \\* and \\_ for displaying those inside text fields. 
+
+0.1.0 (5/11/26)
 
 - Many markdown support
 - Test/showcase file
