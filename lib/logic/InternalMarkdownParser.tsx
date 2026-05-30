@@ -18,6 +18,7 @@ import {
   isTable,
   isCollapsible,
 } from "./MarkdownPatterns";
+import { InteractiveDisplay } from "./Interactive/InteractiveDisplay";
 
 export function InternalTopLevelMarkdownParser({
   a,
@@ -27,7 +28,11 @@ export function InternalTopLevelMarkdownParser({
 }: {
   a: string;
   inline: boolean;
-  codeOverload?: (language: string, code: string, overload: (language: string, code: string) => ReactNode) => ReactNode;
+  codeOverload?: (
+    language: string,
+    code: string,
+    overload: (language: string, code: string) => ReactNode,
+  ) => ReactNode;
   inlineOverload?: (input: string) => string;
 }): ReactNode {
   if (!a[0]) {
@@ -36,7 +41,6 @@ export function InternalTopLevelMarkdownParser({
     const newLineItems = a.split("\n");
     const type = newLineItems[0].slice(3).trimEnd();
     const codeText = newLineItems.slice(1).join("\n");
-    // AI: If function exists, return that instead
     return InternalCodeDisplay(type, codeText, codeOverload);
   } else if (isHeader(a)) {
     const spaceItems = a.split(" ");
@@ -53,7 +57,12 @@ export function InternalTopLevelMarkdownParser({
     return (
       <blockquote>
         {newItems.map((a) => (
-          <InternalTopLevelMarkdownParser a={a} inline={false} codeOverload={codeOverload} inlineOverload={inlineOverload} />
+          <InternalTopLevelMarkdownParser
+            a={a}
+            inline={false}
+            codeOverload={codeOverload}
+            inlineOverload={inlineOverload}
+          />
         ))}
       </blockquote>
     );
@@ -62,11 +71,15 @@ export function InternalTopLevelMarkdownParser({
   } else if (isUnorderedList(a)) {
     const lines = a.split("\n");
     const baseIndent = lines[0].match(/^(\s*)/)?.[1].length ?? 0;
-    return <ul>{renderULItems(lines, baseIndent, codeOverload, inlineOverload)}</ul>;
+    return (
+      <ul>{renderULItems(lines, baseIndent, codeOverload, inlineOverload)}</ul>
+    );
   } else if (isOrderedList(a)) {
     const lines = a.split("\n");
     const baseIndent = lines[0].match(/^(\s*)/)?.[1].length ?? 0;
-    return <ol>{renderOLItems(lines, baseIndent, codeOverload, inlineOverload)}</ol>;
+    return (
+      <ol>{renderOLItems(lines, baseIndent, codeOverload, inlineOverload)}</ol>
+    );
   } else if (isTable(a)) {
     return <DisplayTable text={a} />;
   } else if (isCollapsible(a)) {
@@ -83,7 +96,14 @@ export function InternalTopLevelMarkdownParser({
           />
         }
         defaultOpen={lines[0][1] === "v" ? true : false}
-        innerComponent={newSemantics.map(a => <InternalTopLevelMarkdownParser a={a} inline={false} codeOverload={codeOverload} inlineOverload={inlineOverload} />)}
+        innerComponent={newSemantics.map((a) => (
+          <InternalTopLevelMarkdownParser
+            a={a}
+            inline={false}
+            codeOverload={codeOverload}
+            inlineOverload={inlineOverload}
+          />
+        ))}
       />
     );
   } else {
@@ -100,25 +120,21 @@ export function InternalTopLevelMarkdownParser({
 function InternalCodeDisplay(
   type: string,
   codeText: string,
-  codeOverload?: (language: string, code: string, overload: (language: string, code: string) => ReactNode) => ReactNode,
+  codeOverload?: (
+    language: string,
+    code: string,
+    overload: (language: string, code: string) => ReactNode,
+  ) => ReactNode,
 ): ReactNode {
   const defaultDisplay = (): ReactNode => {
     if (type === "math") {
-      return (
-        <MathDisplay
-          text={codeText}
-          displayAsBlock={true}
-        />
-      );
+      return <MathDisplay text={codeText} displayAsBlock={true} />;
     } else if (type === "mermaid") {
       return <MermaidDisplay text={codeText} />;
+    } else if (type === "interactive") {
+      return <InteractiveDisplay text={codeText} />;
     } else {
-      return (
-        <CodeViewer
-          language={type}
-          codeLines={codeText}
-        />
-      );
+      return <CodeViewer language={type} codeLines={codeText} />;
     }
   };
 

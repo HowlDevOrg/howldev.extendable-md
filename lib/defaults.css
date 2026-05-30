@@ -95,4 +95,15 @@
     padding: 2px;
     margin: 2px;
   }
+
+  /* Interactive functions */
+  .interactive-display {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .interactive-params {
+    display: flex;
+    flex-direction: column;
+  }
 }
