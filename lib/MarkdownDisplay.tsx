@@ -36,7 +36,7 @@ type Props = {
  * 
  * For the optional inlineOverload parameter, this function runs before any of the built-in Regex functions. 
  * This allows you to overwrite/ignore any inline Markdown you don't like or add in a custom one, 
- * such as the \^\^(text)\^\^ example that might return a custom CSS class-span that you can style. 
+ * such as the \^\^text\^\^ example that might return a custom CSS class-span that you can style. 
  * 
  * Example: 
  * ```js

@@ -10,7 +10,6 @@ import katex from "katex";
 export function InlineMD(input: string, inlineOverload?: (input: string) => string): string {
   let rollingResult = input;
 
-  // AI: If function exists, run rollingResult through that function
   if (inlineOverload) {
     rollingResult = inlineOverload(rollingResult);
   }
@@ -88,7 +87,7 @@ export function InlineMD(input: string, inlineOverload?: (input: string) => stri
   });
   
   // \-Cleanup
-  rollingResult = rollingResult.replace(/\\([_*])/g, (_, p1, p2) => {
+  rollingResult = rollingResult.replace(/\\([_*])/g, (_, p1) => {
     return `${p1}`;
   });
 
