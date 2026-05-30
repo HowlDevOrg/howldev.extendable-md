@@ -133,3 +133,22 @@ Image below:
 
 Clickable image below: 
 [![My profile pic](https://avatars.githubusercontent.com/u/264075687?s=400&u=3169ff9669a03ae07419f84f711cf4180d96ca51&v=4)](https://github.com/organizations/HowlDevOrg)
+
+---
+
+Alright. What if you could set up a simple calculator? (this may transform into a "Form" in the future, but that seems not super helpful right now). Though I might want to include features for making questions..? I dunno. You can *kinda* do that with this. 
+
+So, if you wanted a calculator that could tell you how many operations a second you could run by giving it an enum and a number, it would look like this: 
+
+```interactive
+interval: Seconds | Milliseconds | Microseconds | Nanoseconds | Picoseconds
+value: number
+---
+switch interval
+Seconds: RETURN 1 / value
+Milliseconds: RETURN 1000 / value
+Microseconds: RETURN 1000000 / value
+Nanoseconds: RETURN 1000000000 / value
+Picoseconds: RETURN 1000000000000 / value
+end switch
+```
