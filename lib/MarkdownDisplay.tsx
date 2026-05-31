@@ -7,6 +7,7 @@ type Props = {
   text: string;
   codeOverload?: (language: string, code: string, overload: (language: string, code: string) => ReactNode) => ReactNode;
   inlineOverload?: (input: string) => string;
+  enableInteractiveCalculator?: boolean;
 };
 
 /**
@@ -50,13 +51,13 @@ type Props = {
  * @param codeOverload Optional function to overload the CodeViewer component. 
  * @param inlineOverload Optional function to have custom inline values. 
  */
-export function MarkdownDisplay({ text, codeOverload, inlineOverload }: Props) {
+export function MarkdownDisplay({ text, codeOverload, inlineOverload, enableInteractiveCalculator = false }: Props) {
   const items = semanticDiffuser(text);
 
   return (
     <div id="extendable-md-container"> {/* This feels verbose but I do want a top-level id */}
       {items.map((a) => (
-        <InternalTopLevelMarkdownParser a={a} inline={false} codeOverload={codeOverload} inlineOverload={inlineOverload} />
+        <InternalTopLevelMarkdownParser a={a} inline={false} codeOverload={codeOverload} inlineOverload={inlineOverload} enableInteractiveCalculator={enableInteractiveCalculator} />
       ))}
     </div>
   );

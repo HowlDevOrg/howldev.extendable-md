@@ -25,6 +25,7 @@ export function InternalTopLevelMarkdownParser({
   inline,
   codeOverload,
   inlineOverload,
+  enableInteractiveCalculator,
 }: {
   a: string;
   inline: boolean;
@@ -34,6 +35,7 @@ export function InternalTopLevelMarkdownParser({
     overload: (language: string, code: string) => ReactNode,
   ) => ReactNode;
   inlineOverload?: (input: string) => string;
+  enableInteractiveCalculator: boolean;
 }): ReactNode {
   if (!a[0]) {
     return;
@@ -41,7 +43,12 @@ export function InternalTopLevelMarkdownParser({
     const newLineItems = a.split("\n");
     const type = newLineItems[0].slice(3).trimEnd();
     const codeText = newLineItems.slice(1).join("\n");
-    return InternalCodeDisplay(type, codeText, codeOverload);
+    return InternalCodeDisplay(
+      type,
+      codeText,
+      enableInteractiveCalculator,
+      codeOverload,
+    );
   } else if (isHeader(a)) {
     const spaceItems = a.split(" ");
     let headerSize = spaceItems[0].length;
@@ -62,6 +69,7 @@ export function InternalTopLevelMarkdownParser({
             inline={false}
             codeOverload={codeOverload}
             inlineOverload={inlineOverload}
+            enableInteractiveCalculator={enableInteractiveCalculator}
           />
         ))}
       </blockquote>
@@ -93,6 +101,7 @@ export function InternalTopLevelMarkdownParser({
             inline={false}
             codeOverload={codeOverload}
             inlineOverload={inlineOverload}
+            enableInteractiveCalculator={enableInteractiveCalculator}
           />
         }
         defaultOpen={lines[0][1] === "v" ? true : false}
@@ -102,6 +111,7 @@ export function InternalTopLevelMarkdownParser({
             inline={false}
             codeOverload={codeOverload}
             inlineOverload={inlineOverload}
+            enableInteractiveCalculator={enableInteractiveCalculator}
           />
         ))}
       />
@@ -120,6 +130,7 @@ export function InternalTopLevelMarkdownParser({
 function InternalCodeDisplay(
   type: string,
   codeText: string,
+  enableInteractiveCalculator: boolean,
   codeOverload?: (
     language: string,
     code: string,
@@ -131,7 +142,7 @@ function InternalCodeDisplay(
       return <MathDisplay text={codeText} displayAsBlock={true} />;
     } else if (type === "mermaid") {
       return <MermaidDisplay text={codeText} />;
-    } else if (type === "interactive") {
+    } else if (enableInteractiveCalculator && type === "interactive") {
       return <InteractiveDisplay text={codeText} />;
     } else {
       return <CodeViewer language={type} codeLines={codeText} />;

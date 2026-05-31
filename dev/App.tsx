@@ -44,6 +44,7 @@ export function App() {
             text={text}
             // codeOverload={ExampleCodeOverride}
             // inlineOverload={ExampleInlineOverride}
+            enableInteractiveCalculator={true}
           />
         </div>
       </div>
