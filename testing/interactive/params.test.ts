@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { ParamDefSplitter } from "../lib/logic/Interactive/ParamDef";
-import { EnumType } from "../lib/logic/Interactive/types";
+import { ParamDefSplitter } from "../../lib/logic/Interactive/ParamDef";
+import { EnumType } from "../../lib/logic/Interactive/types";
 
 describe("params are correctly rendered", () => {
   it("single string input works", () => {
