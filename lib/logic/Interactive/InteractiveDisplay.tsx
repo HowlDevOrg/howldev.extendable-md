@@ -37,7 +37,7 @@ export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
 
   const updateValues = (index: number, value: string) => {
     if (Number(value)) {
-        value = Number(value).toString();
+      value = Number(value).toString();
     }
     setValues((a) =>
       a.map((a, i) => {
@@ -49,7 +49,7 @@ export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
 
   const result: ReactNode[] = [];
   for (const i of values) {
-    result.push(<p>{i !== "" ? i : "empty"}</p>)
+    result.push(<p>{i !== "" ? i : "empty"}</p>);
   }
 
   return (
@@ -74,9 +74,7 @@ export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
                 <input
                   type="number"
                   value={values[i]}
-                  onChange={(e) =>
-                    updateValues(i, e.target.value)
-                  }
+                  onChange={(e) => updateValues(i, e.target.value)}
                 />
               </label>
             );
@@ -88,25 +86,29 @@ export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
                 <input
                   type="checkbox"
                   checked={bool}
-                  onClick={_ =>
-                    updateValues(i, bool ? "false" : "true")
-                  }
+                  onClick={(_) => updateValues(i, bool ? "false" : "true")}
                 />
               </label>
             );
           } else if (a.type == "enum") {
             const obj = a as EnumType;
             return (
-                <select onChange={(e) => updateValues(i, e.target.value)} value={values[i]}>
-                    {obj.values.map(a => <option value={a}>{a}</option>)}
-                </select>
-            )
+              <select
+                onChange={(e) => updateValues(i, e.target.value)}
+                value={values[i]}
+              >
+                {obj.values.map((a) => (
+                  <option value={a}>{a}</option>
+                ))}
+              </select>
+            );
           }
+          throw new Error(
+            "Unreachable place at the end of Interactive Display.",
+          );
         })}
       </div>
-      <div className="interactive-result">
-        {result}
-      </div>
+      <div className="interactive-result">{result}</div>
     </div>
   );
 }
