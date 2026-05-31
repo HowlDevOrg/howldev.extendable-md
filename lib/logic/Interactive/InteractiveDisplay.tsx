@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { ParamDef } from "./types";
+import { ReactNode, useCallback, useEffect, useState } from "react";
+import { EnumType, ParamDef } from "./types";
 import { ParamDefSplitter } from "./ParamDef";
 
 type InteractiveDisplayProps = {
@@ -36,6 +36,9 @@ export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
   }, [text]);
 
   const updateValues = (index: number, value: string) => {
+    if (Number(value)) {
+        value = Number(value).toString();
+    }
     setValues((a) =>
       a.map((a, i) => {
         if (i == index) return value;
@@ -44,7 +47,10 @@ export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
     );
   };
 
-  console.log(values);
+  const result: ReactNode[] = [];
+  for (const i of values) {
+    result.push(<p>{i !== "" ? i : "empty"}</p>)
+  }
 
   return (
     <div className="interactive-display">
@@ -67,18 +73,39 @@ export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
                 {a.name}:
                 <input
                   type="number"
-                  defaultValue={Number(values[i])}
-                  onBlur={(e) => updateValues(i, Number(e.target.value).toString())}
+                  value={values[i]}
+                  onChange={(e) =>
+                    updateValues(i, e.target.value)
+                  }
                 />
               </label>
             );
+          } else if (a.type == "boolean") {
+            const bool = values[i] == "true";
+            return (
+              <label key={a.name + i}>
+                {a.name}:
+                <input
+                  type="checkbox"
+                  checked={bool}
+                  onClick={_ =>
+                    updateValues(i, bool ? "false" : "true")
+                  }
+                />
+              </label>
+            );
+          } else if (a.type == "enum") {
+            const obj = a as EnumType;
+            return (
+                <select onChange={(e) => updateValues(i, e.target.value)} value={values[i]}>
+                    {obj.values.map(a => <option value={a}>{a}</option>)}
+                </select>
+            )
           }
-          return (
-            <p>
-              {a.name}: {a.type}
-            </p>
-          );
         })}
+      </div>
+      <div className="interactive-result">
+        {result}
       </div>
     </div>
   );
