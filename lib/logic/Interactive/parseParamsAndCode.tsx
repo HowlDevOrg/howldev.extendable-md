@@ -7,6 +7,8 @@ export function parseParamsAndCode(text: string): { newParams: ParamDef[]; newCo
     const items = text.split("\n");
     let params = true;
     for (let i = 0; i < items.length; i++) {
+        if (!items[i]) continue; // null or whitespace
+
         if (items[i] === "---") {
             params = false;
         } else if (params) {

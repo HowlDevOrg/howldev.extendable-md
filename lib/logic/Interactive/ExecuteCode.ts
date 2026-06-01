@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { ParamDef } from "./types";
 
-type ExecutionReturn = {
+export type ExecutionReturn = {
     label: string; 
     value: string;
 }
