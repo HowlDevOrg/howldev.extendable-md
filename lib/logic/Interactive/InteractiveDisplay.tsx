@@ -1,4 +1,4 @@
-import { ReactNode, useCallback } from "react";
+import { ReactNode } from "react";
 import { InteractiveDisplayInputs } from "./InteractiveDisplayInputs";
 import { useInteractiveDisplay } from "./useInteractiveDisplay";
 
