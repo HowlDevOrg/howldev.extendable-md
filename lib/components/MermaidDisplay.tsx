@@ -48,7 +48,7 @@ export function MermaidDisplay({ text, refreshInterval }: Props) {
         if (renderId === renderCounterRef.current) {
           setSvgData(svg);
         }
-      } catch (e: any) {
+      } catch (e) {
         setSvgData(`Error: ${e}`);
       }
     }, refreshInterval ?? 100);

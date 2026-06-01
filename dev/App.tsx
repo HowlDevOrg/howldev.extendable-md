@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { MarkdownDisplay } from "../lib/MarkdownDisplay.js";
 import "./App.css";
 

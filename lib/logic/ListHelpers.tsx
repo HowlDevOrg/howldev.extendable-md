@@ -85,6 +85,7 @@ function renderListItems(
           inline={true}
           codeOverload={codeOverload}
           inlineOverload={inlineOverload}
+          enableInteractiveCalculator={false}
         />
         {renderNested(nestedLines)}
       </li>,

@@ -27,13 +27,16 @@ export function ParamDefSplitter(params: string[]): ParamDef[] {
         break;
       default:
         const possibleEnums = parts[1].split("|").map((a) => a.trim());
-        if (possibleEnums.length == 1)
-          throw new Error(`Can't determine type or create enum from type name ${parts[1]}.`);
+        if (possibleEnums.length == 1) {
+          throw new Error(
+            `Can't determine type or create enum from type name ${parts[1]}.`,
+          );
+        }
 
         result.push({
           name: parts[0],
           type: "enum",
-          values: possibleEnums
+          values: possibleEnums,
         });
     }
   }

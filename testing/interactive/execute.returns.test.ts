@@ -95,7 +95,9 @@ describe("code throws errors when param not found", () => {
     const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];
     const values: string[] = ["lorem value"];
     const code = ["return not Found"];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError("Cannot find key not Found.");
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Cannot find key not Found.",
+    );
   });
   it("unequal array length (lower)", () => {
     const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];

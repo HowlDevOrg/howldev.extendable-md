@@ -24,7 +24,11 @@ export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
 
   const result: ReactNode[] = [];
   for (const i of codeResult) {
-    result.push(<p>{i.label}: {i.value}</p>)
+    result.push(
+      <p>
+        {i.label}: {i.value}
+      </p>,
+    );
   }
 
   return (

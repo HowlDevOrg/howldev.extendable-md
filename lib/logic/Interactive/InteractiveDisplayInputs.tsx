@@ -40,7 +40,7 @@ export function InteractiveDisplayInputs({
           <input
             type="checkbox"
             checked={bool}
-            onClick={(_) => updateValues(i, bool ? "false" : "true")}
+            onClick={() => updateValues(i, bool ? "false" : "true")}
           />
         </label>
       );

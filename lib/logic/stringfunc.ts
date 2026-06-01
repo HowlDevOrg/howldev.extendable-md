@@ -118,10 +118,8 @@ export function semanticDiffuser(items: string): string[] {
       i = j;
       newItems.push(collected.join("\n"));
     } else {
-      const collected = collectConsecutiveLines(
-        oldItems,
-        i,
-        (line) => isPlaintext(line),
+      const collected = collectConsecutiveLines(oldItems, i, (line) =>
+        isPlaintext(line),
       );
       i += collected.length - 1;
       newItems.push(collected.join("\n"));

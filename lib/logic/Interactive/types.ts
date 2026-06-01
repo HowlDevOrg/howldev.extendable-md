@@ -1,8 +1,4 @@
-export type ParamDef =
-  StringType
-  | NumberType
-  | BoolType
-  | EnumType
+export type ParamDef = StringType | NumberType | BoolType | EnumType;
 
 export type StringType = { name: string; type: "string" };
 export type NumberType = { name: string; type: "number" };
