@@ -44,7 +44,6 @@ export function InlineMD(
     return `<b>${p1}</b>`;
   });
 
-  // (?<!\\)\*([^_*]+?)(?!\\)\*
   // Italic
   rollingResult = rollingResult.replace(
     /(?<!\\)\*([^_*]+?)(?!\\)\*/g,
