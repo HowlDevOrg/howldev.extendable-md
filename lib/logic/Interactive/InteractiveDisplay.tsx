@@ -26,7 +26,7 @@ export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
   for (const i of codeResult) {
     result.push(
       <p>
-        {i.label}: {i.value}
+        {i.label ? i.label + ":" : ""} {i.value}
       </p>,
     );
   }

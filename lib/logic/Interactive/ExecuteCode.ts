@@ -18,6 +18,23 @@ export function ExecuteCode(
     lookup[paramDef[i].name] = values[i];
   }
   const key = code[0].split(" ").slice(1).join(" ");
-  if (!(key in lookup)) throw new Error(`Cannot find key ${key}.`);
-  return [{ label: key, value: lookup[key] }];
+  let returnLabel, returnValue;
+
+  if (key.startsWith('"') && key.endsWith('"')) {
+    returnValue = key.slice(1, key.length - 1);
+    returnLabel = "";
+  } else if (Number(key)) {
+    returnValue = Number(key).toString();
+    returnLabel = "";
+  } else if (key === "true" || key === "false") {
+    returnValue = key;
+    returnLabel = "";
+  } else if (!(key in lookup)) {
+    throw new Error(`Cannot find key ${key}.`);
+  } else {
+    returnLabel = key;
+    returnValue = lookup[key];
+  }
+
+  return [{ label: returnLabel, value: returnValue }];
 }

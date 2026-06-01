@@ -63,6 +63,54 @@ describe("code can execute return on single inputs", () => {
   });
 });
 
+describe("code can execute return on primitives", () => {
+  it("no params/values returns string without quotes", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return "This thing"`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("This thing");
+  });
+  it("no params/values returns number (int)", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return 15`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("15");
+  });
+  it("no params/values returns number (float)", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return 15.25`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("15.25");
+  });
+  it("no params/values returns bool (true)", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return true`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("true");
+  });
+  it("no params/values returns bool (false)", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return false`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("false");
+  });
+});
+
 describe("code can execute return on multiple inputs", () => {
   it("string and number return first", () => {
     const paramDefs: ParamDef[] = [
