@@ -26,6 +26,7 @@ export function ParamDefSplitter(params: string[]): ParamDef[] {
         });
         break;
       default:
+        // eslint-disable-next-line
         const possibleEnums = parts[1].split("|").map((a) => a.trim());
         if (possibleEnums.length == 1) {
           throw new Error(

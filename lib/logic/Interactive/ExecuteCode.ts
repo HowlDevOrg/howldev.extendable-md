@@ -12,6 +12,7 @@ export function ExecuteCode(
 ): ExecutionReturn[] {
   if (paramDef.length !== values.length)
     throw new Error("Arrays are not of equal size.");
+  // eslint-disable-next-line
   const lookup: any = {};
   for (let i = 0; i < paramDef.length; i++) {
     lookup[paramDef[i].name] = values[i];
