@@ -1,31 +1,14 @@
-import { ReactNode, useCallback, useEffect, useState } from "react";
-import { ParamDef } from "./types";
-import { ExecuteCode } from "./ExecuteCode";
-import { parseParamsAndCode } from "./parseParamsAndCode";
-import { getDefault } from "./getDefault";
+import { ReactNode, useCallback } from "react";
 import { InteractiveDisplayInputs } from "./InteractiveDisplayInputs";
+import { useInteractiveDisplay } from "./useInteractiveDisplay";
 
 type InteractiveDisplayProps = {
   text: string;
 };
 
 export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
-  const [params, setParams] = useState<ParamDef[]>([]);
-  const [code, setCode] = useState<string[]>([]);
-  const [values, setValues] = useState<string[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    try {
-      const { newParams, newCode } = parseParamsAndCode(text);
-      setParams(newParams);
-      setCode(newCode);
-      setValues(newParams.map(getDefault));
-      setError(null);
-    } catch (ex) {
-      setError(ex instanceof Error ? ex.message : String(ex));
-    }
-  }, [text]);
+  const { setValues, params, values, paramError, runtimeError, codeResult } =
+    useInteractiveDisplay(text);
 
   const updateValues = (index: number, value: string) => {
     if (Number(value)) {
@@ -40,32 +23,28 @@ export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
   };
 
   const result: ReactNode[] = [];
-  if (code.length > 0) {
-    try {
-      const returns = ExecuteCode(params, values, code);
-      for (const i of returns) {
-        result.push(
-          <p>
-            {i.label}: {i.value}
-          </p>,
-        );
-      }
-    } catch (ex: any) {
-      return <p style={{ color: "red" }}>Code syntax error: {ex.message}</p>;
-    }
+  for (const i of codeResult) {
+    result.push(<p>{i.label}: {i.value}</p>)
   }
 
   return (
     <div className="interactive-display">
-      {error && <p style={{ color: "red" }}>Param parsing error: {error}</p>}
-      <div className="interactive-params">
-        <InteractiveDisplayInputs
-          params={params}
-          values={values}
-          updateValues={updateValues}
-        />
-      </div>
-      <div className="interactive-result">{result}</div>
+      {paramError ? (
+        <p style={{ color: "red" }}>Param parsing error: {paramError}</p>
+      ) : (
+        <div className="interactive-params">
+          <InteractiveDisplayInputs
+            params={params}
+            values={values}
+            updateValues={updateValues}
+          />
+        </div>
+      )}
+      {runtimeError ? (
+        <p style={{ color: "red" }}>Code syntax error: {runtimeError}</p>
+      ) : (
+        <div className="interactive-result">{result}</div>
+      )}
     </div>
   );
 }
