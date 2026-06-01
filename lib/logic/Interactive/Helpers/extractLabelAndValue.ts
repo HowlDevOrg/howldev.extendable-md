@@ -1,4 +1,5 @@
 import { ExecutionReturn } from "../ExecuteCode";
+import { isQuotedString, getInnerString } from "./stringHelpers";
 
 export function extractLabelAndValue(
   key: string,
@@ -13,8 +14,8 @@ export function extractLabelAndValue(
     key = match[1];
   }
 
-  if (key.startsWith('"') && key.endsWith('"')) {
-    returnValue = key.slice(1, key.length - 1);
+  if (isQuotedString(key)) {
+    returnValue = getInnerString(key);
     returnLabel = "";
   } else if (Number(key)) {
     returnValue = Number(key).toString();
@@ -34,3 +35,4 @@ export function extractLabelAndValue(
   }
   return { label: returnLabel, value: returnValue };
 }
+

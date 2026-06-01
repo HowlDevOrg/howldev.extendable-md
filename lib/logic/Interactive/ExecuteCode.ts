@@ -1,4 +1,5 @@
 import { extractLabelAndValue } from "./Helpers/extractLabelAndValue";
+import { getInnerString, isQuotedString } from "./Helpers/stringHelpers";
 import { ParamDef } from "./types";
 
 export type ExecutionReturn = {
@@ -18,12 +19,25 @@ export function ExecuteCode(
   for (let i = 0; i < paramDef.length; i++) {
     lookup[paramDef[i].name] = values[i];
   }
-  const splitString = code[0].split(" ").filter(a => !!a); // wow, that's impressive
-  if (splitString[0] !== "return")
-    throw new Error(`Cannot find keyword ${splitString[0]}.`); 
-
-  const key = splitString.slice(1).join(" ");
-  return [extractLabelAndValue(key, lookup)];
+  for (let i = 0; i < code.length; i++) {
+    const splitString = code[i].split(" ").filter((a) => !!a); 
+    const key = splitString.slice(1).join(" ");
+    switch (splitString[0]) {
+      case "return":
+        return [extractLabelAndValue(key, lookup)];
+      case "assign":
+        const assignRegex = /(.*)=(.*)/;
+        const match = key.match(assignRegex);
+        if (match && match[1] && match[2]) {
+          const item = extractLabelAndValue(match[2].trim(), lookup);
+          lookup[match[1].trim()] = item.value;
+        } else {
+          throw new Error("Did not match assignment regex in assign block.");
+        }
+        break;
+      default:
+        throw new Error(`Cannot find keyword ${splitString[0]}.`);
+    }
+  }
+  throw new Error("Did not find a return statement.");
 }
-
-
