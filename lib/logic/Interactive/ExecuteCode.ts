@@ -18,7 +18,11 @@ export function ExecuteCode(
   for (let i = 0; i < paramDef.length; i++) {
     lookup[paramDef[i].name] = values[i];
   }
-  const key = code[0].split(" ").slice(1).join(" ");
+  const splitString = code[0].split(" ").filter(a => !!a); // wow, that's impressive
+  if (splitString[0] !== "return")
+    throw new Error(`Cannot find keyword ${splitString[0]}.`); 
+
+  const key = splitString.slice(1).join(" ");
   return [extractLabelAndValue(key, lookup)];
 }
 

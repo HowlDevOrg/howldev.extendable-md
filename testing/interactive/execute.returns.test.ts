@@ -221,3 +221,22 @@ describe("code throws errors when param not found", () => {
     );
   });
 });
+
+describe("code throws errors when return is misspelled", () => {
+  it("retun function", () => {
+    const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];
+    const values: string[] = ["lorem value"];
+    const code = ["retun not Found"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Cannot find keyword retun.",
+    );
+  });
+  it("retun function with some extra spaces", () => {
+    const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];
+    const values: string[] = ["lorem value"];
+    const code = ["  retun        not Found"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Cannot find keyword retun.",
+    );
+  });
+});
