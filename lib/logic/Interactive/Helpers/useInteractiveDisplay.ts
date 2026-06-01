@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { ExecuteCode } from "./ExecuteCode";
+import { ExecuteCode } from "../ExecuteCode";
 import { getDefault } from "./getDefault";
 import { parseParamsAndCode } from "./parseParamsAndCode";
 

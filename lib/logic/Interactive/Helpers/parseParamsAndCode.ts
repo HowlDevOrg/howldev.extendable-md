@@ -1,5 +1,5 @@
-import { ParamDefSplitter } from "./ParamDef";
-import { ParamDef } from "./types";
+import { ParamDefSplitter } from "../ParamDef";
+import { ParamDef } from "../types";
 
 export function parseParamsAndCode(text: string): {
   newParams: ParamDef[];

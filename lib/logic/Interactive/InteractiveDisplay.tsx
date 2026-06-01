@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { InteractiveDisplayInputs } from "./InteractiveDisplayInputs";
-import { useInteractiveDisplay } from "./useInteractiveDisplay";
+import { useInteractiveDisplay } from "./Helpers/useInteractiveDisplay";
 
 type InteractiveDisplayProps = {
   text: string;

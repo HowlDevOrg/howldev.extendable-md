@@ -111,6 +111,63 @@ describe("code can execute return on primitives", () => {
   });
 });
 
+describe("code can execute return with alias", () => {
+  it("no params/values returns string as prim", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return "This thing" as item`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("item");
+    expect(modified[0].value).toBe("This thing");
+  });
+  it("no params/values returns number (int) as prim", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return 15 as item`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("item");
+    expect(modified[0].value).toBe("15");
+  });
+  it("no params/values returns number (float) as prim", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return 15.25 as item`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("item");
+    expect(modified[0].value).toBe("15.25");
+  });
+  it("no params/values returns bool (true) as prim", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return true as item`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("item");
+    expect(modified[0].value).toBe("true");
+  });
+  it("no params/values returns bool (false) as prim", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return false as item`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("item");
+    expect(modified[0].value).toBe("false");
+  });
+  it("single string input works aliased", () => {
+    const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];
+    const values: string[] = ["lorem value"];
+    const code = ["return Lorem as This Item"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("This Item");
+    expect(modified[0].value).toBe("lorem value");
+  });
+});
+
 describe("code can execute return on multiple inputs", () => {
   it("string and number return first", () => {
     const paramDefs: ParamDef[] = [

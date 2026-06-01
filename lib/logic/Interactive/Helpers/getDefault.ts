@@ -1,4 +1,4 @@
-import { ParamDef } from "./types";
+import { ParamDef } from "../types";
 
 export function getDefault(a: ParamDef): string {
   switch (a.type) {
