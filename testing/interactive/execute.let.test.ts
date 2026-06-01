@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { ExecuteCode } from "../../lib/logic/Interactive/ExecuteCode";
 import { ParamDef } from "../../lib/logic/Interactive/types";
 
-describe("code can execute return on single inputs", () => {
+describe("code can execute assign on primitives", () => {
   it("no params make new variable with primitive (number) and return", () => {
     const paramDefs: ParamDef[] = [];
     const values: string[] = [];
@@ -32,7 +32,7 @@ describe("code can execute return on single inputs", () => {
   });
 });
 
-describe("code can execute return on single params", () => {
+describe("code can execute assign on variables", () => {
   it("no params make new variable with param (number) and return", () => {
     const paramDefs: ParamDef[] = [{ name: "lorem", type: "number" }];
     const values: string[] = ["15.25"];
