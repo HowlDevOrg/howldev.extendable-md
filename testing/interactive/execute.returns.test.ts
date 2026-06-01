@@ -12,6 +12,15 @@ describe("code can execute return on single inputs", () => {
     expect(modified[0].label).toBe("Lorem");
     expect(modified[0].value).toBe("lorem value");
   });
+  it("empty string input works", () => {
+    const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];
+    const values: string[] = [""];
+    const code = ["return Lorem"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("Lorem");
+    expect(modified[0].value).toBe("");
+  });
   it("single boolean input works", () => {
     const paramDefs: ParamDef[] = [{ name: "Lorem", type: "boolean" }];
     const values: string[] = ["true"];

@@ -17,6 +17,6 @@ export function ExecuteCode(
         lookup[paramDef[i].name] = values[i];
     }
     const key = code[0].split(' ').slice(1).join(' ');
-    if (!lookup[key]) throw new Error(`Cannot find key ${key}.`);
+    if (!(key in lookup)) throw new Error(`Cannot find key ${key}.`);
     return [{label: key, value: lookup[key]}];
 }

@@ -1,6 +1,7 @@
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { EnumType, ParamDef } from "./types";
 import { ParamDefSplitter } from "./ParamDef";
+import { ExecuteCode } from "./ExecuteCode";
 
 type InteractiveDisplayProps = {
   text: string;
@@ -8,15 +9,30 @@ type InteractiveDisplayProps = {
 
 export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
   const [params, setParams] = useState<ParamDef[]>([]);
+  const [code, setCode] = useState<string[]>([]);
   const [values, setValues] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     try {
-      const items = ParamDefSplitter(text.split("\n"));
-      setParams(items);
+      const newParamsRaw: string[] = [];
+      const newCode: string[] = [];
+      const items = text.split("\n");
+      let params = true;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i] === "---") {
+          params = false;
+        } else if (params) {
+          newParamsRaw.push(items[i]);
+        } else {
+          newCode.push(items[i]);
+        }
+      }
+      const newParams = ParamDefSplitter(newParamsRaw);
+      setParams(newParams);
+      setCode(newCode);
       setValues(
-        items.map((a) => {
+        newParams.map((a) => {
           switch (a.type) {
             case "string":
               return "";
@@ -48,13 +64,24 @@ export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
   };
 
   const result: ReactNode[] = [];
-  for (const i of values) {
-    result.push(<p>{i !== "" ? i : "empty"}</p>);
+  try {
+    const returns = ExecuteCode(params, values, code);
+    for (const i of returns) {
+      result.push(
+        <p>
+          {i.label}: {i.value}
+        </p>,
+      );
+    }
+  } catch (ex: any) {
+    return (
+        <p style={{color: "red"}}>Code syntax error: {ex.message}</p>
+    )
   }
 
   return (
     <div className="interactive-display">
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
+      {error && <p style={{ color: "red" }}>Param parsing error: {error}</p>}
       <div className="interactive-params">
         {params.map((a, i) => {
           if (a.type == "string") {
