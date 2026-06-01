@@ -98,11 +98,14 @@
 
   /* Interactive functions */
   .interactive-display {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
   .interactive-params {
+    display: flex;
+    flex-direction: column;
+  }
+  .interactive-result {
     display: flex;
     flex-direction: column;
   }
