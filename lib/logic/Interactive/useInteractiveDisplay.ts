@@ -1,38 +1,45 @@
-import { useState, useEffect } from "react";
-import { ExecutionReturn, ExecuteCode } from "./ExecuteCode";
+import { useState, useMemo } from "react";
+import { ExecuteCode } from "./ExecuteCode";
 import { getDefault } from "./getDefault";
 import { parseParamsAndCode } from "./parseParamsAndCode";
-import { ParamDef } from "./types";
 
 export function useInteractiveDisplay(text: string) {
-  const [params, setParams] = useState<ParamDef[]>([]);
-  const [code, setCode] = useState<string[]>([]);
   const [values, setValues] = useState<string[]>([]);
-  const [paramError, setParamError] = useState<string | null>(null);
-  const [runtimeError, setRuntimeError] = useState<string | null>(null);
-  const [codeResult, setCodeResult] = useState<ExecutionReturn[]>([]);
 
-  useEffect(() => {
+  const { params, code, paramError } = useMemo(() => {
     try {
       const { newParams, newCode } = parseParamsAndCode(text);
-      setParams(newParams);
-      setCode(newCode);
+      // This does not create an infinite render loop and this is intended behavior.. I don't know 
+      // how to fix it in the React system. 
+      // eslint-disable-next-line
       setValues(newParams.map(getDefault));
-      setParamError(null);
+      return {
+        params: newParams,
+        code: newCode,
+        paramError: null,
+      };
     } catch (ex) {
-      setParamError(ex instanceof Error ? ex.message : String(ex));
+      return {
+        params: [],
+        code: [],
+        paramError: ex instanceof Error ? ex.message : String(ex),
+      };
     }
   }, [text]);
 
-  useEffect(() => {
+  const { codeResult, runtimeError } = useMemo(() => {
     if (code.length > 0) {
       try {
         const returns = ExecuteCode(params, values, code);
-        setCodeResult(returns);
-        setRuntimeError(null);
+        return { codeResult: returns, runtimeError: null };
       } catch (ex) {
-        setRuntimeError(ex instanceof Error ? ex.message : String(ex));
+        return {
+          codeResult: [],
+          runtimeError: ex instanceof Error ? ex.message : String(ex),
+        };
       }
+    } else {
+      return { codeResult: [], runtimeError: null };
     }
   }, [params, values, code]);
 
