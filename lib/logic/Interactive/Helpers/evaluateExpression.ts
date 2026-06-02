@@ -11,6 +11,9 @@ export function evaluateExpression(
   if (match) {
     const num1 = evaluateExpression(match[1], lookup);
     const num2 = evaluateExpression(match[3], lookup);
+    if (num1.type !== num2.type) {
+      throw new CodeError(`Can't execute operator ${match[2]} on types ${num1.type} and ${num2.type}.`)
+    }
     switch (match[2]) {
       case "+":
         return {

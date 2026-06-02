@@ -22,6 +22,8 @@ export function extractLabelAndValue(
         : StructuredReturnToString(result);
   }
 
+  key = key.trim();
+
   if (isQuotedString(key)) {
     returnValue = getInnerString(key);
     returnLabel = "";

@@ -182,3 +182,38 @@ describe("code can execute multiple math operators on other side of assign", () 
     expect(modified[0].value).toBe("11");
   });
 });
+
+describe("code throws errors on mismatched types", () => {
+  it("number and string", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return 15 < "hello"`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Can't execute operator < on types number and string.",
+    );
+  });
+  it("number and bool", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return 15 + true`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Can't execute operator + on types number and bool.",
+    );
+  });
+  it("string and bool", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return "hello" == true`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Can't execute operator == on types string and bool.",
+    );
+  });
+  it("bool and string", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return true < "hello"`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Can't execute operator < on types bool and string.",
+    );
+  });
+});
