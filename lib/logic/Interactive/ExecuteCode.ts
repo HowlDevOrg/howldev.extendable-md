@@ -27,7 +27,7 @@ export function ExecuteCode(
     const key = splitString.slice(1).join(" ");
     switch (splitString[0]) {
       case "return":
-        const vals = extractLabelAndValue(key, lookup);
+        const vals = evaluateExpression(key, lookup);
         return [{ label: vals.label, value: StructuredReturnToString(vals) }];
       case "assign":
         const assignRegex = /(.*)=(.*)/;

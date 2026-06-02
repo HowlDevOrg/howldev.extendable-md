@@ -1,27 +1,34 @@
-import { StructuredOutput } from "../types";
+import { StructuredReturn } from "../types";
 import { extractLabelAndValue } from "./extractLabelAndValue";
 
 // eslint-disable-next-line
-export function evaluateExpression(possibleExp: string, lookup: any): StructuredOutput {
+export function evaluateExpression(
+  possibleExp: string,
+  lookup: any,
+): StructuredReturn {
   const operatorRegex = /(.*)(!=|={2}|<=?|>=?|\*|-|\+|\/|%)(.*)/;
   const match = possibleExp.match(operatorRegex);
   if (match) {
     switch (match[2]) {
       case "+":
         const [sum1, sum2] = GetNumbers(match[1], match[3]);
-        return {value: (sum1 + sum2).toString(), type: "number"};
+        return { value: (sum1 + sum2).toString(), type: "number", label: "" };
       case "-":
         const [sub1, sub2] = GetNumbers(match[1], match[3]);
-        return {value: (sub1 - sub2).toString(), type: "number"};
+        return { value: (sub1 - sub2).toString(), type: "number", label: "" };
       case "*":
         const [times1, times2] = GetNumbers(match[1], match[3]);
-        return {value: (times1 * times2).toString(), type: "number"};
+        return {
+          value: (times1 * times2).toString(),
+          type: "number",
+          label: "",
+        };
       case "/":
         const [div1, div2] = GetNumbers(match[1], match[3]);
-        return {value: (div1 / div2).toString(), type: "number"};
+        return { value: (div1 / div2).toString(), type: "number", label: "" };
       case "%":
         const [mod1, mod2] = GetNumbers(match[1], match[3]);
-        return {value: (mod1 % mod2).toString(), type: "number"};
+        return { value: (mod1 % mod2).toString(), type: "number", label: "" };
       default:
         throw new Error(
           `Unknown operator error: Could not find operator ${match[2]}`,
@@ -29,7 +36,7 @@ export function evaluateExpression(possibleExp: string, lookup: any): Structured
     }
   } else {
     const val = extractLabelAndValue(possibleExp, lookup);
-    return {value: val.value, type: val.type };
+    return { value: val.value, type: val.type, label: val.label };
   }
 }
 

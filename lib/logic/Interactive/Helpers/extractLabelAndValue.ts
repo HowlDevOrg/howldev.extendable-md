@@ -1,7 +1,4 @@
-import {
-  ObjectWithStructuredValue,
-  StructuredReturn,
-} from "../types";
+import { ObjectWithStructuredValue, StructuredReturn } from "../types";
 import { isQuotedString, getInnerString } from "./stringHelpers";
 
 export function extractLabelAndValue(
@@ -17,8 +14,6 @@ export function extractLabelAndValue(
   if (match) {
     key = match[1];
   }
-
-  key = key.trim();
 
   if (isQuotedString(key)) {
     returnValue = getInnerString(key);

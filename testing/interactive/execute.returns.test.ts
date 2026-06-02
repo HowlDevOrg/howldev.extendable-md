@@ -111,6 +111,45 @@ describe("code can execute return on primitives", () => {
   });
 });
 
+describe("code can execute return on expressions", () => {
+  it("addition expression", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return 15 + 23`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("38");
+  });
+  it("multiply expression", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return 4 * 5`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("20");
+  });
+  it("subtract expression", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return 4 - 2`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("2");
+  });
+  it("divide expression", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return 4 / 2`];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("2");
+  });
+});
+
 describe("code can execute return with alias", () => {
   it("no params/values returns string as prim", () => {
     const paramDefs: ParamDef[] = [];
