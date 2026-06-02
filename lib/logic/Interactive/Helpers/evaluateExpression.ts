@@ -1,33 +1,35 @@
+import { StructuredOutput } from "../types";
 import { extractLabelAndValue } from "./extractLabelAndValue";
 
 // eslint-disable-next-line
-export function evaluateExpression(possibleExp: string, lookup: any): string {
+export function evaluateExpression(possibleExp: string, lookup: any): StructuredOutput {
   const operatorRegex = /(.*)(!=|={2}|<=?|>=?|\*|-|\+|\/|%)(.*)/;
   const match = possibleExp.match(operatorRegex);
   if (match) {
     switch (match[2]) {
       case "+":
         const [sum1, sum2] = GetNumbers(match[1], match[3]);
-        return (sum1 + sum2).toString();
+        return {value: (sum1 + sum2).toString(), type: "number"};
       case "-":
         const [sub1, sub2] = GetNumbers(match[1], match[3]);
-        return (sub1 - sub2).toString();
+        return {value: (sub1 - sub2).toString(), type: "number"};
       case "*":
         const [times1, times2] = GetNumbers(match[1], match[3]);
-        return (times1 * times2).toString();
+        return {value: (times1 * times2).toString(), type: "number"};
       case "/":
         const [div1, div2] = GetNumbers(match[1], match[3]);
-        return (div1 / div2).toString();
+        return {value: (div1 / div2).toString(), type: "number"};
       case "%":
         const [mod1, mod2] = GetNumbers(match[1], match[3]);
-        return (mod1 % mod2).toString();
+        return {value: (mod1 % mod2).toString(), type: "number"};
       default:
         throw new Error(
-          `Unreachable error: Could not find operator ${match[2]}`,
+          `Unknown operator error: Could not find operator ${match[2]}`,
         );
     }
   } else {
-    return extractLabelAndValue(possibleExp, lookup).value;
+    const val = extractLabelAndValue(possibleExp, lookup);
+    return {value: val.value, type: val.type };
   }
 }
 
@@ -35,7 +37,7 @@ function GetNumbers(str1: string, str2: string): number[] {
   return [GetSingleNumber(str1), GetSingleNumber(str2)];
 }
 
-function GetSingleNumber(str: string): number {
+export function GetSingleNumber(str: string): number {
   if (Number(str)) {
     return Number(str);
   }

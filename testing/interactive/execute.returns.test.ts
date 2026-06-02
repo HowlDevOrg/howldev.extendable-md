@@ -174,7 +174,7 @@ describe("code can execute return on multiple inputs", () => {
       { name: "Lorem", type: "string" },
       { name: "Lorem2", type: "number" },
     ];
-    const values: string[] = ["lorem value", "part 2"];
+    const values: string[] = ["lorem value", "15.225"];
     const code = ["return Lorem"];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -186,12 +186,12 @@ describe("code can execute return on multiple inputs", () => {
       { name: "Lorem", type: "string" },
       { name: "Lorem2", type: "number" },
     ];
-    const values: string[] = ["lorem value", "part 2"];
+    const values: string[] = ["lorem value", "15.225"];
     const code = ["return Lorem2"];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
     expect(modified[0].label).toBe("Lorem2");
-    expect(modified[0].value).toBe("part 2");
+    expect(modified[0].value).toBe("15.225");
   });
 });
 

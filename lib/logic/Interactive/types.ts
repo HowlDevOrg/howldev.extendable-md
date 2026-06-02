@@ -4,3 +4,23 @@ export type StringType = { name: string; type: "string" };
 export type NumberType = { name: string; type: "number" };
 export type BoolType = { name: string; type: "boolean" };
 export type EnumType = { name: string; type: "enum"; values: string[] };
+
+export type StructuredOutput = {
+  type: "string" | "bool" | "number";
+  value: string | boolean | number;
+};
+
+export type ObjectWithStructuredValue = {
+  [key: string]: StructuredOutput;
+};
+
+export type ExecutionReturn = {
+  label: string;
+  value: string;
+};
+
+export type StructuredReturn = {
+  label: string;
+  type: "string" | "bool" | "number";
+  value: string | boolean | number;
+};

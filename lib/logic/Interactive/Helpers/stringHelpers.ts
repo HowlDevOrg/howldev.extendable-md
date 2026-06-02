@@ -1,6 +1,24 @@
-export function getInnerString(key: string): any {
-    return key.slice(1, key.length - 1);
+import { ParamDef, StructuredOutput } from "../types";
+import { GetSingleNumber } from "./evaluateExpression";
+
+export function getInnerString(key: string): string {
+  return key.slice(1, key.length - 1);
 }
 export function isQuotedString(key: string) {
-    return key.startsWith('"') && key.endsWith('"');
+  return key.startsWith('"') && key.endsWith('"');
+}
+export function paramDefAndValueToStructuredOutput(
+  param: ParamDef,
+  value: string,
+): StructuredOutput {
+  switch (param.type) {
+    case "string":
+      return { value: value, type: "string" };
+    case "boolean":
+      return { value: value === "true" ? true : false, type: "bool" };
+    case "number":
+      return { value: GetSingleNumber(value), type: "number" };
+    case "enum":
+      return { value: value, type: "string" };
+  }
 }
