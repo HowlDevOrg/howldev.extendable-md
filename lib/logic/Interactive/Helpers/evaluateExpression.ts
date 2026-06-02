@@ -42,6 +42,42 @@ export function evaluateExpression(
           type: "number",
           label: "",
         };
+      case "<":
+        return {
+          value: ((num1.value as number) < (num2.value as number)),
+          type: "bool",
+          label: "",
+        };
+      case ">":
+        return {
+          value: ((num1.value as number) > (num2.value as number)),
+          type: "bool",
+          label: "",
+        };
+      case "<=":
+        return {
+          value: ((num1.value as number) <= (num2.value as number)),
+          type: "bool",
+          label: "",
+        };
+      case ">=":
+        return {
+          value: ((num1.value as number) >= (num2.value as number)),
+          type: "bool",
+          label: "",
+        };
+      case "!=":
+        return {
+          value: ((num1.value as number) != (num2.value as number)),
+          type: "bool",
+          label: "",
+        };
+      case "==":
+        return {
+          value: ((num1.value as number) == (num2.value as number)),
+          type: "bool",
+          label: "",
+        };
       default:
         throw new CodeError(
           `Unknown operator error: Could not find operator ${match[2]}`,

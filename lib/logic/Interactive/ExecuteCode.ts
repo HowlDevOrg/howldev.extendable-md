@@ -30,7 +30,7 @@ export function ExecuteCode(
         const vals = evaluateExpression(key, lookup);
         return [{ label: vals.label, value: StructuredReturnToString(vals) }];
       case "assign":
-        const assignRegex = /(.*)=(.*)/;
+        const assignRegex = /(.*)[^<>!=]=[^=](.*)/;
         const match = key.match(assignRegex);
         if (match && match[1] && match[2]) {
           lookup[match[1].trim()] = evaluateExpression(match[2].trim(), lookup);
