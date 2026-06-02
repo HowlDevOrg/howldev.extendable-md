@@ -1,4 +1,6 @@
+import { StructuredReturnToString } from "../StructuredReturnToString";
 import { ObjectWithStructuredValue, StructuredReturn } from "../types";
+import { evaluateExpression } from "./evaluateExpression";
 import { isQuotedString, getInnerString } from "./stringHelpers";
 
 export function extractLabelAndValue(
@@ -12,7 +14,13 @@ export function extractLabelAndValue(
   const asRegex = /(.*)\s+as\s+(.*)/;
   const match = key.match(asRegex);
   if (match) {
-    key = match[1];
+    console.log(match)
+    console.log("Match: ", match[1])
+    const result = evaluateExpression(match[1], lookup);
+    key =
+      result.type === "string"
+        ? '"' + result.value + '"'
+        : StructuredReturnToString(result);
   }
 
   if (isQuotedString(key)) {
@@ -34,6 +42,8 @@ export function extractLabelAndValue(
     returnLabel = key;
     type = lookup[key].type;
   }
+
+  console.log(key, match)
 
   if (match) {
     returnLabel = match[2];

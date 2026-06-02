@@ -1,11 +1,10 @@
 import { evaluateExpression } from "./Helpers/evaluateExpression";
-import { extractLabelAndValue } from "./Helpers/extractLabelAndValue";
 import { paramDefAndValueToStructuredOutput } from "./Helpers/stringHelpers";
+import { StructuredReturnToString } from "./StructuredReturnToString";
 import {
   ExecutionReturn,
   ObjectWithStructuredValue,
   ParamDef,
-  StructuredReturn,
 } from "./types";
 
 export function ExecuteCode(
@@ -43,15 +42,4 @@ export function ExecuteCode(
     }
   }
   throw new Error("Did not find a return statement.");
-}
-
-function StructuredReturnToString(val: StructuredReturn): string {
-  switch (val.type) {
-    case "string":
-      return val.value as string;
-    case "bool":
-      return val.value ? "true" : "false";
-    case "number":
-      return val.value.toString();
-  }
 }

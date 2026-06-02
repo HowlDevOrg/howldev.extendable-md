@@ -49,3 +49,25 @@ describe("code can execute math operators on other side of assign", () => {
     expect(modified[0].value).toBe("2");
   });
 });
+
+// Executed left to right
+describe("code can execute multiple math operators on other side of assign", () => {
+  it("can execute 2 + 3 * 5", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = ["assign x = 2 + 3 * 5", "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("25");
+  });
+  it("can execute 2 * 3 + 5", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = ["assign x = 2 * 3 + 5", "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("11");
+  });
+});

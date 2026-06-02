@@ -1,5 +1,4 @@
 import { ParamDef, StructuredOutput } from "../types";
-import { GetSingleNumber } from "./evaluateExpression";
 
 export function getInnerString(key: string): string {
   return key.slice(1, key.length - 1);
@@ -21,4 +20,11 @@ export function paramDefAndValueToStructuredOutput(
     case "enum":
       return { value: value, type: "string" };
   }
+}
+
+export function GetSingleNumber(str: string): number {
+  if (Number(str)) {
+    return Number(str);
+  }
+  throw new Error(`Could not parse ${str} as number.`);
 }
