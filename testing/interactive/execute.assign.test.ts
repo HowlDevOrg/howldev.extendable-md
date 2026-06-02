@@ -3,9 +3,9 @@ import { ExecuteCode } from "../../lib/logic/Interactive/ExecuteCode";
 import { ParamDef } from "../../lib/logic/Interactive/types";
 
 describe("code can execute assign on primitives", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
   it("no params make new variable with primitive (number) and return", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = ["assign x = 15.25", "return x"];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -13,8 +13,6 @@ describe("code can execute assign on primitives", () => {
     expect(modified[0].value).toBe("15.25");
   });
   it("no params make new variable with primitive (boolean) and return", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = ["assign x = false", "return x"];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -22,8 +20,6 @@ describe("code can execute assign on primitives", () => {
     expect(modified[0].value).toBe("false");
   });
   it("no params make new variable with primitive (string) and return", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = [`assign x = "this"`, "return x"];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -72,25 +68,21 @@ describe("code can execute assign on variables", () => {
 });
 
 describe("assign throws errors when invalid structure", () => {
+  const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];
+  const values: string[] = ["lorem value"];
   it("no equals sign", () => {
-    const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];
-    const values: string[] = ["lorem value"];
     const code = ["assign x 15"];
     expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
       "Did not match assignment regex in assign block.",
     );
   });
   it("nothing pre sign", () => {
-    const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];
-    const values: string[] = ["lorem value"];
     const code = ["assign = 15"];
     expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
       "Did not match assignment regex in assign block.",
     );
   });
   it("nothing post sign", () => {
-    const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];
-    const values: string[] = ["lorem value"];
     const code = ["assign x =   "];
     expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
       "Did not match assignment regex in assign block.",

@@ -64,9 +64,9 @@ describe("code can execute return on single inputs", () => {
 });
 
 describe("code can execute return on primitives", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
   it("no params/values returns string without quotes", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = [`return "This thing"`];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -74,8 +74,6 @@ describe("code can execute return on primitives", () => {
     expect(modified[0].value).toBe("This thing");
   });
   it("no params/values returns number (int)", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = [`return 15`];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -83,8 +81,6 @@ describe("code can execute return on primitives", () => {
     expect(modified[0].value).toBe("15");
   });
   it("no params/values returns number (float)", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = [`return 15.25`];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -92,8 +88,6 @@ describe("code can execute return on primitives", () => {
     expect(modified[0].value).toBe("15.25");
   });
   it("no params/values returns bool (true)", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = [`return true`];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -101,8 +95,6 @@ describe("code can execute return on primitives", () => {
     expect(modified[0].value).toBe("true");
   });
   it("no params/values returns bool (false)", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = [`return false`];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -112,9 +104,9 @@ describe("code can execute return on primitives", () => {
 });
 
 describe("code can execute return on expressions", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
   it("addition expression", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = [`return 15 + 23`];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -122,8 +114,6 @@ describe("code can execute return on expressions", () => {
     expect(modified[0].value).toBe("38");
   });
   it("multiply expression", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = [`return 4 * 5`];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -131,8 +121,6 @@ describe("code can execute return on expressions", () => {
     expect(modified[0].value).toBe("20");
   });
   it("subtract expression", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = [`return 4 - 2`];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -140,8 +128,6 @@ describe("code can execute return on expressions", () => {
     expect(modified[0].value).toBe("2");
   });
   it("divide expression", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = [`return 4 / 2`];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -208,12 +194,12 @@ describe("code can execute return with alias", () => {
 });
 
 describe("code can execute return on multiple inputs", () => {
+  const paramDefs: ParamDef[] = [
+    { name: "Lorem", type: "string" },
+    { name: "Lorem2", type: "number" },
+  ];
+  const values: string[] = ["lorem value", "15.225"];
   it("string and number return first", () => {
-    const paramDefs: ParamDef[] = [
-      { name: "Lorem", type: "string" },
-      { name: "Lorem2", type: "number" },
-    ];
-    const values: string[] = ["lorem value", "15.225"];
     const code = ["return Lorem"];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -221,11 +207,6 @@ describe("code can execute return on multiple inputs", () => {
     expect(modified[0].value).toBe("lorem value");
   });
   it("string and number return second", () => {
-    const paramDefs: ParamDef[] = [
-      { name: "Lorem", type: "string" },
-      { name: "Lorem2", type: "number" },
-    ];
-    const values: string[] = ["lorem value", "15.225"];
     const code = ["return Lorem2"];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -262,17 +243,15 @@ describe("code throws errors when param not found", () => {
 });
 
 describe("code throws errors when return is misspelled", () => {
+  const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];
+  const values: string[] = ["lorem value"];
   it("retun function", () => {
-    const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];
-    const values: string[] = ["lorem value"];
     const code = ["retun not Found"];
     expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
       "Cannot find keyword retun.",
     );
   });
   it("retun function with some extra spaces", () => {
-    const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];
-    const values: string[] = ["lorem value"];
     const code = ["  retun        not Found"];
     expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
       "Cannot find keyword retun.",
