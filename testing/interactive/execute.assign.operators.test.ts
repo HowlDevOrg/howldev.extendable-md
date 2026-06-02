@@ -211,6 +211,25 @@ describe("code can execute multiple math operators on other side of assign", () 
   });
 });
 
+describe("code can alias generic functions on return", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
+  it("can execute 2 + 3 as result", () => {
+    const code = ["return 2 + 3 as result"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("result");
+    expect(modified[0].value).toBe("5");
+  });
+  it("can execute 2 + 3 * 5 as result", () => {
+    const code = ["return 2 + 3 * 5 as result"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("result");
+    expect(modified[0].value).toBe("25");
+  });
+});
+
 describe("code throws errors on mismatched types", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];

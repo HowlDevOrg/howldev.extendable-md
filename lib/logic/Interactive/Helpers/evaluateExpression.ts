@@ -1,93 +1,109 @@
 import { CodeError } from "../customErrors";
 import { ObjectWithStructuredValue, StructuredReturn } from "../types";
 import { extractLabelAndValue } from "./extractLabelAndValue";
+import { StructuredReturnToString } from "./structuredReturnToString";
 
 export function evaluateExpression(
   possibleExp: string,
   lookup: ObjectWithStructuredValue,
 ): StructuredReturn {
+  const asRegex = /(.*)\s+as\s+(.*)/;
+  const asMatch = possibleExp.match(asRegex);
+  let label;
+
+  if (asMatch) {
+    const result = evaluateExpression(asMatch[1], lookup);
+    possibleExp =
+      result.type === "string"
+        ? '"' + result.value + '"'
+        : StructuredReturnToString(result);
+    label = asMatch[2];
+  } else {
+    label = "";
+  }
+
   const operatorRegex = /(.*)(!=|={2}|<=?|>=?|\*|-|\+|\/|%)(.*)/;
-  const match = possibleExp.match(operatorRegex);
-  if (match) {
-    const num1 = evaluateExpression(match[1], lookup);
-    const num2 = evaluateExpression(match[3], lookup);
+  const opMatch = possibleExp.match(operatorRegex);
+  if (opMatch) {
+    const num1 = evaluateExpression(opMatch[1], lookup);
+    const num2 = evaluateExpression(opMatch[3], lookup);
     if (num1.type !== num2.type) {
       throw new CodeError(
-        `Can't execute operator ${match[2]} on types ${num1.type} and ${num2.type}.`,
+        `Can't execute operator ${opMatch[2]} on types ${num1.type} and ${num2.type}.`,
       );
     }
-    switch (match[2]) {
+    switch (opMatch[2]) {
       case "+":
         if (num1.type === "number") {
           return {
             value: (Number(num1.value) + Number(num2.value)).toString(),
             type: "number",
-            label: "",
+            label: label,
           };
         } else if (num1.type === "string") {
           return {
             value: ((num1.value as string) + (num2.value as string)).toString(),
             type: "string",
-            label: "",
+            label: label,
           };
         } else {
           throw new CodeError("Cannot apply + operator to bool types.");
         }
       case "-":
-        possibleThrowForNonNumberForOperator(match[2], num1);
+        possibleThrowForNonNumberForOperator(opMatch[2], num1);
         return {
           value: ((num1.value as number) - (num2.value as number)).toString(),
           type: "number",
-          label: "",
+          label: label,
         };
       case "*":
-        possibleThrowForNonNumberForOperator(match[2], num1);
+        possibleThrowForNonNumberForOperator(opMatch[2], num1);
         return {
           value: (Number(num1.value) * Number(num2.value)).toString(),
           type: "number",
-          label: "",
+          label: label,
         };
       case "/":
-        possibleThrowForNonNumberForOperator(match[2], num1);
+        possibleThrowForNonNumberForOperator(opMatch[2], num1);
         return {
           value: ((num1.value as number) / (num2.value as number)).toString(),
           type: "number",
-          label: "",
+          label: label,
         };
       case "%":
-        possibleThrowForNonNumberForOperator(match[2], num1);
+        possibleThrowForNonNumberForOperator(opMatch[2], num1);
         return {
           value: ((num1.value as number) % (num2.value as number)).toString(),
           type: "number",
-          label: "",
+          label: label,
         };
       case "<":
-        possibleThrowForNonNumberForOperator(match[2], num1);
+        possibleThrowForNonNumberForOperator(opMatch[2], num1);
         return {
           value: (num1.value as number) < (num2.value as number),
           type: "bool",
-          label: "",
+          label: label,
         };
       case ">":
-        possibleThrowForNonNumberForOperator(match[2], num1);
+        possibleThrowForNonNumberForOperator(opMatch[2], num1);
         return {
           value: (num1.value as number) > (num2.value as number),
           type: "bool",
-          label: "",
+          label: label,
         };
       case "<=":
-        possibleThrowForNonNumberForOperator(match[2], num1);
+        possibleThrowForNonNumberForOperator(opMatch[2], num1);
         return {
           value: (num1.value as number) <= (num2.value as number),
           type: "bool",
-          label: "",
+          label: label,
         };
       case ">=":
-        possibleThrowForNonNumberForOperator(match[2], num1);
+        possibleThrowForNonNumberForOperator(opMatch[2], num1);
         return {
           value: (num1.value as number) >= (num2.value as number),
           type: "bool",
-          label: "",
+          label: label,
         };
       case "!=":
         switch (num1.type) {
@@ -95,19 +111,19 @@ export function evaluateExpression(
             return {
               value: (num1.value as string) != (num2.value as string),
               type: "bool",
-              label: "",
+              label: label,
             };
           case "number":
             return {
               value: (num1.value as number) != (num2.value as number),
               type: "bool",
-              label: "",
+              label: label,
             };
           case "bool":
             return {
               value: (num1.value as boolean) != (num2.value as boolean),
               type: "bool",
-              label: "",
+              label: label,
             };
         }
       case "==":
@@ -116,28 +132,28 @@ export function evaluateExpression(
             return {
               value: (num1.value as string) == (num2.value as string),
               type: "bool",
-              label: "",
+              label: label,
             };
           case "number":
             return {
               value: (num1.value as number) == (num2.value as number),
               type: "bool",
-              label: "",
+              label: label,
             };
           case "bool":
             return {
               value: (num1.value as boolean) == (num2.value as boolean),
               type: "bool",
-              label: "",
+              label: label,
             };
         }
       default:
         throw new CodeError(
-          `Unknown operator error: Could not find operator ${match[2]}`,
+          `Unknown operator error: Could not find operator ${opMatch[2]}`,
         );
     }
   } else {
-    return extractLabelAndValue(possibleExp, lookup);
+    return extractLabelAndValue(possibleExp, lookup, label);
   }
 }
 

@@ -7,20 +7,11 @@ import { CodeError } from "../customErrors";
 export function extractLabelAndValue(
   key: string,
   lookup: ObjectWithStructuredValue,
+  possibleLabel: string,
 ): StructuredReturn {
   let returnLabel: string;
   let returnValue: string | number | boolean;
   let type: "string" | "number" | "bool";
-
-  const asRegex = /(.*)\s+as\s+(.*)/;
-  const match = key.match(asRegex);
-  if (match) {
-    const result = evaluateExpression(match[1], lookup);
-    key =
-      result.type === "string"
-        ? '"' + result.value + '"'
-        : StructuredReturnToString(result);
-  }
 
   key = key.trim();
 
@@ -44,8 +35,8 @@ export function extractLabelAndValue(
     type = lookup[key].type;
   }
 
-  if (match) {
-    returnLabel = match[2];
+  if (possibleLabel) {
+    returnLabel = possibleLabel;
   }
   return { label: returnLabel, value: returnValue, type: type };
 }
