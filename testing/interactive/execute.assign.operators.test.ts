@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { ExecuteCode } from "../../lib/logic/Interactive/ExecuteCode";
 import { ParamDef } from "../../lib/logic/Interactive/types";
+import { beforeEach } from "vitest";
 
 describe("code can execute math operators on other side of assign", () => {
   it("can execute 2 + 3", () => {
@@ -162,9 +163,12 @@ describe("code can execute equivalence operators on other side of assign (for nu
     expect(modified[0].label).toBe("x");
     expect(modified[0].value).toBe("true");
   });
+});
+
+describe("equivalence operators on all types", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
   it("can execute 2 == 2", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = ["assign x = 2 == 2", "return x"];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
@@ -172,9 +176,42 @@ describe("code can execute equivalence operators on other side of assign (for nu
     expect(modified[0].value).toBe("true");
   });
   it("can execute 2 != 2", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
     const code = ["assign x = 2 != 2", "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("false");
+  });
+  it(`can execute "this" == "this"`, () => {
+    const code = [`assign x = "this" == "this"`, "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("true");
+  });
+  it(`can execute "this" != "that"`, () => {
+    const code = [`assign x = "this" != "that"`, "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("true");
+  });
+  it(`can execute "this" == "that"`, () => {
+    const code = [`assign x = "this" == "that"`, "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("false");
+  });
+  it("can execute true != false", () => {
+    const code = ["assign x = true != false", "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("true");
+  });
+  it("can execute true == false", () => {
+    const code = ["assign x = true == false", "return x"];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
     expect(modified[0].label).toBe("x");
@@ -235,6 +272,140 @@ describe("code throws errors on mismatched types", () => {
     const code = [`return true < "hello"`];
     expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
       "Can't execute operator < on types bool and string.",
+    );
+  });
+});
+
+describe("code throws errors for numeric operators when not number (string)", () => {
+  it("- operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return "13" - "hello"`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type string is not valid for operator -.",
+    );
+  });
+  it("* operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return "13" * "hello"`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type string is not valid for operator *.",
+    );
+  });
+  it("/ operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return "13" / "hello"`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type string is not valid for operator /.",
+    );
+  });
+  it("% operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return "13" % "hello"`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type string is not valid for operator %.",
+    );
+  });
+  it("< operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return "13" < "hello"`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type string is not valid for operator <.",
+    );
+  });
+  it("> operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return "13" > "hello"`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type string is not valid for operator >.",
+    );
+  });
+  it("<= operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return "13" <= "hello"`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type string is not valid for operator <=.",
+    );
+  });
+  it(">= operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return "13" >= "hello"`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type string is not valid for operator >=.",
+    );
+  });
+});
+
+describe("code throws errors for numeric operators when not number (boolean)", () => {
+  it("- operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return true - false`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type bool is not valid for operator -.",
+    );
+  });
+  it("* operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return true * false`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type bool is not valid for operator *.",
+    );
+  });
+  it("/ operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return true / false`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type bool is not valid for operator /.",
+    );
+  });
+  it("% operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return true % false`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type bool is not valid for operator %.",
+    );
+  });
+  it("< operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return true < false`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type bool is not valid for operator <.",
+    );
+  });
+  it("> operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return true > false`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type bool is not valid for operator >.",
+    );
+  });
+  it("<= operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return true <= false`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type bool is not valid for operator <=.",
+    );
+  });
+  it(">= operator", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`return true >= false`];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Type bool is not valid for operator >=.",
     );
   });
 });
