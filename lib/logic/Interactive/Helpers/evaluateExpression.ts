@@ -153,7 +153,7 @@ export function evaluateExpression(
         );
     }
   } else {
-    return extractLabelAndValue(possibleExp, lookup, label);
+    return extractLabelAndValue(possibleExp.trim(), lookup, label);
   }
 }
 

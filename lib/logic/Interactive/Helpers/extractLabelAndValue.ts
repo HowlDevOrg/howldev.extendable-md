@@ -13,8 +13,6 @@ export function extractLabelAndValue(
   let returnValue: string | number | boolean;
   let type: "string" | "number" | "bool";
 
-  key = key.trim();
-
   if (isQuotedString(key)) {
     returnValue = getInnerString(key);
     returnLabel = "";
