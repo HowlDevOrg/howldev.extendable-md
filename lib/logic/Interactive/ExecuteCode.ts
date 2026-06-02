@@ -1,3 +1,4 @@
+import { evaluateExpression } from "./Helpers/evaluateExpression";
 import { extractLabelAndValue } from "./Helpers/extractLabelAndValue";
 import { getInnerString, isQuotedString } from "./Helpers/stringHelpers";
 import { ParamDef } from "./types";
@@ -29,8 +30,7 @@ export function ExecuteCode(
         const assignRegex = /(.*)=(.*)/;
         const match = key.match(assignRegex);
         if (match && match[1] && match[2]) {
-          const item = extractLabelAndValue(match[2].trim(), lookup);
-          lookup[match[1].trim()] = item.value;
+          lookup[match[1].trim()] = evaluateExpression(match[2].trim(), lookup);
         } else {
           throw new Error("Did not match assignment regex in assign block.");
         }
