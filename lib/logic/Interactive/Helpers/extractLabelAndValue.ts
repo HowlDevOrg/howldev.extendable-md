@@ -1,7 +1,8 @@
-import { StructuredReturnToString } from "../StructuredReturnToString";
+import { StructuredReturnToString } from "./structuredReturnToString";
 import { ObjectWithStructuredValue, StructuredReturn } from "../types";
 import { evaluateExpression } from "./evaluateExpression";
 import { isQuotedString, getInnerString } from "./stringHelpers";
+import { CodeError } from "../customErrors";
 
 export function extractLabelAndValue(
   key: string,
@@ -34,7 +35,7 @@ export function extractLabelAndValue(
     returnLabel = "";
     type = "bool";
   } else if (!(key in lookup)) {
-    throw new Error(`Cannot find key ${key}.`);
+    throw new CodeError(`Cannot find key ${key}.`);
   } else {
     returnValue = lookup[key].value;
     returnLabel = key;

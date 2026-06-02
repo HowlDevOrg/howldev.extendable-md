@@ -1,3 +1,4 @@
+import { InternalError } from "./customErrors";
 import { ParamDef, EnumType } from "./types";
 
 type InteractiveDisplayInputsProps = {
@@ -57,7 +58,7 @@ export function InteractiveDisplayInputs({
         </select>
       );
     }
-    throw new Error(
+    throw new InternalError(
       "Unreachable place at the end of Interactive Display Inputs.",
     );
   });

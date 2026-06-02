@@ -1,3 +1,4 @@
+import { InternalError } from "../customErrors";
 import { ParamDef, StructuredOutput } from "../types";
 
 export function getInnerString(key: string): string {
@@ -26,5 +27,5 @@ export function GetSingleNumber(str: string): number {
   if (Number(str)) {
     return Number(str);
   }
-  throw new Error(`Could not parse ${str} as number.`);
+  throw new InternalError(`Could not parse ${str} as number.`);
 }

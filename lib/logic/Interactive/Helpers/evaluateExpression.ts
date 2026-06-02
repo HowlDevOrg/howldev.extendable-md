@@ -1,3 +1,4 @@
+import { CodeError } from "../customErrors";
 import { ObjectWithStructuredValue, StructuredReturn } from "../types";
 import { extractLabelAndValue } from "./extractLabelAndValue";
 
@@ -42,7 +43,7 @@ export function evaluateExpression(
           label: "",
         };
       default:
-        throw new Error(
+        throw new CodeError(
           `Unknown operator error: Could not find operator ${match[2]}`,
         );
     }

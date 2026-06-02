@@ -1,3 +1,4 @@
+import { CodeError } from "./customErrors";
 import type { ParamDef } from "./types";
 
 export function ParamDefSplitter(params: string[]): ParamDef[] {
@@ -5,7 +6,7 @@ export function ParamDefSplitter(params: string[]): ParamDef[] {
   for (const i of params) {
     const parts = i.split(":").map((a) => a.trim());
     if (parts.length != 2)
-      throw new Error(`Unknown split result on parameter ${i}.`);
+      throw new CodeError(`Unknown split result on parameter ${i}.`);
     switch (parts[1]) {
       case "string":
         result.push({
@@ -29,7 +30,7 @@ export function ParamDefSplitter(params: string[]): ParamDef[] {
         // eslint-disable-next-line
         const possibleEnums = parts[1].split("|").map((a) => a.trim());
         if (possibleEnums.length == 1) {
-          throw new Error(
+          throw new CodeError(
             `Can't determine type or create enum from type name ${parts[1]}.`,
           );
         }

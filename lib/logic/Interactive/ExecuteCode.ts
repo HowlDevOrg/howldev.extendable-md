@@ -1,6 +1,7 @@
+import { CodeError, InternalError } from "./customErrors";
 import { evaluateExpression } from "./Helpers/evaluateExpression";
 import { paramDefAndValueToStructuredOutput } from "./Helpers/stringHelpers";
-import { StructuredReturnToString } from "./StructuredReturnToString";
+import { StructuredReturnToString } from "./Helpers/structuredReturnToString";
 import {
   ExecutionReturn,
   ObjectWithStructuredValue,
@@ -13,7 +14,7 @@ export function ExecuteCode(
   code: string[],
 ): ExecutionReturn[] {
   if (paramDef.length !== values.length)
-    throw new Error("Arrays are not of equal size.");
+    throw new InternalError("Arrays are not of equal size.");
   const lookup: ObjectWithStructuredValue = {};
   for (let i = 0; i < paramDef.length; i++) {
     lookup[paramDef[i].name] = paramDefAndValueToStructuredOutput(
@@ -34,12 +35,12 @@ export function ExecuteCode(
         if (match && match[1] && match[2]) {
           lookup[match[1].trim()] = evaluateExpression(match[2].trim(), lookup);
         } else {
-          throw new Error("Did not match assignment regex in assign block.");
+          throw new CodeError("Did not match assignment regex in assign block.");
         }
         break;
       default:
-        throw new Error(`Cannot find keyword ${splitString[0]}.`);
+        throw new CodeError(`Cannot find keyword ${splitString[0]}.`);
     }
   }
-  throw new Error("Did not find a return statement.");
+  throw new CodeError("Did not find a return statement.");
 }

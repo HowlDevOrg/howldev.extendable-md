@@ -1,4 +1,4 @@
-import { StructuredReturn } from "./types";
+import { StructuredReturn } from "../types";
 
 export function StructuredReturnToString(val: StructuredReturn): string {
     switch (val.type) {
