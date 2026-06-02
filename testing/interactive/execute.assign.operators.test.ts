@@ -50,6 +50,27 @@ describe("code can execute math operators on other side of assign", () => {
   });
 });
 
+describe("code can execute string concatenate on other side of assign", () => {
+  it("can execute one + two", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`assign x = "one" + "two"`, "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("onetwo");
+  });
+  it("can execute one + two with spaces", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [`assign x = "one " + "two"`, "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("one two");
+  });
+});
+
 describe("code can execute equivalence operators on other side of assign (for numbers)", () => {
   it("can execute 2 < 3", () => {
     const paramDefs: ParamDef[] = [];

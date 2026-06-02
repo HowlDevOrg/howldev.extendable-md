@@ -16,11 +16,19 @@ export function evaluateExpression(
     }
     switch (match[2]) {
       case "+":
-        return {
-          value: (Number(num1.value) + Number(num2.value)).toString(),
-          type: "number",
-          label: "",
-        };
+        if (num1.type === "number") {
+          return {
+            value: (Number(num1.value) + Number(num2.value)).toString(),
+            type: "number",
+            label: "",
+          };
+        } else if (num1.type === "string") {
+          return {
+            value: ((num1.value as string) + (num2.value as string)).toString(),
+            type: "string",
+            label: "",
+          };
+        }
       case "-":
         return {
           value: ((num1.value as number) - (num2.value as number)).toString(),
