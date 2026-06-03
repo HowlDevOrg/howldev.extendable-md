@@ -1,6 +1,4 @@
-import { StructuredReturnToString } from "./structuredReturnToString";
 import { ObjectWithStructuredValue, StructuredReturn } from "../types";
-import { evaluateExpression } from "./evaluateExpression";
 import { isQuotedString, getInnerString } from "./stringHelpers";
 import { CodeError } from "../customErrors";
 

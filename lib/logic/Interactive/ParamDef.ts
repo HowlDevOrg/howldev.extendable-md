@@ -26,8 +26,7 @@ export function ParamDefSplitter(params: string[]): ParamDef[] {
           type: "boolean",
         });
         break;
-      default:
-        // eslint-disable-next-line
+      default: {
         const possibleEnums = parts[1].split("|").map((a) => a.trim());
         if (possibleEnums.length == 1) {
           throw new CodeError(
@@ -40,6 +39,7 @@ export function ParamDefSplitter(params: string[]): ParamDef[] {
           type: "enum",
           values: possibleEnums,
         });
+      }
     }
   }
   return result;

@@ -43,7 +43,9 @@ describe("code can execute assign on variables", () => {
   variableTests.forEach(({ paramType, paramValue, expected, enumValues }) => {
     it(`no params make new variable with param (${paramType}) and return`, () => {
       const paramDefs: ParamDef[] = enumValues
-        ? [{ name: "lorem", type: paramType as any, values: enumValues }]
+      // eslint-disable-next-line
+      ? [{ name: "lorem", type: paramType as any, values: enumValues }]
+      // eslint-disable-next-line
         : [{ name: "lorem", type: paramType as any }];
       const values: string[] = [paramValue];
       const code = ["assign x = lorem", "return x"];
