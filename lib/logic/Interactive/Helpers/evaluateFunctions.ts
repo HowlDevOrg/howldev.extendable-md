@@ -69,11 +69,19 @@ export function evaluateFunctions(
       let abs = getNumber(funcMatch[2], lookup, "abs");
       return { label: label, type: "number", value: Math.abs(abs) };
     case "pow":
-      const powSplit = funcMatch[2].split(',').map(a => a.trim());
-      if (powSplit.length != 2) throw new CodeError("Pow needs 2 number operands.")
+      const powSplit = funcMatch[2].split(",").map((a) => a.trim());
+      if (powSplit.length != 2)
+        throw new CodeError("Pow needs 2 number operands.");
       let pow1 = getNumber(powSplit[0], lookup, "pow");
       let pow2 = getNumber(powSplit[1], lookup, "pow");
       return { label: label, type: "number", value: Math.pow(pow1, pow2) };
+    case "atan2":
+      const atan2Split = funcMatch[2].split(",").map((a) => a.trim());
+      if (atan2Split.length != 2)
+        throw new CodeError("Atan2 needs 2 number operands.");
+      let atan21 = getNumber(atan2Split[0], lookup, "atan2");
+      let atan22 = getNumber(atan2Split[1], lookup, "atan2");
+      return { label: label, type: "number", value: Math.atan2(atan21, atan22) };
     // String methods ////////////////////////////////////////////
     case "isEmpty":
       let isEmpty = getString(funcMatch[2], lookup, "isEmpty");

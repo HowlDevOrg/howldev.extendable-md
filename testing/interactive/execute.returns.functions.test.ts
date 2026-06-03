@@ -104,6 +104,11 @@ describe("code can run simple functions with prims", () => {
       check: (val: string) => expect(val).toBe("9"),
     },
     {
+      name: "atan2(10, 5)",
+      code: "return atan2(10, 5)",
+      check: (val: string) => expect(val).toBe("1.1071487177940904"),
+    },
+    {
       name: "isEmpty(\"\")",
       code: "return isEmpty(\"\")",
       check: (val: string) => expect(val).toBe("true"),
@@ -307,6 +312,33 @@ describe("code throws errors on invalid inputs", () => {
     const code = ["return pow(true, 4)"];
     expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
       "Can't get number from value true in function pow.",
+    );
+  });
+
+  it("atan2 doesn't work with only 1 input", () => {
+    const code = ["return atan2(3)"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Atan2 needs 2 number operands.",
+    );
+  });
+
+  it("atan2 doesn't work with 3 inputs", () => {
+    const code = ["return atan2(3, 4, 5)"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Atan2 needs 2 number operands.",
+    );
+  });
+
+  it("atan2 doesn't work with non-number inputs 1", () => {
+    const code = ["return atan2(3, \"4\")"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Can't get number from value 4 in function atan2.",
+    );
+  });
+  it("atan2 doesn't work with non-number inputs 2", () => {
+    const code = ["return atan2(true, 4)"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Can't get number from value true in function atan2.",
     );
   });
 });
