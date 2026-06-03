@@ -32,6 +32,15 @@ export function evaluateFunctions(
     case "tan":
       let tan = getNumber(funcMatch[2], lookup, "tan");
       return { label: label, type: "number", value: Math.tan(tan) };
+    case "round":
+      let round = getNumber(funcMatch[2], lookup, "round");
+      return { label: label, type: "number", value: Math.round(round) };
+    case "floor":
+      let floor = getNumber(funcMatch[2], lookup, "floor");
+      return { label: label, type: "number", value: Math.floor(floor) };
+    case "ceil":
+      let ceil = getNumber(funcMatch[2], lookup, "ceil");
+      return { label: label, type: "number", value: Math.ceil(ceil) };
     default:
       throw new CodeError(`Couldn't find function name ${funcMatch[1]}.`);
   }

@@ -47,6 +47,48 @@ describe("code can run simple functions with prims", () => {
     expect(modified[0].label).toBe("");
     expect(modified[0].value).toBe("0");
   });
+  it("round(1.5)", () => {
+    const code = ["return round(1.5)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("2");
+  });
+  it("round(200.1)", () => {
+    const code = ["return round(200.1)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("200");
+  });
+  it("floor(1.5)", () => {
+    const code = ["return floor(1.5)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("1");
+  });
+  it("floor(200.1)", () => {
+    const code = ["return floor(200.1)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("200");
+  });
+  it("ceil(1.5)", () => {
+    const code = ["return ceil(1.5)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("2");
+  });
+  it("ceil(200.1)", () => {
+    const code = ["return ceil(200.1)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("201");
+  });
 });
 
 describe("code can run simple functions with prims and outside operators", () => {
@@ -114,7 +156,7 @@ describe("code throws errors on invalid inputs", () => {
     );
   });
 
-  const numberFunctions = ["sqrt", "sin", "cos", "tan"];
+  const numberFunctions = ["sqrt", "sin", "cos", "tan", "round", "floor", "ceil"];
   numberFunctions.forEach((func) => {
     it(`${func} (string)`, () => {
       const code = [`return ${func}("this")`];
