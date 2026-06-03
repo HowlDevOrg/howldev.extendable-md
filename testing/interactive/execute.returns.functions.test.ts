@@ -108,33 +108,33 @@ describe("code can run simple functions with prims", () => {
       check: (val: string) => expect(val).toBe("1.1071487177940904"),
     },
     {
-      name: "isEmpty(\"\")",
-      code: "return isEmpty(\"\")",
+      name: 'isEmpty("")',
+      code: 'return isEmpty("")',
       check: (val: string) => expect(val).toBe("true"),
     },
     {
-      name: "isEmpty(\"this\")",
-      code: "return isEmpty(\"this\")",
+      name: 'isEmpty("this")',
+      code: 'return isEmpty("this")',
       check: (val: string) => expect(val).toBe("false"),
     },
     {
-      name: "isNotEmpty(\"\")",
-      code: "return isNotEmpty(\"\")",
+      name: 'isNotEmpty("")',
+      code: 'return isNotEmpty("")',
       check: (val: string) => expect(val).toBe("false"),
     },
     {
-      name: "isNotEmpty(\"this\")",
-      code: "return isNotEmpty(\"this\")",
+      name: 'isNotEmpty("this")',
+      code: 'return isNotEmpty("this")',
       check: (val: string) => expect(val).toBe("true"),
     },
     {
-      name: "len(\"first\")",
-      code: "return len(\"first\")",
+      name: 'len("first")',
+      code: 'return len("first")',
       check: (val: string) => expect(val).toBe("5"),
     },
     {
-      name: "len(\"o\")",
-      code: "return len(\"o\")",
+      name: 'len("o")',
+      code: 'return len("o")',
       check: (val: string) => expect(val).toBe("1"),
     },
   ];
@@ -233,14 +233,14 @@ describe("code can run string functions with concats", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
   it("isEmpty 1", () => {
-    const code = ["return isEmpty(\"this\" + \"that\")"];
+    const code = ['return isEmpty("this" + "that")'];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
     expect(modified[0].label).toBe("");
     expect(modified[0].value).toBe("false");
   });
   it("isEmpty 2", () => {
-    const code = ["return isEmpty(\"\" + \"\")"];
+    const code = ['return isEmpty("" + "")'];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
     expect(modified[0].label).toBe("");
@@ -252,11 +252,48 @@ describe("code can run string functions with outside numbers", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
   it("len", () => {
-    const code = ["return len(\"this\") + 2"];
+    const code = ['return len("this") + 2'];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
     expect(modified[0].label).toBe("");
     expect(modified[0].value).toBe("6");
+  });
+});
+
+describe("code can run functions with variables and numbers", () => {
+  it("pow with two variables", () => {
+    const paramDefs: ParamDef[] = [
+      { name: "base", type: "number" },
+      { name: "exp", type: "number" },
+    ];
+    const values: string[] = ["2", "3"];
+    const code = ['return pow(base, exp)'];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("8");
+  });
+  it("pow with one variable and a number 1", () => {
+    const paramDefs: ParamDef[] = [
+      { name: "base", type: "number" },
+    ];
+    const values: string[] = ["2"];
+    const code = ['return pow(base, 3)'];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("8");
+  });
+  it("pow with one variable and a number 2", () => {
+    const paramDefs: ParamDef[] = [
+      { name: "exp", type: "number" },
+    ];
+    const values: string[] = ["3"];
+    const code = ['return pow(2, exp)'];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("8");
   });
 });
 
@@ -318,11 +355,7 @@ describe("code throws errors on invalid inputs", () => {
     });
   });
 
-  const stringFunctions = [
-    "isEmpty",
-    "isNotEmpty",
-    "len",
-  ];
+  const stringFunctions = ["isEmpty", "isNotEmpty", "len"];
   stringFunctions.forEach((func) => {
     it(`${func} (number)`, () => {
       const code = [`return ${func}(45.2)`];
@@ -354,7 +387,7 @@ describe("code throws errors on invalid inputs", () => {
   });
 
   it("pow doesn't work with non-number inputs 1", () => {
-    const code = ["return pow(3, \"4\")"];
+    const code = ['return pow(3, "4")'];
     expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
       "Can't get number from value 4 in function pow.",
     );
@@ -381,7 +414,7 @@ describe("code throws errors on invalid inputs", () => {
   });
 
   it("atan2 doesn't work with non-number inputs 1", () => {
-    const code = ["return atan2(3, \"4\")"];
+    const code = ['return atan2(3, "4")'];
     expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
       "Can't get number from value 4 in function atan2.",
     );
