@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { ExecuteCode } from "../../lib/logic/Interactive/ExecuteCode";
-import { ParamDef } from "../../lib/logic/Interactive/types";
+import { ExecuteCode } from "../../lib/logic/Calculator/ExecuteCode";
+import { ParamDef } from "../../lib/logic/Calculator/types";
 
 describe("code can execute assign on primitives", () => {
   const paramDefs: ParamDef[] = [];
