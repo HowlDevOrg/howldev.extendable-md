@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { ExecuteCode } from "../../lib/logic/Interactive/ExecuteCode";
 import { ParamDef } from "../../lib/logic/Interactive/types";
+import { evaluateFunctions } from "../../lib/logic/Interactive/Helpers/evaluateFunctions";
+import { evaluateExpression } from "../../lib/logic/Interactive/Helpers/evaluateExpression";
 
 describe("code can run simple functions with prims", () => {
   const paramDefs: ParamDef[] = [];
@@ -135,6 +137,27 @@ describe("code can run simple functions with prims", () => {
       expect(modified[0].label).toBe("");
       func.check(modified[0].value);
     });
+  });
+});
+
+describe("code can run stringify functions", () => {
+  it("Can stringify number", () => {
+    const modified = evaluateExpression("str(45.2)", {});
+    expect(modified.label).toBe("");
+    expect(modified.type).toBe("string");
+    expect(modified.value).toBe("45.2");
+  });
+  it("Can stringify boolean (true)", () => {
+    const modified = evaluateExpression("str(true)", {});
+    expect(modified.label).toBe("");
+    expect(modified.type).toBe("string");
+    expect(modified.value).toBe("true");
+  });
+  it("Can stringify boolean (false)", () => {
+    const modified = evaluateExpression("str(false)", {});
+    expect(modified.label).toBe("");
+    expect(modified.type).toBe("string");
+    expect(modified.value).toBe("false");
   });
 });
 

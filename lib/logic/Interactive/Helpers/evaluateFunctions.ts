@@ -78,6 +78,9 @@ export function evaluateFunctions(
     case "len":
       let len = getString(funcMatch[2], lookup, "len");
       return { label: label, type: "number", value: len.length };
+    case "str":
+      let val = evaluateExpression(funcMatch[2], lookup);
+      return { label: label, type: "string", value: val.value.toString() };
     default:
       throw new CodeError(`Couldn't find function name ${funcMatch[1]}.`);
   }
@@ -88,12 +91,12 @@ function getNumber(
   lookup: ObjectWithStructuredValue,
   funcName: string,
 ): number {
-  let sqrt = evaluateExpression(charString, lookup);
-  if (sqrt.type !== "number")
+  let number = evaluateExpression(charString, lookup);
+  if (number.type !== "number")
     throw new CodeError(
-      `Can't get number from value ${sqrt.value} in function ${funcName}.`,
+      `Can't get number from value ${number.value} in function ${funcName}.`,
     );
-  return sqrt.value as number;
+  return number.value as number;
 }
 
 function getString(
@@ -101,10 +104,10 @@ function getString(
   lookup: ObjectWithStructuredValue,
   funcName: string,
 ): string {
-  let sqrt = evaluateExpression(charString, lookup);
-  if (sqrt.type !== "string")
+  let string = evaluateExpression(charString, lookup);
+  if (string.type !== "string")
     throw new CodeError(
-      `Can't get string from value ${sqrt.value} in function ${funcName}.`,
+      `Can't get string from value ${string.value} in function ${funcName}.`,
     );
-  return sqrt.value as string;
+  return string.value as string;
 }
