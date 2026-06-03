@@ -106,28 +106,21 @@ describe("code throws errors on invalid inputs", () => {
       "Don't include any parameters with the function pi.",
     );
   });
-  it("sqrt (string)", () => {
-    const code = ["return sqrt(\"this\")"];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Can't get number from value this in function sqrt.",
-    );
-  });
-  it("sqrt (boolean)", () => {
-    const code = ["return sqrt(true)"];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Can't get number from value true in function sqrt.",
-    );
-  });
-  it("sin (string)", () => {
-    const code = ["return sin(\"this\")"];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Can't get number from value this in function sin.",
-    );
-  });
-  it("sin (boolean)", () => {
-    const code = ["return sin(true)"];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Can't get number from value true in function sin.",
-    );
+
+  const numberFunctions = ["sqrt", "sin", "cos"];
+  numberFunctions.forEach((func) => {
+    it(`${func} (string)`, () => {
+      const code = [`return ${func}("this")`];
+      expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+        `Can't get number from value this in function ${func}.`,
+      );
+    });
+
+    it(`${func} (boolean)`, () => {
+      const code = [`return ${func}(true)`];
+      expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+        `Can't get number from value true in function ${func}.`,
+      );
+    });
   });
 });
