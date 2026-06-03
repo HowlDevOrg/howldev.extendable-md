@@ -1,0 +1,119 @@
+import { describe, it, expect } from "vitest";
+import { ExecuteCode } from "../../lib/logic/Interactive/ExecuteCode";
+import { ParamDef } from "../../lib/logic/Interactive/types";
+
+describe("code can run simple functions with prims", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
+  it("e()", () => {
+    const code = ["return e()"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value.slice(0, 4)).toBe("2.71");
+  });
+  it("pi()", () => {
+    const code = ["return pi()"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value.slice(0, 4)).toBe("3.14");
+  });
+  it("sqrt()", () => {
+    const code = ["return sqrt(16)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("4");
+  });
+});
+
+describe("code can run simple functions with prims and outside operators", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
+  it("e() minus e()", () => {
+    const code = ["return e() - e()"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("0");
+  });
+  it("e() times 0", () => {
+    const code = ["return e() * 0"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("0");
+  });
+});
+
+describe("code can run simple functions with inside and outside operators", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
+  it("sqrt 1", () => {
+    const code = ["return sqrt(20 - 4) - 2"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("2");
+  });
+  it("sqrt 2", () => {
+    const code = ["return sqrt(6 * 6) * 2"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("12");
+  });
+});
+
+describe("code throws errors on invalid function names", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
+  it("nothing", () => {
+    const code = ["return nothing()"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Couldn't find function name nothing.",
+    );
+  });
+});
+
+describe("code throws errors on invalid inputs", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
+  it("e with params", () => {
+    const code = ["return e(\"this\")"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Don't include any parameters with the function e.",
+    );
+  });
+  it("pi with params", () => {
+    const code = ["return pi(\"this\")"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Don't include any parameters with the function pi.",
+    );
+  });
+  it("sqrt (string)", () => {
+    const code = ["return sqrt(\"this\")"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Can't get number from value this in function sqrt.",
+    );
+  });
+  it("sqrt (boolean)", () => {
+    const code = ["return sqrt(true)"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Can't get number from value true in function sqrt.",
+    );
+  });
+  it("sin (string)", () => {
+    const code = ["return sin(\"this\")"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Can't get number from value this in function sin.",
+    );
+  });
+  it("sin (boolean)", () => {
+    const code = ["return sin(true)"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Can't get number from value true in function sin.",
+    );
+  });
+});

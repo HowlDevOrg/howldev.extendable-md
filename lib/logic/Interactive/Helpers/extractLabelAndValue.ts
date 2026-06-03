@@ -17,7 +17,7 @@ export function extractLabelAndValue(
     returnValue = getInnerString(key);
     returnLabel = "";
     type = "string";
-  } else if (Number(key)) {
+  } else if (!isNaN(Number(key))) {
     returnValue = Number(key).toString();
     returnLabel = "";
     type = "number";
