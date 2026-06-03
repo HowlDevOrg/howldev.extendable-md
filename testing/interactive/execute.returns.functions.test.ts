@@ -297,6 +297,39 @@ describe("code can run functions with variables and numbers", () => {
   });
 });
 
+describe("code can run nested functions", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
+  it("pow with two variables in start", () => {
+    const code = ['return pow(abs(-2), 4)'];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("16");
+  });
+  it("pow with two variables in end", () => {
+    const code = ['return pow(2, abs(-4))'];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("16");
+  });
+  it("rad to deg and back again", () => {
+    const code = ['return radtodeg(degtorad(180))'];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("180");
+  });
+  it("atan2 to readable", () => {
+    const code = ['return radtodeg(atan2(5, 5))'];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("45");
+  });
+});
+
 describe("code throws errors on invalid function bases", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
