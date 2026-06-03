@@ -206,6 +206,27 @@ describe("code can run simple functions with inside and outside operators", () =
     expect(modified[0].label).toBe("");
     expect(modified[0].value).toBe("12");
   });
+  it("pow 2, 1 + 2", () => {
+    const code = ["return pow(2, 1 + 2)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("8");
+  });
+  it("pow 2, 1 + 2 * 2", () => {
+    const code = ["return pow(2, 1 + 2) * 2"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("16");
+  });
+  it("pow 2, 1 + 2 * 2 all inside parenthesis", () => {
+    const code = ["return pow(2, 1 + 2 * 2)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("64");
+  });
 });
 
 describe("code throws errors on invalid function bases", () => {
