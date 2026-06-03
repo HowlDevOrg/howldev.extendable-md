@@ -89,6 +89,20 @@ describe("code can run simple functions with prims", () => {
     expect(modified[0].label).toBe("");
     expect(modified[0].value).toBe("201");
   });
+  it("degtorad(180)", () => {
+    const code = ["return degtorad(180)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value.slice(0, 4)).toBe("3.14");
+  });
+  it("radtodeg(180)", () => {
+    const code = ["return radtodeg(2.0943951024)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value.slice(0, 4)).toBe("120.");
+  });
 });
 
 describe("code can run simple functions with prims and outside operators", () => {
@@ -156,7 +170,7 @@ describe("code throws errors on invalid inputs", () => {
     );
   });
 
-  const numberFunctions = ["sqrt", "sin", "cos", "tan", "round", "floor", "ceil"];
+  const numberFunctions = ["sqrt", "sin", "cos", "tan", "round", "floor", "ceil", "degtorad", "radtodeg"];
   numberFunctions.forEach((func) => {
     it(`${func} (string)`, () => {
       const code = [`return ${func}("this")`];

@@ -41,6 +41,12 @@ export function evaluateFunctions(
     case "ceil":
       let ceil = getNumber(funcMatch[2], lookup, "ceil");
       return { label: label, type: "number", value: Math.ceil(ceil) };
+    case "degtorad":
+      let degtorad = getNumber(funcMatch[2], lookup, "degtorad");
+      return { label: label, type: "number", value: degtorad / (180 / Math.PI) };
+    case "radtodeg":
+      let radtodeg = getNumber(funcMatch[2], lookup, "radtodeg");
+      return { label: label, type: "number", value: radtodeg * (180 / Math.PI) };
     default:
       throw new CodeError(`Couldn't find function name ${funcMatch[1]}.`);
   }
