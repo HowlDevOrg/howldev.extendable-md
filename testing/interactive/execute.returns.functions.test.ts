@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { ExecuteCode } from "../../lib/logic/Interactive/ExecuteCode";
 import { ParamDef } from "../../lib/logic/Interactive/types";
-import { evaluateFunctions } from "../../lib/logic/Interactive/Helpers/evaluateFunctions";
 import { evaluateExpression } from "../../lib/logic/Interactive/Helpers/evaluateExpression";
 
 describe("code can run simple functions with prims", () => {

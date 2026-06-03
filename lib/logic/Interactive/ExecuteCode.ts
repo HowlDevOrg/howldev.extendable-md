@@ -2,11 +2,7 @@ import { CodeError, InternalError } from "./customErrors";
 import { evaluateExpression } from "./Helpers/evaluateExpression";
 import { paramDefAndValueToStructuredOutput } from "./Helpers/stringHelpers";
 import { StructuredReturnToString } from "./Helpers/structuredReturnToString";
-import {
-  ExecutionReturn,
-  ObjectWithStructuredValue,
-  ParamDef,
-} from "./types";
+import { ExecutionReturn, ObjectWithStructuredValue, ParamDef } from "./types";
 
 export function ExecuteCode(
   paramDef: ParamDef[],
@@ -26,18 +22,22 @@ export function ExecuteCode(
     const splitString = code[i].split(" ").filter((a) => !!a);
     const key = splitString.slice(1).join(" ");
     switch (splitString[0]) {
-      case "return":
+      case "return": {
         const vals = evaluateExpression(key, lookup);
         return [{ label: vals.label, value: StructuredReturnToString(vals) }];
-      case "assign":
+      }
+      case "assign": {
         const assignRegex = /(.*)[^<>!=]=[^=](.*)/;
         const match = key.match(assignRegex);
         if (match && match[1] && match[2]) {
           lookup[match[1].trim()] = evaluateExpression(match[2].trim(), lookup);
         } else {
-          throw new CodeError("Did not match assignment regex in assign block.");
+          throw new CodeError(
+            "Did not match assignment regex in assign block.",
+          );
         }
         break;
+      }
       default:
         throw new CodeError(`Cannot find keyword ${splitString[0]}.`);
     }
