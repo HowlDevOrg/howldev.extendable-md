@@ -24,7 +24,7 @@ export function paramDefAndValueToStructuredOutput(
 }
 
 export function GetSingleNumber(str: string): number {
-  if (Number(str)) {
+  if (!isNaN(Number(str))) {
     return Number(str);
   }
   throw new InternalError(`Could not parse ${str} as number.`);

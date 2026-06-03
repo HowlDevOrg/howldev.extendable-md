@@ -23,3 +23,15 @@ export class CodeError extends Error {
         super("Code Error: " + str);
     }
 }
+
+/**
+ * Returns an error with "User Error: " prefixed
+ * to error messages. 
+ * 
+ * Used for custom exceptions of the writer.. 
+ */
+export class UserError extends Error {
+    constructor(str: string) {
+        super("User Error: " + str);
+    }
+}

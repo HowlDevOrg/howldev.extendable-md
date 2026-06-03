@@ -1,4 +1,4 @@
-import { CodeError, InternalError } from "./customErrors";
+import { CodeError, InternalError, UserError } from "./customErrors";
 import { evaluateExpression } from "./Helpers/evaluateExpression";
 import { paramDefAndValueToStructuredOutput } from "./Helpers/stringHelpers";
 import { StructuredReturnToString } from "./Helpers/structuredReturnToString";
@@ -20,15 +20,16 @@ export function ExecuteCode(
   }
   for (let i = 0; i < code.length; i++) {
     const splitString = code[i].split(" ").filter((a) => !!a);
-    const key = splitString.slice(1).join(" ");
+    const expValue = splitString.slice(1).join(" ");
     switch (splitString[0]) {
       case "return": {
-        const vals = evaluateExpression(key, lookup);
+        const vals = evaluateExpression(expValue, lookup);
         return [{ label: vals.label, value: StructuredReturnToString(vals) }];
       }
+      case "throw": throw new UserError(expValue);
       case "assign": {
         const assignRegex = /(.*)[^<>!=]=[^=](.*)/;
-        const match = key.match(assignRegex);
+        const match = expValue.match(assignRegex);
         if (match && match[1] && match[2]) {
           lookup[match[1].trim()] = evaluateExpression(match[2].trim(), lookup);
         } else {
