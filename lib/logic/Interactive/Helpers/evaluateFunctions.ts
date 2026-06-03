@@ -68,6 +68,12 @@ export function evaluateFunctions(
     case "abs":
       let abs = getNumber(funcMatch[2], lookup, "abs");
       return { label: label, type: "number", value: Math.abs(abs) };
+    case "pow":
+      const powSplit = funcMatch[2].split(',').map(a => a.trim());
+      if (powSplit.length != 2) throw new CodeError("Pow needs 2 number operands.")
+      let pow1 = getNumber(powSplit[0], lookup, "pow");
+      let pow2 = getNumber(powSplit[1], lookup, "pow");
+      return { label: label, type: "number", value: Math.pow(pow1, pow2) };
     // String methods ////////////////////////////////////////////
     case "isEmpty":
       let isEmpty = getString(funcMatch[2], lookup, "isEmpty");

@@ -99,6 +99,11 @@ describe("code can run simple functions with prims", () => {
       check: (val: string) => expect(val).toBe("120"),
     },
     {
+      name: "pow(3, 2)",
+      code: "return pow(3, 2)",
+      check: (val: string) => expect(val).toBe("9"),
+    },
+    {
       name: "isEmpty(\"\")",
       code: "return isEmpty(\"\")",
       check: (val: string) => expect(val).toBe("true"),
@@ -276,5 +281,32 @@ describe("code throws errors on invalid inputs", () => {
         `Can't get string from value true in function ${func}.`,
       );
     });
+  });
+
+  it("pow doesn't work with only 1 input", () => {
+    const code = ["return pow(3)"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Pow needs 2 number operands.",
+    );
+  });
+
+  it("pow doesn't work with 3 inputs", () => {
+    const code = ["return pow(3, 4, 5)"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Pow needs 2 number operands.",
+    );
+  });
+
+  it("pow doesn't work with non-number inputs 1", () => {
+    const code = ["return pow(3, \"4\")"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Can't get number from value 4 in function pow.",
+    );
+  });
+  it("pow doesn't work with non-number inputs 2", () => {
+    const code = ["return pow(true, 4)"];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Can't get number from value true in function pow.",
+    );
   });
 });
