@@ -57,15 +57,15 @@ export function evaluateBinaryOperators(
     const n2 = Number(num2.value);
     switch (opMatch[2]) {
       case "+":
-        return { value: (n1 + n2).toString(), type: "number", label: label };
+        return { value: n1 + n2, type: "number", label: label };
       case "-":
-        return { value: (n1 - n2).toString(), type: "number", label: label };
+        return { value: n1 - n2, type: "number", label: label };
       case "*":
-        return { value: (n1 * n2).toString(), type: "number", label: label };
+        return { value: n1 * n2, type: "number", label: label };
       case "/":
-        return { value: (n1 / n2).toString(), type: "number", label: label };
+        return { value: n1 / n2, type: "number", label: label };
       case "%":
-        return { value: (n1 % n2).toString(), type: "number", label: label };
+        return { value: n1 % n2, type: "number", label: label };
       case "<":
         return { value: n1 < n2, type: "bool", label: label };
       case ">":
