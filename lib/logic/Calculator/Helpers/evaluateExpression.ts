@@ -2,13 +2,13 @@ import { ObjectWithStructuredValue, StructuredReturn } from "../types";
 import { evaluateBinaryOperators } from "./evaluateBinaryOperators";
 import { evaluateFunctions } from "./evaluateFunctions";
 import { extractLabelAndValue } from "./extractLabelAndValue";
+import { asRegex, functionRegex, operatorRegex } from "./regex";
 import { StructuredReturnToString } from "./structuredReturnToString";
 
 export function evaluateExpression(
   possibleExp: string,
   lookup: ObjectWithStructuredValue,
 ): StructuredReturn {
-  const asRegex = /(.*)\s+as\s+(.*)/;
   const asMatch = possibleExp.match(asRegex);
   let label;
 
@@ -23,10 +23,7 @@ export function evaluateExpression(
     label = "";
   }
 
-  const operatorRegex =
-    /(.*)(&&|\|\||!=|={2}|<=?|>=?|\*|-|\+|\/|%)(?![^()]*\))(.*)/;
   const opMatch = possibleExp.match(operatorRegex);
-  const functionRegex = /(\w*)\s*\((.*)\)/;
   const funcMatch = possibleExp.match(functionRegex);
   if (opMatch && funcMatch) {
     return opMatch[0].length >= funcMatch[0].length

@@ -1,5 +1,6 @@
 import { CodeError, InternalError, UserError } from "./customErrors";
 import { evaluateExpression } from "./Helpers/evaluateExpression";
+import { assignRegex } from "./Helpers/regex";
 import { paramDefAndValueToStructuredOutput } from "./Helpers/stringHelpers";
 import { StructuredReturnToString } from "./Helpers/structuredReturnToString";
 import {
@@ -52,7 +53,6 @@ export function ExecuteCode(
         break;
       }
       case "assign": {
-        const assignRegex = /(.*)[^<>!=]=[^=](.*)/;
         const match = expValue.match(assignRegex);
         if (match && match[1] && match[2]) {
           lookup[match[1].trim()] = evaluateExpression(match[2].trim(), lookup);
