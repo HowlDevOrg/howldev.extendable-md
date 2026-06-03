@@ -3,6 +3,20 @@ import { ObjectWithStructuredValue, StructuredReturn } from "../types";
 import { extractLabelAndValue } from "./extractLabelAndValue";
 import { StructuredReturnToString } from "./structuredReturnToString";
 
+const VALID_OPERATORS = [
+  "+",
+  "-",
+  "*",
+  "/",
+  "%",
+  "<",
+  ">",
+  "<=",
+  ">=",
+  "!=",
+  "==",
+];
+
 export function evaluateExpression(
   possibleExp: string,
   lookup: ObjectWithStructuredValue,
@@ -32,136 +46,74 @@ export function evaluateExpression(
         `Can't execute operator ${opMatch[2]} on types ${num1.type} and ${num2.type}.`,
       );
     }
-    switch (opMatch[2]) {
-      case "+":
-        if (num1.type === "number") {
-          return {
-            value: (Number(num1.value) + Number(num2.value)).toString(),
-            type: "number",
-            label: label,
-          };
-        } else if (num1.type === "string") {
-          return {
-            value: ((num1.value as string) + (num2.value as string)).toString(),
-            type: "string",
-            label: label,
-          };
-        } else {
-          throw new CodeError("Cannot apply + operator to bool types.");
-        }
-      case "-":
-        possibleThrowForNonNumberForOperator(opMatch[2], num1);
-        return {
-          value: ((num1.value as number) - (num2.value as number)).toString(),
-          type: "number",
-          label: label,
-        };
-      case "*":
-        possibleThrowForNonNumberForOperator(opMatch[2], num1);
-        return {
-          value: (Number(num1.value) * Number(num2.value)).toString(),
-          type: "number",
-          label: label,
-        };
-      case "/":
-        possibleThrowForNonNumberForOperator(opMatch[2], num1);
-        return {
-          value: ((num1.value as number) / (num2.value as number)).toString(),
-          type: "number",
-          label: label,
-        };
-      case "%":
-        possibleThrowForNonNumberForOperator(opMatch[2], num1);
-        return {
-          value: ((num1.value as number) % (num2.value as number)).toString(),
-          type: "number",
-          label: label,
-        };
-      case "<":
-        possibleThrowForNonNumberForOperator(opMatch[2], num1);
-        return {
-          value: (num1.value as number) < (num2.value as number),
-          type: "bool",
-          label: label,
-        };
-      case ">":
-        possibleThrowForNonNumberForOperator(opMatch[2], num1);
-        return {
-          value: (num1.value as number) > (num2.value as number),
-          type: "bool",
-          label: label,
-        };
-      case "<=":
-        possibleThrowForNonNumberForOperator(opMatch[2], num1);
-        return {
-          value: (num1.value as number) <= (num2.value as number),
-          type: "bool",
-          label: label,
-        };
-      case ">=":
-        possibleThrowForNonNumberForOperator(opMatch[2], num1);
-        return {
-          value: (num1.value as number) >= (num2.value as number),
-          type: "bool",
-          label: label,
-        };
-      case "!=":
-        switch (num1.type) {
-          case "string":
-            return {
-              value: (num1.value as string) != (num2.value as string),
-              type: "bool",
-              label: label,
-            };
-          case "number":
-            return {
-              value: (num1.value as number) != (num2.value as number),
-              type: "bool",
-              label: label,
-            };
-          case "bool":
-            return {
-              value: (num1.value as boolean) != (num2.value as boolean),
-              type: "bool",
-              label: label,
-            };
-        }
-      case "==":
-        switch (num1.type) {
-          case "string":
-            return {
-              value: (num1.value as string) == (num2.value as string),
-              type: "bool",
-              label: label,
-            };
-          case "number":
-            return {
-              value: (num1.value as number) == (num2.value as number),
-              type: "bool",
-              label: label,
-            };
-          case "bool":
-            return {
-              value: (num1.value as boolean) == (num2.value as boolean),
-              type: "bool",
-              label: label,
-            };
-        }
-      default:
-        throw new CodeError(
-          `Unknown operator error: Could not find operator ${opMatch[2]}`,
-        );
+
+    if (!VALID_OPERATORS.includes(opMatch[2])) {
+      throw new CodeError(
+        `Unknown operator error: Could not find operator ${opMatch[2]}`,
+      );
+    }
+
+    if (num1.type === "string") {
+      const str1 = num1.value as string;
+      const str2 = num2.value as string;
+      switch (opMatch[2]) {
+        case "+":
+          return { value: str1 + str2, type: "string", label: label };
+        case "!=":
+          return { value: str1 != str2, type: "bool", label: label };
+        case "==":
+          return { value: str1 == str2, type: "bool", label: label };
+        default:
+          throw new CodeError(
+            `Type string is not valid for operator ${opMatch[2]}.`,
+          );
+      }
+    } else if (num1.type === "number") {
+      const n1 = Number(num1.value);
+      const n2 = Number(num2.value);
+      switch (opMatch[2]) {
+        case "+":
+          return { value: (n1 + n2).toString(), type: "number", label: label };
+        case "-":
+          return { value: (n1 - n2).toString(), type: "number", label: label };
+        case "*":
+          return { value: (n1 * n2).toString(), type: "number", label: label };
+        case "/":
+          return { value: (n1 / n2).toString(), type: "number", label: label };
+        case "%":
+          return { value: (n1 % n2).toString(), type: "number", label: label };
+        case "<":
+          return { value: n1 < n2, type: "bool", label: label };
+        case ">":
+          return { value: n1 > n2, type: "bool", label: label };
+        case "<=":
+          return { value: n1 <= n2, type: "bool", label: label };
+        case ">=":
+          return { value: n1 >= n2, type: "bool", label: label };
+        case "!=":
+          return { value: n1 != n2, type: "bool", label: label };
+        case "==":
+          return { value: n1 == n2, type: "bool", label: label };
+        default:
+          throw new CodeError(
+            `Type number is not valid for operator ${opMatch[2]}.`,
+          );
+      }
+    } else {
+      const bool1 = num1.value as boolean;
+      const bool2 = num2.value as boolean;
+      switch (opMatch[2]) {
+        case "!=":
+          return { value: bool1 != bool2, type: "bool", label: label };
+        case "==":
+          return { value: bool1 == bool2, type: "bool", label: label };
+        default:
+          throw new CodeError(
+            `Type bool is not valid for operator ${opMatch[2]}.`,
+          );
+      }
     }
   } else {
     return extractLabelAndValue(possibleExp.trim(), lookup, label);
-  }
-}
-
-function possibleThrowForNonNumberForOperator(
-  op: string,
-  type: StructuredReturn,
-): void {
-  if (type.type !== "number") {
-    throw new CodeError(`Type ${type.type} is not valid for operator ${op}.`);
   }
 }
