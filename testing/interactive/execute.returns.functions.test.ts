@@ -124,6 +124,13 @@ describe("code can run simple functions with prims", () => {
     expect(modified[0].label).toBe("");
     expect(modified[0].value).toBe(Math.log(20).toString());
   });
+  it("abs(-120)", () => {
+    const code = ["return abs(-120)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("120");
+  });
 });
 
 describe("code can run simple functions with prims and outside operators", () => {
@@ -204,6 +211,7 @@ describe("code throws errors on invalid inputs", () => {
     "log",
     "log2",
     "ln",
+    "abs",
   ];
   numberFunctions.forEach((func) => {
     it(`${func} (string)`, () => {

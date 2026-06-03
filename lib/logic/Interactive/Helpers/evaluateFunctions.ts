@@ -56,6 +56,9 @@ export function evaluateFunctions(
     case "ln":
       let ln = getNumber(funcMatch[2], lookup, "ln");
       return { label: label, type: "number", value: Math.log(ln) };
+    case "abs":
+      let abs = getNumber(funcMatch[2], lookup, "abs");
+      return { label: label, type: "number", value: Math.abs(abs) };
     default:
       throw new CodeError(`Couldn't find function name ${funcMatch[1]}.`);
   }
