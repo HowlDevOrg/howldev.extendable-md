@@ -18,7 +18,7 @@ import {
   isTable,
   isCollapsible,
 } from "./MarkdownPatterns";
-import { InteractiveDisplay } from "./Interactive/InteractiveDisplay";
+import { CalculatorDisplay } from "./Calculator/CalculatorDisplay";
 
 export function InternalTopLevelMarkdownParser({
   a,
@@ -142,8 +142,8 @@ function InternalCodeDisplay(
       return <MathDisplay text={codeText} displayAsBlock={true} />;
     } else if (type === "mermaid") {
       return <MermaidDisplay text={codeText} />;
-    } else if (enableInteractiveCalculator && type === "interactive") {
-      return <InteractiveDisplay text={codeText} />;
+    } else if (enableInteractiveCalculator && type === "calculator") {
+      return <CalculatorDisplay text={codeText} />;
     } else {
       return <CodeViewer language={type} codeLines={codeText} />;
     }

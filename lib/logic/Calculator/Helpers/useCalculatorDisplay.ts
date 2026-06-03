@@ -3,7 +3,7 @@ import { ExecuteCode } from "../ExecuteCode";
 import { getDefault } from "./getDefault";
 import { parseParamsAndCode } from "./parseParamsAndCode";
 
-export function useInteractiveDisplay(text: string) {
+export function useCalculatorDisplay(text: string) {
   const [values, setValues] = useState<string[]>([]);
 
   const { params, code, paramError } = useMemo(() => {

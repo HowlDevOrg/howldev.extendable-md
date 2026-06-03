@@ -97,15 +97,15 @@
   }
 
   /* Interactive functions */
-  .interactive-display {
+  .calculator-display {
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
-  .interactive-params {
+  .calculator-params {
     display: flex;
     flex-direction: column;
   }
-  .interactive-result {
+  .calculator-result {
     display: flex;
     flex-direction: column;
   }

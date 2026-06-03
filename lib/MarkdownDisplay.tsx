@@ -50,6 +50,7 @@ type Props = {
  * @param text Text to render.
  * @param codeOverload Optional function to overload the CodeViewer component. 
  * @param inlineOverload Optional function to have custom inline values. 
+ * @param enableInteractiveCalculator Optional boolean to allow usage of the calculator code block. 
  */
 export function MarkdownDisplay({ text, codeOverload, inlineOverload, enableInteractiveCalculator = false }: Props) {
   const items = semanticDiffuser(text);

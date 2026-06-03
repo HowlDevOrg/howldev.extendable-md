@@ -1,14 +1,14 @@
 import { ReactNode } from "react";
-import { InteractiveDisplayInputs } from "./InteractiveDisplayInputs";
-import { useInteractiveDisplay } from "./Helpers/useInteractiveDisplay";
+import { InteractiveDisplayInputs } from "./CalculatorDisplayInputs";
+import { useCalculatorDisplay } from "./Helpers/useCalculatorDisplay";
 
-type InteractiveDisplayProps = {
+type CalculatorDisplayProps = {
   text: string;
 };
 
-export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
+export function CalculatorDisplay({ text }: CalculatorDisplayProps) {
   const { setValues, params, values, paramError, runtimeError, codeResult } =
-    useInteractiveDisplay(text);
+    useCalculatorDisplay(text);
 
   const updateValues = (index: number, value: string) => {
     if (Number(value)) {
@@ -32,11 +32,11 @@ export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
   }
 
   return (
-    <div className="interactive-display">
+    <div className="calculator-display">
       {paramError ? (
         <p style={{ color: "red" }}>Param parsing error: {paramError}</p>
       ) : (
-        <div className="interactive-params">
+        <div className="calculator-params">
           <InteractiveDisplayInputs
             params={params}
             values={values}
@@ -47,7 +47,7 @@ export function InteractiveDisplay({ text }: InteractiveDisplayProps) {
       {runtimeError ? (
         <p style={{ color: "red" }}>Code syntax error: {runtimeError}</p>
       ) : (
-        <div className="interactive-result">{result}</div>
+        <div className="calculator-result">{result}</div>
       )}
     </div>
   );
