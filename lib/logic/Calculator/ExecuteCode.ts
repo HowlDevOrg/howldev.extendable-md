@@ -2,7 +2,12 @@ import { CodeError, InternalError, UserError } from "./customErrors";
 import { evaluateExpression } from "./Helpers/evaluateExpression";
 import { paramDefAndValueToStructuredOutput } from "./Helpers/stringHelpers";
 import { StructuredReturnToString } from "./Helpers/structuredReturnToString";
-import { ExecutionReturn, ObjectWithStructuredValue, ParamDef } from "./types";
+import {
+  ExecutionReturn,
+  ObjectWithStructuredValue,
+  ParamDef,
+  StructuredReturn,
+} from "./types";
 
 export function ExecuteCode(
   paramDef: ParamDef[],
@@ -26,7 +31,26 @@ export function ExecuteCode(
         const vals = evaluateExpression(expValue, lookup);
         return [{ label: vals.label, value: StructuredReturnToString(vals) }];
       }
-      case "throw": throw new UserError(expValue);
+      case "throw":
+        throw new UserError(expValue);
+      case "throwifoutsiderange": {
+        const args = expValue.split(",");
+        const value = evaluateExpression(args[0], lookup);
+        const lowerBound = evaluateExpression(args[1], lookup);
+        const upperBound = evaluateExpression(args[2], lookup);
+        const v = throwIfNotNumber(value);
+        const lb = throwIfNotNumber(lowerBound);
+        const ub = throwIfNotNumber(upperBound);
+        if (v < lb || v > ub) {
+          const displayName = value.label
+            ? `${value.value} (${value.label})`
+            : value.value;
+          throw new UserError(
+            `${displayName} is outside of range ${lowerBound.value} - ${upperBound.value}.`,
+          );
+        }
+        break;
+      }
       case "assign": {
         const assignRegex = /(.*)[^<>!=]=[^=](.*)/;
         const match = expValue.match(assignRegex);
@@ -44,4 +68,15 @@ export function ExecuteCode(
     }
   }
   throw new CodeError("Did not find a return statement.");
+}
+
+function throwIfNotNumber(value: StructuredReturn): number {
+  if (value.type !== "number") {
+    const displayValue =
+      value.type === "string" ? '"' + value.value + '"' : value.value;
+    throw new CodeError(
+      `Value ${displayValue} must be of type number in throwIfOutsideRange.`,
+    );
+  }
+  return value.value as number;
 }
