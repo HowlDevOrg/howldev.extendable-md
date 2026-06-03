@@ -96,12 +96,33 @@ describe("code can run simple functions with prims", () => {
     expect(modified[0].label).toBe("");
     expect(modified[0].value.slice(0, 4)).toBe("3.14");
   });
-  it("radtodeg(180)", () => {
+  it("radtodeg(2.0943951024)", () => {
     const code = ["return radtodeg(2.0943951024)"];
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
     expect(modified[0].label).toBe("");
-    expect(modified[0].value.slice(0, 4)).toBe("120.");
+    expect(modified[0].value.slice(0, 5)).toBe("120.0");
+  });
+  it("log(100)", () => {
+    const code = ["return log(100)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("2");
+  });
+  it("log2(64)", () => {
+    const code = ["return log2(64)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("6");
+  });
+  it("ln(20)", () => {
+    const code = ["return ln(20)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe(Math.log(20).toString());
   });
 });
 
@@ -143,10 +164,10 @@ describe("code can run simple functions with inside and outside operators", () =
   });
 });
 
-describe("code throws errors on invalid function names", () => {
+describe("code throws errors on invalid function bases", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
-  it("nothing", () => {
+  it("invalid name (nothing)", () => {
     const code = ["return nothing()"];
     expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
       "Couldn't find function name nothing.",
@@ -170,7 +191,20 @@ describe("code throws errors on invalid inputs", () => {
     );
   });
 
-  const numberFunctions = ["sqrt", "sin", "cos", "tan", "round", "floor", "ceil", "degtorad", "radtodeg"];
+  const numberFunctions = [
+    "sqrt",
+    "sin",
+    "cos",
+    "tan",
+    "round",
+    "floor",
+    "ceil",
+    "degtorad",
+    "radtodeg",
+    "log",
+    "log2",
+    "ln",
+  ];
   numberFunctions.forEach((func) => {
     it(`${func} (string)`, () => {
       const code = [`return ${func}("this")`];
