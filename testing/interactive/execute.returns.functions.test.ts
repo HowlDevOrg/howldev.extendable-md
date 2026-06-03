@@ -189,7 +189,7 @@ describe("code can run simple functions with prims and outside operators", () =>
   });
 });
 
-describe("code can run simple functions with inside and outside operators", () => {
+describe("code can run simple math functions with inside and outside operators", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
   it("sqrt 1", () => {
@@ -226,6 +226,37 @@ describe("code can run simple functions with inside and outside operators", () =
     expect(modified.length).toBe(1);
     expect(modified[0].label).toBe("");
     expect(modified[0].value).toBe("64");
+  });
+});
+
+describe("code can run string functions with concats", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
+  it("isEmpty 1", () => {
+    const code = ["return isEmpty(\"this\" + \"that\")"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("false");
+  });
+  it("isEmpty 2", () => {
+    const code = ["return isEmpty(\"\" + \"\")"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("true");
+  });
+});
+
+describe("code can run string functions with outside numbers", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
+  it("len", () => {
+    const code = ["return len(\"this\") + 2"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("6");
   });
 });
 
