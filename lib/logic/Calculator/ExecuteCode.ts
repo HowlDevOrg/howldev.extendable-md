@@ -21,7 +21,7 @@ export function ExecuteCode(
   for (let i = 0; i < code.length; i++) {
     const splitString = code[i].split(" ").filter((a) => !!a);
     const expValue = splitString.slice(1).join(" ");
-    switch (splitString[0]) {
+    switch (splitString[0].toLowerCase()) {
       case "return": {
         const vals = evaluateExpression(expValue, lookup);
         return [{ label: vals.label, value: StructuredReturnToString(vals) }];
