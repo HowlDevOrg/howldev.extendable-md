@@ -6,40 +6,21 @@ import { beforeEach } from "vitest";
 describe("code can execute math operators on other side of assign", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
-  it("can execute 2 + 3", () => {
-    const code = ["assign x = 2 + 3", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("5");
-  });
-  it("can execute 2 * 3", () => {
-    const code = ["assign x = 2 * 3", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("6");
-  });
-  it("can execute 2 - 3", () => {
-    const code = ["assign x = 2 - 3", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("-1");
-  });
-  it("can execute 2 / 3", () => {
-    const code = ["assign x = 2 / 3", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("0.6666666666666666");
-  });
-  it("can execute 5 % 3", () => {
-    const code = ["assign x = 5 % 3", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("2");
+  const mathOperations = [
+    { op: "+", left: 2, right: 3, expected: "5" },
+    { op: "*", left: 2, right: 3, expected: "6" },
+    { op: "-", left: 2, right: 3, expected: "-1" },
+    { op: "/", left: 2, right: 3, expected: "0.6666666666666666" },
+    { op: "%", left: 5, right: 3, expected: "2" },
+  ];
+  mathOperations.forEach(({ op, left, right, expected }) => {
+    it(`can execute ${left} ${op} ${right}`, () => {
+      const code = [`assign x = ${left} ${op} ${right}`, "return x"];
+      const modified = ExecuteCode(paramDefs, values, code);
+      expect(modified.length).toBe(1);
+      expect(modified[0].label).toBe("x");
+      expect(modified[0].value).toBe(expected);
+    });
   });
 });
 
@@ -65,75 +46,26 @@ describe("code can execute string concatenate on other side of assign", () => {
 describe("code can execute equivalence operators on other side of assign (for numbers)", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
-  it("can execute 2 < 3", () => {
-    const code = ["assign x = 2 < 3", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("true");
-  });
-  it("can execute 3 < 2", () => {
-    const code = ["assign x = 3 < 2", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("false");
-  });
-  it("can execute 2 > 3", () => {
-    const code = ["assign x = 2 > 3", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("false");
-  });
-  it("can execute 2 <= 3", () => {
-    const code = ["assign x = 2 <= 3", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("true");
-  });
-  it("can execute 2 <= 2", () => {
-    const code = ["assign x = 2 <= 2", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("true");
-  });
-  it("can execute 2 >= 2", () => {
-    const code = ["assign x = 2 >= 2", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("true");
-  });
-  it("can execute 2 >= 5", () => {
-    const code = ["assign x = 2 >= 5", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("false");
-  });
-  it("can execute 5 >= 2", () => {
-    const code = ["assign x = 5 >= 2", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("true");
-  });
-  it("can execute 5 == 2", () => {
-    const code = ["assign x = 5 == 2", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("false");
-  });
-  it("can execute 5 != 2", () => {
-    const code = ["assign x = 5 != 2", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("true");
+  const equivalenceTests = [
+    { left: 2, op: "<", right: 3, expected: "true" },
+    { left: 3, op: "<", right: 2, expected: "false" },
+    { left: 2, op: ">", right: 3, expected: "false" },
+    { left: 2, op: "<=", right: 3, expected: "true" },
+    { left: 2, op: "<=", right: 2, expected: "true" },
+    { left: 2, op: ">=", right: 2, expected: "true" },
+    { left: 2, op: ">=", right: 5, expected: "false" },
+    { left: 5, op: ">=", right: 2, expected: "true" },
+    { left: 5, op: "==", right: 2, expected: "false" },
+    { left: 5, op: "!=", right: 2, expected: "true" },
+  ];
+  equivalenceTests.forEach(({ left, op, right, expected }) => {
+    it(`can execute ${left} ${op} ${right}`, () => {
+      const code = [`assign x = ${left} ${op} ${right}`, "return x"];
+      const modified = ExecuteCode(paramDefs, values, code);
+      expect(modified.length).toBe(1);
+      expect(modified[0].label).toBe("x");
+      expect(modified[0].value).toBe(expected);
+    });
   });
 });
 

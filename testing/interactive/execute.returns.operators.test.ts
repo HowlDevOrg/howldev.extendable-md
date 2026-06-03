@@ -53,105 +53,27 @@ describe("code throws errors on mismatched types", () => {
 describe("code throws errors for numeric operators when not number (string)", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
-  it("- operator", () => {
-    const code = [`return "13" - "hello"`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type string is not valid for operator -.",
-    );
-  });
-  it("* operator", () => {
-    const code = [`return "13" * "hello"`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type string is not valid for operator *.",
-    );
-  });
-  it("/ operator", () => {
-    const code = [`return "13" / "hello"`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type string is not valid for operator /.",
-    );
-  });
-  it("% operator", () => {
-    const code = [`return "13" % "hello"`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type string is not valid for operator %.",
-    );
-  });
-  it("< operator", () => {
-    const code = [`return "13" < "hello"`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type string is not valid for operator <.",
-    );
-  });
-  it("> operator", () => {
-    const code = [`return "13" > "hello"`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type string is not valid for operator >.",
-    );
-  });
-  it("<= operator", () => {
-    const code = [`return "13" <= "hello"`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type string is not valid for operator <=.",
-    );
-  });
-  it(">= operator", () => {
-    const code = [`return "13" >= "hello"`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type string is not valid for operator >=.",
-    );
+  const invalidStringOperators = ["-", "*", "/", "%", "<", ">", "<=", ">="];
+  invalidStringOperators.forEach((op) => {
+    it(`${op} operator`, () => {
+      const code = [`return "13" ${op} "hello"`];
+      expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+        `Type string is not valid for operator ${op}.`,
+      );
+    });
   });
 });
 
 describe("code throws errors for numeric operators when not number (boolean)", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
-  it("- operator", () => {
-    const code = [`return true - false`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type bool is not valid for operator -.",
-    );
-  });
-  it("* operator", () => {
-    const code = [`return true * false`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type bool is not valid for operator *.",
-    );
-  });
-  it("/ operator", () => {
-    const code = [`return true / false`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type bool is not valid for operator /.",
-    );
-  });
-  it("% operator", () => {
-    const code = [`return true % false`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type bool is not valid for operator %.",
-    );
-  });
-  it("< operator", () => {
-    const code = [`return true < false`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type bool is not valid for operator <.",
-    );
-  });
-  it("> operator", () => {
-    const code = [`return true > false`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type bool is not valid for operator >.",
-    );
-  });
-  it("<= operator", () => {
-    const code = [`return true <= false`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type bool is not valid for operator <=.",
-    );
-  });
-  it(">= operator", () => {
-    const code = [`return true >= false`];
-    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
-      "Type bool is not valid for operator >=.",
-    );
+  const invalidBoolOperators = ["-", "*", "/", "%", "<", ">", "<=", ">="];
+  invalidBoolOperators.forEach((op) => {
+    it(`${op} operator`, () => {
+      const code = [`return true ${op} false`];
+      expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+        `Type bool is not valid for operator ${op}.`,
+      );
+    });
   });
 });

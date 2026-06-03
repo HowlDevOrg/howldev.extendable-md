@@ -66,121 +66,62 @@ describe("code can execute return on single inputs", () => {
 describe("code can execute return on primitives", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
-  it("no params/values returns string without quotes", () => {
-    const code = [`return "This thing"`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("");
-    expect(modified[0].value).toBe("This thing");
-  });
-  it("no params/values returns number (int)", () => {
-    const code = [`return 15`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("");
-    expect(modified[0].value).toBe("15");
-  });
-  it("no params/values returns number (float)", () => {
-    const code = [`return 15.25`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("");
-    expect(modified[0].value).toBe("15.25");
-  });
-  it("no params/values returns bool (true)", () => {
-    const code = [`return true`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("");
-    expect(modified[0].value).toBe("true");
-  });
-  it("no params/values returns bool (false)", () => {
-    const code = [`return false`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("");
-    expect(modified[0].value).toBe("false");
+  const primitives = [
+    { description: "string without quotes", code: `return "This thing"`, expected: "This thing" },
+    { description: "number (int)", code: "return 15", expected: "15" },
+    { description: "number (float)", code: "return 15.25", expected: "15.25" },
+    { description: "bool (true)", code: "return true", expected: "true" },
+    { description: "bool (false)", code: "return false", expected: "false" },
+  ];
+  primitives.forEach(({ description, code, expected }) => {
+    it(`no params/values returns ${description}`, () => {
+      const codeArray = [code];
+      const modified = ExecuteCode(paramDefs, values, codeArray);
+      expect(modified.length).toBe(1);
+      expect(modified[0].label).toBe("");
+      expect(modified[0].value).toBe(expected);
+    });
   });
 });
 
 describe("code can execute return on expressions", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
-  it("addition expression", () => {
-    const code = [`return 15 + 23`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("");
-    expect(modified[0].value).toBe("38");
-  });
-  it("multiply expression", () => {
-    const code = [`return 4 * 5`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("");
-    expect(modified[0].value).toBe("20");
-  });
-  it("subtract expression", () => {
-    const code = [`return 4 - 2`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("");
-    expect(modified[0].value).toBe("2");
-  });
-  it("divide expression", () => {
-    const code = [`return 4 / 2`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("");
-    expect(modified[0].value).toBe("2");
+  const expressions = [
+    { description: "addition expression", code: "return 15 + 23", expected: "38" },
+    { description: "multiply expression", code: "return 4 * 5", expected: "20" },
+    { description: "subtract expression", code: "return 4 - 2", expected: "2" },
+    { description: "divide expression", code: "return 4 / 2", expected: "2" },
+  ];
+  expressions.forEach(({ description, code, expected }) => {
+    it(description, () => {
+      const codeArray = [code];
+      const modified = ExecuteCode(paramDefs, values, codeArray);
+      expect(modified.length).toBe(1);
+      expect(modified[0].label).toBe("");
+      expect(modified[0].value).toBe(expected);
+    });
   });
 });
 
 describe("code can execute return with alias", () => {
-  it("no params/values returns string as prim", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
-    const code = [`return "This thing" as item`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("item");
-    expect(modified[0].value).toBe("This thing");
-  });
-  it("no params/values returns number (int) as prim", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
-    const code = [`return 15 as item`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("item");
-    expect(modified[0].value).toBe("15");
-  });
-  it("no params/values returns number (float) as prim", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
-    const code = [`return 15.25 as item`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("item");
-    expect(modified[0].value).toBe("15.25");
-  });
-  it("no params/values returns bool (true) as prim", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
-    const code = [`return true as item`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("item");
-    expect(modified[0].value).toBe("true");
-  });
-  it("no params/values returns bool (false) as prim", () => {
-    const paramDefs: ParamDef[] = [];
-    const values: string[] = [];
-    const code = [`return false as item`];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("item");
-    expect(modified[0].value).toBe("false");
+  const primitives = [
+    { description: "string as prim", code: `return "This thing" as item`, expected: "This thing" },
+    { description: "number (int) as prim", code: "return 15 as item", expected: "15" },
+    { description: "number (float) as prim", code: "return 15.25 as item", expected: "15.25" },
+    { description: "bool (true) as prim", code: "return true as item", expected: "true" },
+    { description: "bool (false) as prim", code: "return false as item", expected: "false" },
+  ];
+  primitives.forEach(({ description, code, expected }) => {
+    it(`no params/values returns ${description}`, () => {
+      const paramDefs: ParamDef[] = [];
+      const values: string[] = [];
+      const codeArray = [code];
+      const modified = ExecuteCode(paramDefs, values, codeArray);
+      expect(modified.length).toBe(1);
+      expect(modified[0].label).toBe("item");
+      expect(modified[0].value).toBe(expected);
+    });
   });
   it("single string input works aliased", () => {
     const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];

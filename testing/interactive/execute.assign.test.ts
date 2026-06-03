@@ -29,41 +29,24 @@ describe("code can execute assign on primitives", () => {
 });
 
 describe("code can execute assign on variables", () => {
-  it("no params make new variable with param (number) and return", () => {
-    const paramDefs: ParamDef[] = [{ name: "lorem", type: "number" }];
-    const values: string[] = ["15.25"];
-    const code = ["assign x = lorem", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("15.25");
-  });
-  it("no params make new variable with param (boolean) and return", () => {
-    const paramDefs: ParamDef[] = [{ name: "lorem", type: "boolean" }];
-    const values: string[] = ["true"];
-    const code = ["assign x = lorem", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("true");
-  });
-  it("no params make new variable with param (string) and return", () => {
-    const paramDefs: ParamDef[] = [{ name: "lorem", type: "string" }];
-    const values: string[] = ["this"];
-    const code = ["assign x = lorem", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("this");
-  });
-  it("no params make new variable with param (enum) and return", () => {
-    const paramDefs: ParamDef[] = [{ name: "lorem", type: "enum", values: ["one", "two"] }];
-    const values: string[] = ["one"];
-    const code = ["assign x = lorem", "return x"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("one");
+  const variableTests = [
+    { paramType: "number", paramValue: "15.25", expected: "15.25" },
+    { paramType: "boolean", paramValue: "true", expected: "true" },
+    { paramType: "string", paramValue: "this", expected: "this" },
+    { paramType: "enum", paramValue: "one", expected: "one", enumValues: ["one", "two"] },
+  ];
+  variableTests.forEach(({ paramType, paramValue, expected, enumValues }) => {
+    it(`no params make new variable with param (${paramType}) and return`, () => {
+      const paramDefs: ParamDef[] = enumValues
+        ? [{ name: "lorem", type: paramType as any, values: enumValues }]
+        : [{ name: "lorem", type: paramType as any }];
+      const values: string[] = [paramValue];
+      const code = ["assign x = lorem", "return x"];
+      const modified = ExecuteCode(paramDefs, values, code);
+      expect(modified.length).toBe(1);
+      expect(modified[0].label).toBe("x");
+      expect(modified[0].value).toBe(expected);
+    });
   });
 });
 
