@@ -191,6 +191,53 @@ describe("equivalence operators on all types", () => {
   });
 });
 
+describe("boolean operators", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
+  it("can execute true && false", () => {
+    const code = ["assign x = true && false", "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("false");
+  });
+  it("can execute true || false", () => {
+    const code = ["assign x = true || false", "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("true");
+  });
+  it("can execute false && false", () => {
+    const code = ["assign x = false && false", "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("false");
+  });
+  it("can execute false || false", () => {
+    const code = ["assign x = false || false", "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("false");
+  });
+  it("can execute true && true", () => {
+    const code = ["assign x = true && true", "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("true");
+  });
+  it("can execute true || true", () => {
+    const code = ["assign x = true || true", "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("true");
+  });
+});
+
 // Executed left to right
 describe("code can execute multiple math operators on other side of assign", () => {
   const paramDefs: ParamDef[] = [];

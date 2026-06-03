@@ -15,6 +15,8 @@ const VALID_OPERATORS = [
   ">=",
   "!=",
   "==",
+  "||",
+  "&&",
 ];
 
 export function evaluateExpression(
@@ -36,7 +38,7 @@ export function evaluateExpression(
     label = "";
   }
 
-  const operatorRegex = /(.*)(!=|={2}|<=?|>=?|\*|-|\+|\/|%)(.*)/;
+  const operatorRegex = /(.*)(&&|\|\||!=|={2}|<=?|>=?|\*|-|\+|\/|%)(.*)/;
   const opMatch = possibleExp.match(operatorRegex);
   if (opMatch) {
     const num1 = evaluateExpression(opMatch[1], lookup);
@@ -107,6 +109,10 @@ export function evaluateExpression(
           return { value: bool1 != bool2, type: "bool", label: label };
         case "==":
           return { value: bool1 == bool2, type: "bool", label: label };
+        case "&&":
+          return { value: bool1 && bool2, type: "bool", label: label };
+        case "||":
+          return { value: bool1 || bool2, type: "bool", label: label };
         default:
           throw new CodeError(
             `Type bool is not valid for operator ${opMatch[2]}.`,
