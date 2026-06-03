@@ -8,6 +8,7 @@ export function evaluateFunctions(
   lookup: ObjectWithStructuredValue,
 ): StructuredReturn {
   switch (funcMatch[1]) {
+    // Math methods ////////////////////////////////////////////
     case "e":
       if (funcMatch[2])
         throw new CodeError(
@@ -43,10 +44,18 @@ export function evaluateFunctions(
       return { label: label, type: "number", value: Math.ceil(ceil) };
     case "degtorad":
       let degtorad = getNumber(funcMatch[2], lookup, "degtorad");
-      return { label: label, type: "number", value: degtorad / (180 / Math.PI) };
+      return {
+        label: label,
+        type: "number",
+        value: degtorad / (180 / Math.PI),
+      };
     case "radtodeg":
       let radtodeg = getNumber(funcMatch[2], lookup, "radtodeg");
-      return { label: label, type: "number", value: radtodeg * (180 / Math.PI) };
+      return {
+        label: label,
+        type: "number",
+        value: radtodeg * (180 / Math.PI),
+      };
     case "log":
       let log = getNumber(funcMatch[2], lookup, "log");
       return { label: label, type: "number", value: Math.log10(log) };
@@ -59,6 +68,19 @@ export function evaluateFunctions(
     case "abs":
       let abs = getNumber(funcMatch[2], lookup, "abs");
       return { label: label, type: "number", value: Math.abs(abs) };
+    // String methods ////////////////////////////////////////////
+    case "isEmpty":
+      let isEmpty = getString(funcMatch[2], lookup, "isEmpty");
+      return { label: label, type: "bool", value: !isEmpty };
+    case "isNotEmpty":
+      let isNotEmpty = getString(funcMatch[2], lookup, "isNotEmpty");
+      return { label: label, type: "bool", value: !!isNotEmpty };
+    case "len":
+      let len = getString(funcMatch[2], lookup, "len");
+      return { label: label, type: "number", value: len.length };
+    case "str":
+      let val = evaluateExpression(funcMatch[2], lookup);
+      return { label: label, type: "string", value: val.value.toString() };
     default:
       throw new CodeError(`Couldn't find function name ${funcMatch[1]}.`);
   }
@@ -69,10 +91,23 @@ function getNumber(
   lookup: ObjectWithStructuredValue,
   funcName: string,
 ): number {
-  let sqrt = evaluateExpression(charString, lookup);
-  if (sqrt.type !== "number")
+  let number = evaluateExpression(charString, lookup);
+  if (number.type !== "number")
     throw new CodeError(
-      `Can't get number from value ${sqrt.value} in function ${funcName}.`,
+      `Can't get number from value ${number.value} in function ${funcName}.`,
     );
-  return sqrt.value as number;
+  return number.value as number;
+}
+
+function getString(
+  charString: string,
+  lookup: ObjectWithStructuredValue,
+  funcName: string,
+): string {
+  let string = evaluateExpression(charString, lookup);
+  if (string.type !== "string")
+    throw new CodeError(
+      `Can't get string from value ${string.value} in function ${funcName}.`,
+    );
+  return string.value as string;
 }

@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { ExecuteCode } from "../../lib/logic/Interactive/ExecuteCode";
 import { ParamDef } from "../../lib/logic/Interactive/types";
+import { evaluateFunctions } from "../../lib/logic/Interactive/Helpers/evaluateFunctions";
+import { evaluateExpression } from "../../lib/logic/Interactive/Helpers/evaluateExpression";
 
 describe("code can run simple functions with prims", () => {
   const paramDefs: ParamDef[] = [];
@@ -96,6 +98,36 @@ describe("code can run simple functions with prims", () => {
       code: "return abs(-120)",
       check: (val: string) => expect(val).toBe("120"),
     },
+    {
+      name: "isEmpty(\"\")",
+      code: "return isEmpty(\"\")",
+      check: (val: string) => expect(val).toBe("true"),
+    },
+    {
+      name: "isEmpty(\"this\")",
+      code: "return isEmpty(\"this\")",
+      check: (val: string) => expect(val).toBe("false"),
+    },
+    {
+      name: "isNotEmpty(\"\")",
+      code: "return isNotEmpty(\"\")",
+      check: (val: string) => expect(val).toBe("false"),
+    },
+    {
+      name: "isNotEmpty(\"this\")",
+      code: "return isNotEmpty(\"this\")",
+      check: (val: string) => expect(val).toBe("true"),
+    },
+    {
+      name: "len(\"first\")",
+      code: "return len(\"first\")",
+      check: (val: string) => expect(val).toBe("5"),
+    },
+    {
+      name: "len(\"o\")",
+      code: "return len(\"o\")",
+      check: (val: string) => expect(val).toBe("1"),
+    },
   ];
   functions.forEach((func) => {
     it(func.name, () => {
@@ -105,6 +137,27 @@ describe("code can run simple functions with prims", () => {
       expect(modified[0].label).toBe("");
       func.check(modified[0].value);
     });
+  });
+});
+
+describe("code can run stringify functions", () => {
+  it("Can stringify number", () => {
+    const modified = evaluateExpression("str(45.2)", {});
+    expect(modified.label).toBe("");
+    expect(modified.type).toBe("string");
+    expect(modified.value).toBe("45.2");
+  });
+  it("Can stringify boolean (true)", () => {
+    const modified = evaluateExpression("str(true)", {});
+    expect(modified.label).toBe("");
+    expect(modified.type).toBe("string");
+    expect(modified.value).toBe("true");
+  });
+  it("Can stringify boolean (false)", () => {
+    const modified = evaluateExpression("str(false)", {});
+    expect(modified.label).toBe("");
+    expect(modified.type).toBe("string");
+    expect(modified.value).toBe("false");
   });
 });
 
@@ -200,6 +253,27 @@ describe("code throws errors on invalid inputs", () => {
       const code = [`return ${func}(true)`];
       expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
         `Can't get number from value true in function ${func}.`,
+      );
+    });
+  });
+
+  const stringFunctions = [
+    "isEmpty",
+    "isNotEmpty",
+    "len",
+  ];
+  stringFunctions.forEach((func) => {
+    it(`${func} (number)`, () => {
+      const code = [`return ${func}(45.2)`];
+      expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+        `Can't get string from value 45.2 in function ${func}.`,
+      );
+    });
+
+    it(`${func} (boolean)`, () => {
+      const code = [`return ${func}(true)`];
+      expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+        `Can't get string from value true in function ${func}.`,
       );
     });
   });
