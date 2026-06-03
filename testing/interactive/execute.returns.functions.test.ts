@@ -40,6 +40,13 @@ describe("code can run simple functions with prims", () => {
     expect(modified[0].label).toBe("");
     expect(modified[0].value).toBe("1");
   });
+  it("tan()", () => {
+    const code = ["return tan(0)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("0");
+  });
 });
 
 describe("code can run simple functions with prims and outside operators", () => {
@@ -95,19 +102,19 @@ describe("code throws errors on invalid inputs", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
   it("e with params", () => {
-    const code = ["return e(\"this\")"];
+    const code = ['return e("this")'];
     expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
       "Don't include any parameters with the function e.",
     );
   });
   it("pi with params", () => {
-    const code = ["return pi(\"this\")"];
+    const code = ['return pi("this")'];
     expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
       "Don't include any parameters with the function pi.",
     );
   });
 
-  const numberFunctions = ["sqrt", "sin", "cos"];
+  const numberFunctions = ["sqrt", "sin", "cos", "tan"];
   numberFunctions.forEach((func) => {
     it(`${func} (string)`, () => {
       const code = [`return ${func}("this")`];

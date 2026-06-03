@@ -29,6 +29,9 @@ export function evaluateFunctions(
     case "cos":
       let cos = getNumber(funcMatch[2], lookup, "cos");
       return { label: label, type: "number", value: Math.cos(cos) };
+    case "tan":
+      let tan = getNumber(funcMatch[2], lookup, "tan");
+      return { label: label, type: "number", value: Math.tan(tan) };
     default:
       throw new CodeError(`Couldn't find function name ${funcMatch[1]}.`);
   }

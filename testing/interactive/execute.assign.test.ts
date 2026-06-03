@@ -33,7 +33,12 @@ describe("code can execute assign on variables", () => {
     { paramType: "number", paramValue: "15.25", expected: "15.25" },
     { paramType: "boolean", paramValue: "true", expected: "true" },
     { paramType: "string", paramValue: "this", expected: "this" },
-    { paramType: "enum", paramValue: "one", expected: "one", enumValues: ["one", "two"] },
+    {
+      paramType: "enum",
+      paramValue: "one",
+      expected: "one",
+      enumValues: ["one", "two"],
+    },
   ];
   variableTests.forEach(({ paramType, paramValue, expected, enumValues }) => {
     it(`no params make new variable with param (${paramType}) and return`, () => {

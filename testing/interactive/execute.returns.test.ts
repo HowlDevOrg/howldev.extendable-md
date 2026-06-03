@@ -67,7 +67,11 @@ describe("code can execute return on primitives", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
   const primitives = [
-    { description: "string without quotes", code: `return "This thing"`, expected: "This thing" },
+    {
+      description: "string without quotes",
+      code: `return "This thing"`,
+      expected: "This thing",
+    },
     { description: "number (int)", code: "return 15", expected: "15" },
     { description: "number (float)", code: "return 15.25", expected: "15.25" },
     { description: "bool (true)", code: "return true", expected: "true" },
@@ -88,8 +92,16 @@ describe("code can execute return on expressions", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
   const expressions = [
-    { description: "addition expression", code: "return 15 + 23", expected: "38" },
-    { description: "multiply expression", code: "return 4 * 5", expected: "20" },
+    {
+      description: "addition expression",
+      code: "return 15 + 23",
+      expected: "38",
+    },
+    {
+      description: "multiply expression",
+      code: "return 4 * 5",
+      expected: "20",
+    },
     { description: "subtract expression", code: "return 4 - 2", expected: "2" },
     { description: "divide expression", code: "return 4 / 2", expected: "2" },
   ];
@@ -106,11 +118,31 @@ describe("code can execute return on expressions", () => {
 
 describe("code can execute return with alias", () => {
   const primitives = [
-    { description: "string as prim", code: `return "This thing" as item`, expected: "This thing" },
-    { description: "number (int) as prim", code: "return 15 as item", expected: "15" },
-    { description: "number (float) as prim", code: "return 15.25 as item", expected: "15.25" },
-    { description: "bool (true) as prim", code: "return true as item", expected: "true" },
-    { description: "bool (false) as prim", code: "return false as item", expected: "false" },
+    {
+      description: "string as prim",
+      code: `return "This thing" as item`,
+      expected: "This thing",
+    },
+    {
+      description: "number (int) as prim",
+      code: "return 15 as item",
+      expected: "15",
+    },
+    {
+      description: "number (float) as prim",
+      code: "return 15.25 as item",
+      expected: "15.25",
+    },
+    {
+      description: "bool (true) as prim",
+      code: "return true as item",
+      expected: "true",
+    },
+    {
+      description: "bool (false) as prim",
+      code: "return false as item",
+      expected: "false",
+    },
   ];
   primitives.forEach(({ description, code, expected }) => {
     it(`no params/values returns ${description}`, () => {
