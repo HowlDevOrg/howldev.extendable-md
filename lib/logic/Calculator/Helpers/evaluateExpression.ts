@@ -25,7 +25,7 @@ export function evaluateExpression(
 
   const operatorRegex = /(.*)(&&|\|\||!=|={2}|<=?|>=?|\*|-|\+|\/|%)(?![^()]*\))(.*)/;
   const opMatch = possibleExp.match(operatorRegex);
-  const functionRegex = /(\w*)\((.*)\)/;
+  const functionRegex = /(\w*)\s*\((.*)\)/;
   const funcMatch = possibleExp.match(functionRegex);
   if (opMatch) {
     return evaluateBinaryOperators(opMatch, label, lookup);

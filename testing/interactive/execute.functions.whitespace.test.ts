@@ -21,3 +21,10 @@ describe("code can run minified text (basically)", () => {
     expect(modified.value).toBe(32);
   });
 });
+
+it("functions can run with spaces in odd spaces", () => {
+  const modified = evaluateExpression("     abs (pow    (-2  , 5     )      )", {});
+  expect(modified.label).toBe("");
+  expect(modified.type).toBe("number");
+  expect(modified.value).toBe(32);
+});
