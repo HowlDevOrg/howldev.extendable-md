@@ -23,10 +23,16 @@ export function evaluateExpression(
     label = "";
   }
 
-  const operatorRegex = /(.*)(&&|\|\||!=|={2}|<=?|>=?|\*|-|\+|\/|%)(?![^()]*\))(.*)/;
+  const operatorRegex =
+    /(.*)(&&|\|\||!=|={2}|<=?|>=?|\*|-|\+|\/|%)(?![^()]*\))(.*)/;
   const opMatch = possibleExp.match(operatorRegex);
   const functionRegex = /(\w*)\s*\((.*)\)/;
   const funcMatch = possibleExp.match(functionRegex);
+  if (opMatch && funcMatch) {
+    return opMatch[0].length >= funcMatch[0].length
+      ? evaluateBinaryOperators(opMatch, label, lookup)
+      : evaluateFunctions(funcMatch, label, lookup);
+  }
   if (opMatch) {
     return evaluateBinaryOperators(opMatch, label, lookup);
   } else if (funcMatch) {
@@ -35,5 +41,3 @@ export function evaluateExpression(
     return extractLabelAndValue(possibleExp.trim(), lookup, label);
   }
 }
-
-

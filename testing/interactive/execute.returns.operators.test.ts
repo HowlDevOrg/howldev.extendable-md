@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { ExecuteCode } from "../../lib/logic/Calculator/ExecuteCode";
 import { ParamDef } from "../../lib/logic/Calculator/types";
+import { evaluateExpression } from "../../lib/logic/Calculator/Helpers/evaluateExpression";
 
 describe("code can alias generic functions on return", () => {
   const paramDefs: ParamDef[] = [];
@@ -18,6 +19,23 @@ describe("code can alias generic functions on return", () => {
     expect(modified.length).toBe(1);
     expect(modified[0].label).toBe("result");
     expect(modified[0].value).toBe("25");
+  });
+});
+
+describe("code can run operators inside parenthesis", () => {
+  const expressions = [
+    { expression: "2 + 3 * 5", expected: 25 },
+    { expression: "2 + (3 * 5)", expected: 17 },
+    { expression: "(2 + 3) * 5", expected: 25 },
+    // { expression: "(2 + (3 - 1)) / 4", expected: 1 },
+  ];
+  expressions.forEach((exp) => {
+    it(`can execute ${exp.expression}`, () => {
+      const modified = evaluateExpression(exp.expression, {});
+      expect(modified.label).toBe("");
+      expect(modified.type).toBe("number");
+      expect(modified.value).toBe(exp.expected);
+    });
   });
 });
 

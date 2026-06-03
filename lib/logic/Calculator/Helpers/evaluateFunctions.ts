@@ -8,6 +8,9 @@ export function evaluateFunctions(
   lookup: ObjectWithStructuredValue,
 ): StructuredReturn {
   switch (funcMatch[1]) {
+    case "": {
+      return evaluateExpression(funcMatch[2], lookup);
+    }
     // Math methods ////////////////////////////////////////////
     case "e": {
       if (funcMatch[2])
