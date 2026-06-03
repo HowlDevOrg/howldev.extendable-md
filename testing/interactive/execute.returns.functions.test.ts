@@ -26,6 +26,20 @@ describe("code can run simple functions with prims", () => {
     expect(modified[0].label).toBe("");
     expect(modified[0].value).toBe("4");
   });
+  it("sin()", () => {
+    const code = ["return sin(0)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("0");
+  });
+  it("cos()", () => {
+    const code = ["return cos(0)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("1");
+  });
 });
 
 describe("code can run simple functions with prims and outside operators", () => {

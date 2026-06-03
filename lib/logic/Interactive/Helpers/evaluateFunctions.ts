@@ -26,6 +26,9 @@ export function evaluateFunctions(
     case "sin":
       let sin = getNumber(funcMatch[2], lookup, "sin");
       return { label: label, type: "number", value: Math.sin(sin) };
+    case "cos":
+      let cos = getNumber(funcMatch[2], lookup, "cos");
+      return { label: label, type: "number", value: Math.cos(cos) };
     default:
       throw new CodeError(`Couldn't find function name ${funcMatch[1]}.`);
   }
