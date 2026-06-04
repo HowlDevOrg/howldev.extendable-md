@@ -1,14 +1,9 @@
+import { assignIntoLookup, throwIfOutsideRange } from "./keywordFuncs";
 import { CodeError, InternalError, UserError } from "./customErrors";
 import { evaluateExpression } from "./Helpers/evaluateExpression";
-import { assignRegex } from "./Helpers/regex";
 import { paramDefAndValueToStructuredOutput } from "./Helpers/stringHelpers";
 import { StructuredReturnToString } from "./Helpers/structuredReturnToString";
-import {
-  ExecutionReturn,
-  ObjectWithStructuredValue,
-  ParamDef,
-  StructuredReturn,
-} from "./types";
+import { ExecutionReturn, ObjectWithStructuredValue, ParamDef } from "./types";
 
 export function ExecuteCode(
   paramDef: ParamDef[],
@@ -26,40 +21,32 @@ export function ExecuteCode(
   }
   for (let i = 0; i < code.length; i++) {
     const splitString = code[i].split(" ").filter((a) => !!a);
-    const expValue = splitString.slice(1).join(" ");
+    const exprValue = splitString.slice(1).join(" ");
     switch (splitString[0].toLowerCase()) {
       case "return": {
-        const vals = evaluateExpression(expValue, lookup);
+        const vals = evaluateExpression(exprValue, lookup);
         return [{ label: vals.label, value: StructuredReturnToString(vals) }];
       }
       case "throw":
-        throw new UserError(expValue);
-      case "throwifoutsiderange": {
-        const args = expValue.split(",");
-        const value = evaluateExpression(args[0], lookup);
-        const lowerBound = evaluateExpression(args[1], lookup);
-        const upperBound = evaluateExpression(args[2], lookup);
-        const v = throwIfNotNumber(value);
-        const lb = throwIfNotNumber(lowerBound);
-        const ub = throwIfNotNumber(upperBound);
-        if (v < lb || v > ub) {
-          const displayName = value.label
-            ? `${value.value} (${value.label})`
-            : value.value;
-          throw new UserError(
-            `${displayName} is outside of range ${lowerBound.value} - ${upperBound.value}.`,
-          );
-        }
+        throw new UserError(exprValue);
+      case "throwifoutsiderange":
+        throwIfOutsideRange(exprValue, lookup);
         break;
-      }
-      case "assign": {
-        const match = expValue.match(assignRegex);
-        if (match && match[1] && match[2]) {
-          lookup[match[1].trim()] = evaluateExpression(match[2].trim(), lookup);
-        } else {
+      case "assign":
+        assignIntoLookup(exprValue, lookup);
+        break;
+      case "if": {
+        const match = evaluateExpression(exprValue, lookup);
+        if (match.type !== "bool")
           throw new CodeError(
-            "Did not match assignment regex in assign block.",
+            `Cannot interpret type ${match.type} in an if statement.`,
           );
+        if (match.value as boolean) {
+          do {
+            i++;
+            let newSplitString = code[i].split(" ").filter((a) => !!a);
+            let newExprValue = splitString.slice(1).join(" ");
+          } while (i < code.length);
         }
         break;
       }
@@ -68,15 +55,4 @@ export function ExecuteCode(
     }
   }
   throw new CodeError("Did not find a return statement.");
-}
-
-function throwIfNotNumber(value: StructuredReturn): number {
-  if (value.type !== "number") {
-    const displayValue =
-      value.type === "string" ? '"' + value.value + '"' : value.value;
-    throw new CodeError(
-      `Value ${displayValue} must be of type number in throwIfOutsideRange.`,
-    );
-  }
-  return value.value as number;
 }
