@@ -27,7 +27,17 @@ describe("code can run operators inside parenthesis", () => {
     { expression: "2 + 3 * 5", expected: 25 },
     { expression: "2 + (3 * 5)", expected: 17 },
     { expression: "(2 + 3) * 5", expected: 25 },
-    // { expression: "(2 + (3 - 1)) / 4", expected: 1 },
+    { expression: "(2 + (3 - 1)) / 4", expected: 1 },
+    { expression: "(5 + 3) / 2", expected: 4 },
+    { expression: "((2 + 3) * 4) - 5", expected: 15 },
+    { expression: "(10 - 2) * 3", expected: 24 },
+    { expression: "6 / (3 - 1)", expected: 3 },
+    { expression: "(4 + 6) * (2 + 1)", expected: 30 },
+    { expression: "100 / (2 * (2 + 3))", expected: 10 },
+    { expression: "(15 - 3) / (2 + 2)", expected: 3 },
+    { expression: "5 * (2 + 2) - 10", expected: 10 },
+    { expression: "((8 - 2) * 3 + 6)", expected: 54 },
+    { expression: "(20 / (2 + 3)) * 2", expected: 8 },
   ];
   expressions.forEach((exp) => {
     it(`can execute ${exp.expression}`, () => {
