@@ -1,8 +1,7 @@
-import { assignIntoLookup, throwIfOutsideRange } from "./keywordFuncs";
+import { assignIntoLookup, getReturnArray, throwIfOutsideRange } from "./keywordFuncs";
 import { CodeError, InternalError, UserError } from "./customErrors";
 import { evaluateExpression } from "./Helpers/evaluateExpression";
 import { paramDefAndValueToStructuredOutput } from "./Helpers/stringHelpers";
-import { StructuredReturnToString } from "./Helpers/structuredReturnToString";
 import { ExecutionReturn, ObjectWithStructuredValue, ParamDef } from "./types";
 
 export function ExecuteCode(
@@ -23,10 +22,8 @@ export function ExecuteCode(
     const splitString = code[i].split(" ").filter((a) => !!a);
     const exprValue = splitString.slice(1).join(" ");
     switch (splitString[0].toLowerCase()) {
-      case "return": {
-        const vals = evaluateExpression(exprValue, lookup);
-        return [{ label: vals.label, value: StructuredReturnToString(vals) }];
-      }
+      case "return":
+        return getReturnArray(exprValue, lookup);
       case "throw":
         throw new UserError(exprValue);
       case "throwifoutsiderange":

@@ -1,6 +1,8 @@
 import { CodeError, UserError } from "./customErrors";
 import { evaluateExpression } from "./Helpers/evaluateExpression";
 import { assignRegex } from "./Helpers/regex";
+import { splitOnOutermostCommas } from "./Helpers/stringHelpers";
+import { StructuredReturnToString } from "./Helpers/structuredReturnToString";
 import { ObjectWithStructuredValue, StructuredReturn } from "./types";
 
 export function assignIntoLookup(
@@ -14,6 +16,7 @@ export function assignIntoLookup(
     throw new CodeError("Did not match assignment regex in assign block.");
   }
 }
+
 export function throwIfOutsideRange(
   exprValue: string,
   lookup: ObjectWithStructuredValue,
@@ -33,6 +36,17 @@ export function throwIfOutsideRange(
       `${displayName} is outside of range ${lowerBound.value} - ${upperBound.value}.`,
     );
   }
+}
+
+export function getReturnArray(
+  exprValue: string,
+  lookup: ObjectWithStructuredValue,
+) {
+  const expressions = splitOnOutermostCommas(exprValue);
+  return expressions.map((a) => {
+    const vals = evaluateExpression(a, lookup);
+    return { label: vals.label, value: StructuredReturnToString(vals) };
+  });
 }
 
 function throwIfNotNumber(value: StructuredReturn): number {

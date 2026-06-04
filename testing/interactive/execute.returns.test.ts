@@ -188,6 +188,45 @@ describe("code can execute return on multiple inputs", () => {
   });
 });
 
+describe("code can return multiple inputs", () => {
+  const paramDefs: ParamDef[] = [
+    { name: "Lorem", type: "string" },
+    { name: "Lorem2", type: "number" },
+  ];
+  const values: string[] = ["lorem value", "15.225"];
+  it("return string and number", () => {
+    const code = ["return Lorem, Lorem2"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(2);
+    expect(modified[0].label).toBe("Lorem");
+    expect(modified[0].value).toBe("lorem value");
+    expect(modified[1].label).toBe("Lorem2");
+    expect(modified[1].value).toBe("15.225");
+  });
+  it("return operator and function", () => {
+    const code = ["return 15 * 2 + 3 as this, pow(2, 3)"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(2);
+    expect(modified[0].label).toBe("this");
+    expect(modified[0].value).toBe("33");
+    expect(modified[1].label).toBe("");
+    expect(modified[1].value).toBe("8");
+  });
+  it("return operator and function and string and number", () => {
+    const code = ["return 15 * 2 + 3 as this, pow(2, 3), Lorem, Lorem2 as here we go!"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(4);
+    expect(modified[0].label).toBe("this");
+    expect(modified[0].value).toBe("33");
+    expect(modified[1].label).toBe("");
+    expect(modified[1].value).toBe("8");
+    expect(modified[2].label).toBe("Lorem");
+    expect(modified[2].value).toBe("lorem value");
+    expect(modified[3].label).toBe("here we go!");
+    expect(modified[3].value).toBe("15.225");
+  });
+});
+
 describe("code throws errors when param not found", () => {
   it("unknown name", () => {
     const paramDefs: ParamDef[] = [{ name: "Lorem", type: "string" }];
