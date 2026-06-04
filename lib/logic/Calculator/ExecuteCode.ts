@@ -29,7 +29,9 @@ export function ExecuteCode(
     const expValue = splitString.slice(1).join(" ");
     switch (splitString[0].toLowerCase()) {
       case "return": {
+        console.log(expValue);
         const vals = evaluateExpression(expValue, lookup);
+        console.log(vals);
         return [{ label: vals.label, value: StructuredReturnToString(vals) }];
       }
       case "throw":

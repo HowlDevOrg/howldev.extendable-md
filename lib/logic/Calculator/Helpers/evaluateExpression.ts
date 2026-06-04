@@ -1,3 +1,4 @@
+import { CodeError } from "../customErrors";
 import { ObjectWithStructuredValue, StructuredReturn } from "../types";
 import { evaluateBinaryOperators } from "./evaluateBinaryOperators";
 import { evaluateFunctions } from "./evaluateFunctions";
@@ -9,6 +10,7 @@ export function evaluateExpression(
   possibleExp: string,
   lookup: ObjectWithStructuredValue,
 ): StructuredReturn {
+  const originalExp = possibleExp;
   const asMatch = possibleExp.match(asRegex);
   let label;
 
@@ -23,35 +25,22 @@ export function evaluateExpression(
     label = "";
   }
 
+  let funcMatch = possibleExp.match(functionRegex);
+  let iterations = 0; // important safety hatch!
+  while (funcMatch && iterations < 10) {
+    possibleExp = possibleExp.replace(funcMatch[0], StructuredReturnToString(evaluateFunctions(funcMatch, label, lookup)));
+    funcMatch = possibleExp.match(functionRegex);
+    iterations++;
+  }
+
+  if (iterations === 10) {
+    throw new CodeError(`Cannot evaluate string ${originalExp}. Too many parenthesis.`);
+  }
+
   const opMatch = possibleExp.match(operatorRegex);
-  const funcMatch = possibleExp.match(functionRegex);
-  console.log('"' + possibleExp.trim() + '"', opMatch, funcMatch)
-  console.log(isWrappedInParens(possibleExp));
-  if (isWrappedInParens(possibleExp)) {
-    return evaluateExpression(
-      possibleExp.trim().slice(1, possibleExp.length - 2),
-      lookup,
-    );
-  } else if (opMatch) {
+  if (opMatch) {
     return evaluateBinaryOperators(opMatch, label, lookup);
-  } else if (funcMatch) {
-    return evaluateFunctions(funcMatch, label, lookup);
   } else {
     return extractLabelAndValue(possibleExp.trim(), lookup, label);
   }
-}
-
-// AI generated function
-function isWrappedInParens(input: string): boolean {
-    const s = input.trim();
-    if (s[0] !== '(' || s[s.length - 1] !== ')') return false;
-
-    let depth = 0;
-    for (let i = 0; i < s.length - 1; i++) {  // stop before last char
-        if (s[i] === '(') depth++;
-        else if (s[i] === ')') depth--;
-
-        if (depth === 0) return false;  // closed before the end
-    }
-    return true;
 }

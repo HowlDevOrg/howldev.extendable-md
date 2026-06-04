@@ -1,6 +1,7 @@
 import { CodeError } from "../customErrors";
 import { ObjectWithStructuredValue, StructuredReturn } from "../types";
 import { evaluateExpression } from "./evaluateExpression";
+import { StructuredReturnToString } from "./structuredReturnToString";
 
 export function evaluateFunctions(
   funcMatch: RegExpMatchArray,
@@ -121,7 +122,7 @@ export function evaluateFunctions(
     }
     case "str": {
       const val = evaluateExpression(funcMatch[2], lookup);
-      return { label: label, type: "string", value: val.value.toString() };
+      return { label: label, type: "string", value: '"' + StructuredReturnToString(val) + '"' };
     }
     default:
       throw new CodeError(`Couldn't find function name ${funcMatch[1]}.`);
