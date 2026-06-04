@@ -40,6 +40,13 @@ describe("code can execute string concatenate on other side of assign", () => {
     expect(modified[0].label).toBe("x");
     expect(modified[0].value).toBe("one two");
   });
+  it("can execute str with spaces", () => {
+    const code = [`assign x = "here " + str(abs(-20)) + " that"`, "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("here 20 that");
+  });
 });
 
 describe("code can execute equivalence operators on other side of assign (for numbers)", () => {

@@ -154,19 +154,19 @@ describe("code can run stringify functions", () => {
     const modified = evaluateExpression("str(45.2)", {});
     expect(modified.label).toBe("");
     expect(modified.type).toBe("string");
-    expect(modified.value).toBe("\"45.2\"");
+    expect(modified.value).toBe("45.2");
   });
   it("Can stringify boolean (true)", () => {
     const modified = evaluateExpression("str(true)", {});
     expect(modified.label).toBe("");
     expect(modified.type).toBe("string");
-    expect(modified.value).toBe("\"true\"");
+    expect(modified.value).toBe("true");
   });
   it("Can stringify boolean (false)", () => {
     const modified = evaluateExpression("str(false)", {});
     expect(modified.label).toBe("");
     expect(modified.type).toBe("string");
-    expect(modified.value).toBe("\"false\"");
+    expect(modified.value).toBe("false");
   });
 });
 
