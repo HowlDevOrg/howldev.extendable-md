@@ -7,6 +7,7 @@ export function getInnerString(key: string): string {
 export function isQuotedString(key: string) {
   return key.startsWith('"') && key.endsWith('"');
 }
+
 export function paramDefAndValueToStructuredOutput(
   param: ParamDef,
   value: string,
@@ -28,4 +29,20 @@ export function GetSingleNumber(str: string): number {
     return Number(str);
   }
   throw new InternalError(`Could not parse ${str} as number.`);
+}
+
+// AI generated
+export function splitOnOutermostCommas(input: string): string[] {
+    const result: string[] = [];
+    let depth = 0, start = 0;
+    for (let i = 0; i < input.length; i++) {
+        if (input[i] === '(') depth++;
+        else if (input[i] === ')') depth--;
+        else if (input[i] === ',' && depth === 0) {
+            result.push(input.slice(start, i).trim());
+            start = i + 1;
+        }
+    }
+    result.push(input.slice(start).trim());
+    return result;
 }
