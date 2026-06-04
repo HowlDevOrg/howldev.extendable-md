@@ -178,7 +178,7 @@ describe("code can execute multiple math operators on other side of assign", () 
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
     expect(modified[0].label).toBe("x");
-    expect(modified[0].value).toBe("25");
+    expect(modified[0].value).toBe("17");
   });
   it("can execute 2 * 3 + 5", () => {
     const code = ["assign x = 2 * 3 + 5", "return x"];

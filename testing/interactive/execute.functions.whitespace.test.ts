@@ -6,7 +6,7 @@ describe("code can run minified text (basically)", () => {
     const modified = evaluateExpression("4+2*5", {});
     expect(modified.label).toBe("");
     expect(modified.type).toBe("number");
-    expect(modified.value).toBe(30);
+    expect(modified.value).toBe(14);
   });
   it("Can run close functions", () => {
     const modified = evaluateExpression("abs(pow(-2,5))", {});

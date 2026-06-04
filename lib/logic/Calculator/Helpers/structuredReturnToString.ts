@@ -10,3 +10,14 @@ export function StructuredReturnToString(val: StructuredReturn): string {
             return val.value.toString();
     }
 }
+
+export function StructuredReturnReplacementString(val: StructuredReturn): string {
+    switch (val.type) {
+        case "string":
+            return '"' + val.value + '"';
+        case "bool":
+            return val.value ? "true" : "false";
+        case "number":
+            return val.value.toString();
+    }
+}

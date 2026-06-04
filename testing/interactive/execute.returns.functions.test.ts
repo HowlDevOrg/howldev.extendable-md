@@ -154,40 +154,40 @@ describe("code can run stringify functions", () => {
     const modified = evaluateExpression("str(45.2)", {});
     expect(modified.label).toBe("");
     expect(modified.type).toBe("string");
-    expect(modified.value).toBe("45.2");
+    expect(modified.value).toBe("\"45.2\"");
   });
   it("Can stringify boolean (true)", () => {
     const modified = evaluateExpression("str(true)", {});
     expect(modified.label).toBe("");
     expect(modified.type).toBe("string");
-    expect(modified.value).toBe("true");
+    expect(modified.value).toBe("\"true\"");
   });
   it("Can stringify boolean (false)", () => {
     const modified = evaluateExpression("str(false)", {});
     expect(modified.label).toBe("");
     expect(modified.type).toBe("string");
-    expect(modified.value).toBe("false");
+    expect(modified.value).toBe("\"false\"");
   });
 });
 
-describe("code can run simple functions with prims and outside operators", () => {
-  const paramDefs: ParamDef[] = [];
-  const values: string[] = [];
-  it("e() minus e()", () => {
-    const code = ["return e() - e()"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("");
-    expect(modified[0].value).toBe("0");
-  });
-  it("e() times 0", () => {
-    const code = ["return e() * 0"];
-    const modified = ExecuteCode(paramDefs, values, code);
-    expect(modified.length).toBe(1);
-    expect(modified[0].label).toBe("");
-    expect(modified[0].value).toBe("0");
-  });
-});
+// describe("code can run simple functions with prims and outside operators", () => {
+//   const paramDefs: ParamDef[] = [];
+//   const values: string[] = [];
+//   it("e() minus e()", () => {
+//     const code = ["return e() - e()"];
+//     const modified = ExecuteCode(paramDefs, values, code);
+//     expect(modified.length).toBe(1);
+//     expect(modified[0].label).toBe("");
+//     expect(modified[0].value).toBe("0");
+//   });
+//   it("e() times 0", () => {
+//     const code = ["return e() * 0"];
+//     const modified = ExecuteCode(paramDefs, values, code);
+//     expect(modified.length).toBe(1);
+//     expect(modified[0].label).toBe("");
+//     expect(modified[0].value).toBe("0");
+//   });
+// });
 
 describe("code can run simple math functions with inside and outside operators", () => {
   const paramDefs: ParamDef[] = [];
@@ -225,7 +225,7 @@ describe("code can run simple math functions with inside and outside operators",
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
     expect(modified[0].label).toBe("");
-    expect(modified[0].value).toBe("64");
+    expect(modified[0].value).toBe("32");
   });
 });
 

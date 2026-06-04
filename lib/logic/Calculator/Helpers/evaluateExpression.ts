@@ -3,8 +3,13 @@ import { ObjectWithStructuredValue, StructuredReturn } from "../types";
 import { evaluateBinaryOperators } from "./evaluateBinaryOperators";
 import { evaluateFunctions } from "./evaluateFunctions";
 import { extractLabelAndValue } from "./extractLabelAndValue";
-import { asRegex, functionRegex, operatorRegex } from "./regex";
-import { StructuredReturnToString } from "./structuredReturnToString";
+import {
+  asRegex,
+  functionRegex,
+  prioritizedOperatorRegex,
+  lazyOperatorRegex,
+} from "./regex";
+import { StructuredReturnReplacementString, StructuredReturnToString } from "./structuredReturnToString";
 
 export function evaluateExpression(
   possibleExp: string,
@@ -28,19 +33,46 @@ export function evaluateExpression(
   let funcMatch = possibleExp.match(functionRegex);
   let iterations = 0; // important safety hatch!
   while (funcMatch && iterations < 10) {
-    possibleExp = possibleExp.replace(funcMatch[0], StructuredReturnToString(evaluateFunctions(funcMatch, label, lookup)));
+    possibleExp = possibleExp.replace(
+      funcMatch[0],
+      StructuredReturnReplacementString(evaluateFunctions(funcMatch, label, lookup)),
+    );
     funcMatch = possibleExp.match(functionRegex);
+    iterations++;
+  }
+  
+  if (iterations === 10) {
+    throw new CodeError(
+      `Cannot evaluate string ${originalExp}. Too many parenthesis.`,
+    );
+  }
+  
+  let opMatch = possibleExp.match(prioritizedOperatorRegex);
+  iterations = 0;
+  while (opMatch && iterations < 10) {
+    possibleExp = possibleExp.replace(
+      opMatch[0],
+      StructuredReturnReplacementString(evaluateBinaryOperators(opMatch, label, lookup)),
+    );
+    opMatch = possibleExp.match(functionRegex);
+    iterations++;
+  }
+  
+  opMatch = possibleExp.match(lazyOperatorRegex);
+  while (opMatch && iterations < 10) {
+    possibleExp = possibleExp.replace(
+      opMatch[0],
+      StructuredReturnReplacementString(evaluateBinaryOperators(opMatch, label, lookup)),
+    );
+    opMatch = possibleExp.match(functionRegex);
     iterations++;
   }
 
   if (iterations === 10) {
-    throw new CodeError(`Cannot evaluate string ${originalExp}. Too many parenthesis.`);
+    throw new CodeError(
+      `Cannot evaluate string ${originalExp}. Too many operators.`,
+    );
   }
 
-  const opMatch = possibleExp.match(operatorRegex);
-  if (opMatch) {
-    return evaluateBinaryOperators(opMatch, label, lookup);
-  } else {
-    return extractLabelAndValue(possibleExp.trim(), lookup, label);
-  }
+  return extractLabelAndValue(possibleExp.trim(), lookup, label);
 }

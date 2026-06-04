@@ -18,13 +18,13 @@ describe("code can alias generic functions on return", () => {
     const modified = ExecuteCode(paramDefs, values, code);
     expect(modified.length).toBe(1);
     expect(modified[0].label).toBe("result");
-    expect(modified[0].value).toBe("25");
+    expect(modified[0].value).toBe("17");
   });
 });
 
 describe("code can run operators inside parenthesis", () => {
   const expressions = [
-    { expression: "2 + 3 * 5", expected: 25 },
+    { expression: "2 + 3 * 5", expected: 17 },
     { expression: "2 + (3 * 5)", expected: 17 },
     { expression: "(2 + 3) * 5", expected: 25 },
     { expression: "(2 + (3 - 1)) / 4", expected: 1 },
@@ -36,7 +36,7 @@ describe("code can run operators inside parenthesis", () => {
     { expression: "100 / (2 * (2 + 3))", expected: 10 },
     { expression: "(15 - 3) / (2 + 2)", expected: 3 },
     { expression: "5 * (2 + 2) - 10", expected: 10 },
-    { expression: "((8 - 2) * 3 + 6)", expected: 54 },
+    { expression: "((8 - 2) * 3 + 6)", expected: 24 },
     { expression: "(20 / (2 + 3)) * 2", expected: 8 },
   ];
   expressions.forEach((exp) => {
