@@ -37,7 +37,6 @@ export function evaluateBinaryOperators(
     );
   }
 
-  console.log(opMatch)
   if (num1.type === "string") {
     const str1 = num1.value as string;
     const str2 = num2.value as string;

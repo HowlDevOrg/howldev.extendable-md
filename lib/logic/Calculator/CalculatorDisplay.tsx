@@ -25,7 +25,7 @@ export function CalculatorDisplay({ text }: CalculatorDisplayProps) {
   const result: ReactNode[] = [];
   for (const i of codeResult) {
     result.push(
-      <p>
+      <p key={i.label}>
         {i.label ? i.label + ":" : ""} {i.value}
       </p>,
     );
