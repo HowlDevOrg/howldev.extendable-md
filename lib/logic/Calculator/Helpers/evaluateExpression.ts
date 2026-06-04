@@ -33,7 +33,6 @@ export function evaluateExpression(
   let funcMatch = possibleExp.match(functionRegex);
   let iterations = 0; // important safety hatch!
   while (funcMatch && iterations < 10) {
-    console.log(possibleExp, funcMatch);
     possibleExp = possibleExp.replace(
       funcMatch[0],
       StructuredReturnReplacementString(evaluateFunctions(funcMatch, label, lookup)),
@@ -51,23 +50,23 @@ export function evaluateExpression(
   let opMatch = possibleExp.match(prioritizedOperatorRegex);
   iterations = 0;
   while (opMatch && iterations < 10) {
-    console.log(possibleExp, opMatch);
     possibleExp = possibleExp.replace(
       opMatch[0],
       StructuredReturnReplacementString(evaluateBinaryOperators(opMatch, label, lookup)),
     );
-    opMatch = possibleExp.match(functionRegex);
+    opMatch = possibleExp.match(prioritizedOperatorRegex);
     iterations++;
   }
   
   opMatch = possibleExp.match(lazyOperatorRegex);
   while (opMatch && iterations < 10) {
-    console.log(possibleExp, opMatch);
+    // Operator is a negative sign
+    if (!opMatch[1]) break;
     possibleExp = possibleExp.replace(
       opMatch[0],
       StructuredReturnReplacementString(evaluateBinaryOperators(opMatch, label, lookup)),
     );
-    opMatch = possibleExp.match(functionRegex);
+    opMatch = possibleExp.match(lazyOperatorRegex);
     iterations++;
   }
 

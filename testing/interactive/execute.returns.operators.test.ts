@@ -49,6 +49,23 @@ describe("code can run operators inside parenthesis", () => {
   });
 });
 
+describe("code can run bool operators in sequence", () => {
+  const expressions = [
+    { expression: "3 <= 5 || false", expected: true },
+    { expression: "3 >= 5 || false", expected: false },
+    { expression: "3 <= 5 || 20 > 15", expected: true },
+    { expression: "3 <= 5 && 20 > 15", expected: true },
+  ];
+  expressions.forEach((exp) => {
+    it(`can execute ${exp.expression}`, () => {
+      const modified = evaluateExpression(exp.expression, {});
+      expect(modified.label).toBe("");
+      expect(modified.type).toBe("bool");
+      expect(modified.value).toBe(exp.expected);
+    });
+  });
+});
+
 describe("code throws errors on mismatched types", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
