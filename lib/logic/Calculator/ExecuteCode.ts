@@ -22,7 +22,7 @@ export function ExecuteCode(
       values[i],
     );
   }
-  const { returnValue } = executeInstructions(code, lookup);
+  const returnValue = executeInstructions(code, lookup);
   if (!returnValue) {
     throw new CodeError("Did not find a return statement.");
   }
@@ -32,13 +32,13 @@ export function ExecuteCode(
 function executeInstructions(
   code: string[],
   lookup: ObjectWithStructuredValue,
-): { returnValue: ExecutionReturn[] | null; i: number } {
+): ExecutionReturn[] | null {
   for (let i = 0; i < code.length; i++) {
     const splitString = code[i].split(" ").filter((a) => !!a);
     const exprValue = splitString.slice(1).join(" ");
     switch (splitString[0].toLowerCase()) {
       case "return":
-        return { returnValue: getReturnArray(exprValue, lookup), i: Infinity };
+        return getReturnArray(exprValue, lookup);
       case "throw":
         throw new UserError(exprValue);
       case "throwifoutsiderange":
@@ -55,7 +55,8 @@ function executeInstructions(
           );
 
         const indexOfEndif = code.findIndex((a) => a.startsWith("endif"));
-        if (indexOfEndif === -1) throw new CodeError("Did not find endif statement.")
+        if (indexOfEndif === -1)
+          throw new CodeError("Did not find endif statement.");
         if (result.value as boolean) {
           const newCode: string[] = [];
           let breakOut = false;
@@ -67,8 +68,8 @@ function executeInstructions(
               breakOut = true;
             }
           } while (i < code.length && !breakOut);
-          const { returnValue, i: newI } = executeInstructions(newCode, lookup);
-          if (returnValue) return { returnValue, i: Infinity };
+          const returnValue = executeInstructions(newCode, lookup);
+          if (returnValue) return returnValue;
         } else {
           const newCode: string[] = [];
           let breakOut = false;
@@ -84,8 +85,8 @@ function executeInstructions(
               breakOut = true;
             }
           } while (i < code.length && !breakOut);
-          const { returnValue, i: newI } = executeInstructions(newCode, lookup);
-          if (returnValue) return { returnValue, i: -1 };
+          const returnValue = executeInstructions(newCode, lookup);
+          if (returnValue) return returnValue;
         }
         i = indexOfEndif;
         break;
@@ -93,5 +94,5 @@ function executeInstructions(
         throw new CodeError(`Cannot find keyword ${splitString[0]}.`);
     }
   }
-  return { returnValue: null, i: Infinity };
+  return null;
 }
