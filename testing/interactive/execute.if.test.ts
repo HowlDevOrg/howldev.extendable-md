@@ -219,4 +219,21 @@ describe("code can throws errors if not finding correct lines", () => {
       "Cannot find keyword endif.",
     );
   });
+  it("throws errors if variables aren't global", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [
+      "if 3 < 15",
+      "assign x = -2",
+      "else",
+      "assign x = 15",
+      "assign y = 32.6",
+      "assign z = 1",
+      "endif",
+      "return x, y, z",
+    ];
+    expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+      "Cannot find key y.",
+    );
+  });
 });
