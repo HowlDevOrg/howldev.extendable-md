@@ -4,7 +4,6 @@ import {
   throwIfOutsideRange,
 } from "./keywordFuncs";
 import { CodeError, InternalError, UserError } from "./customErrors";
-import { evaluateExpression } from "./Helpers/evaluateExpression";
 import { paramDefAndValueToStructuredOutput } from "./Helpers/stringHelpers";
 import { ExecutionReturn, ObjectWithStructuredValue, ParamDef } from "./types";
 
@@ -22,13 +21,23 @@ export function ExecuteCode(
       values[i],
     );
   }
-  // let returnValue: ExecutionReturn[] | null = null;
+  const { returnValue } = executeInstructions(code, lookup);
+  if (!returnValue) {
+    throw new CodeError("Did not find a return statement.");
+  }
+  return returnValue;
+}
+
+function executeInstructions(
+  code: string[],
+  lookup: ObjectWithStructuredValue,
+): { returnValue: ExecutionReturn[] | null; i: number } {
   for (let i = 0; i < code.length; i++) {
     const splitString = code[i].split(" ").filter((a) => !!a);
     const exprValue = splitString.slice(1).join(" ");
     switch (splitString[0].toLowerCase()) {
       case "return":
-        return getReturnArray(exprValue, lookup);
+        return { returnValue: getReturnArray(exprValue, lookup), i: -1 };
       case "throw":
         throw new UserError(exprValue);
       case "throwifoutsiderange":
@@ -41,5 +50,5 @@ export function ExecuteCode(
         throw new CodeError(`Cannot find keyword ${splitString[0]}.`);
     }
   }
-  throw new CodeError("Did not find a return statement.");
+  return { returnValue: null, i: -1 };
 }
