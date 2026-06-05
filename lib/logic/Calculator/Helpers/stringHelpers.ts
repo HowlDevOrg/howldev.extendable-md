@@ -31,18 +31,41 @@ export function GetSingleNumber(str: string): number {
   throw new InternalError(`Could not parse ${str} as number.`);
 }
 
+export function parseIfElseStatements(ifElseCode: string[]): string[][] {
+  if (!ifElseCode[0].trimStart().toLowerCase().startsWith("if"))
+    throw new InternalError(
+      `If statement does not start with an if statement. Instead started with: ${ifElseCode[0]}.`,
+    );
+  const wholeReturn: string[][] = [];
+  let internalReturn: string[] = [ifElseCode[0]];
+  for (let i = 1; i < ifElseCode.length; i++) {
+    if (
+      ifElseCode[i].trimStart().toLowerCase().startsWith("else") ||
+      ifElseCode[i].trimStart().toLowerCase().startsWith("elsif")
+    ) {
+      wholeReturn.push(internalReturn);
+      internalReturn = [];
+    }
+
+    internalReturn.push(ifElseCode[i]);
+  }
+  wholeReturn.push(internalReturn);
+  return wholeReturn;
+}
+
 // AI generated
 export function splitOnOutermostCommas(input: string): string[] {
-    const result: string[] = [];
-    let depth = 0, start = 0;
-    for (let i = 0; i < input.length; i++) {
-        if (input[i] === '(') depth++;
-        else if (input[i] === ')') depth--;
-        else if (input[i] === ',' && depth === 0) {
-            result.push(input.slice(start, i).trim());
-            start = i + 1;
-        }
+  const result: string[] = [];
+  let depth = 0,
+    start = 0;
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === "(") depth++;
+    else if (input[i] === ")") depth--;
+    else if (input[i] === "," && depth === 0) {
+      result.push(input.slice(start, i).trim());
+      start = i + 1;
     }
-    result.push(input.slice(start).trim());
-    return result;
+  }
+  result.push(input.slice(start).trim());
+  return result;
 }
