@@ -1,4 +1,8 @@
-import { assignIntoLookup, getReturnArray, throwIfOutsideRange } from "./keywordFuncs";
+import {
+  assignIntoLookup,
+  getReturnArray,
+  throwIfOutsideRange,
+} from "./keywordFuncs";
 import { CodeError, InternalError, UserError } from "./customErrors";
 import { evaluateExpression } from "./Helpers/evaluateExpression";
 import { paramDefAndValueToStructuredOutput } from "./Helpers/stringHelpers";
@@ -18,6 +22,7 @@ export function ExecuteCode(
       values[i],
     );
   }
+  // let returnValue: ExecutionReturn[] | null = null;
   for (let i = 0; i < code.length; i++) {
     const splitString = code[i].split(" ").filter((a) => !!a);
     const exprValue = splitString.slice(1).join(" ");
@@ -32,21 +37,6 @@ export function ExecuteCode(
       case "assign":
         assignIntoLookup(exprValue, lookup);
         break;
-      case "if": {
-        const match = evaluateExpression(exprValue, lookup);
-        if (match.type !== "bool")
-          throw new CodeError(
-            `Cannot interpret type ${match.type} in an if statement.`,
-          );
-        if (match.value as boolean) {
-          do {
-            i++;
-            let newSplitString = code[i].split(" ").filter((a) => !!a);
-            let newExprValue = splitString.slice(1).join(" ");
-          } while (i < code.length);
-        }
-        break;
-      }
       default:
         throw new CodeError(`Cannot find keyword ${splitString[0]}.`);
     }
