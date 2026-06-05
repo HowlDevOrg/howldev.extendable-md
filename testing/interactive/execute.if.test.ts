@@ -219,7 +219,7 @@ describe("code can throws errors if not finding correct lines", () => {
       "Cannot find keyword endif.",
     );
   });
-  it("throws errors if variables aren't global", () => {
+  it("throws errors if variables aren't set in both", () => {
     const paramDefs: ParamDef[] = [];
     const values: string[] = [];
     const code = [
