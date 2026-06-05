@@ -54,20 +54,13 @@ function executeInstructions(
             `Cannot interpret type ${result.type} as a boolean in an if statement.`,
           );
 
-        const indexOfEndif = code.findIndex((a, nI) => nI >= i && a.startsWith("endif"));
+        const indexOfEndif = code.findIndex(
+          (a, nI) => nI >= i && a.startsWith("endif"),
+        );
         if (indexOfEndif === -1)
           throw new CodeError("Did not find endif statement.");
         if (result.value as boolean) {
-          const newCode: string[] = [];
-          let breakOut = false;
-          do {
-            i++;
-            const newSplitString = code[i].split(" ").filter((a) => !!a);
-            if (newSplitString[0] !== "else") {
-              newCode.push(code[i]);
-              breakOut = true;
-            }
-          } while (i < code.length && !breakOut);
+          let newCode = collectSubsequentStatements(i, code, indexOfEndif);
           const returnValue = executeInstructions(newCode, lookup);
           if (returnValue) return returnValue;
         } else {
@@ -96,4 +89,18 @@ function executeInstructions(
     }
   }
   return null;
+}
+function collectSubsequentStatements(i: number, code: string[], endif: number): string[] {
+  const newCode: string[] = [];
+  let breakOut = false;
+  do {
+    i++;
+    const newSplitString = code[i].split(" ").filter((a) => !!a);
+    if (newSplitString[0] !== "else" && newSplitString[0] !== "endif") {
+      newCode.push(code[i]);
+    } else {
+      breakOut = true;
+    }
+  } while (i < endif && !breakOut);
+  return newCode;
 }

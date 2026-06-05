@@ -104,6 +104,29 @@ describe("code can run if statements", () => {
   });
 });
 
+describe("code can run multiple lines with no else", () => {
+  it("can run multiple statements inside lone if", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [
+      "if 3 < 15",
+      "assign x = 15",
+      "assign y = 32.6",
+      "assign z = 1",
+      "endif",
+      "return x, y, z as newZ",
+    ];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(3);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("15");
+    expect(modified[1].label).toBe("y");
+    expect(modified[1].value).toBe("32.6");
+    expect(modified[2].label).toBe("newZ");
+    expect(modified[2].value).toBe("1");
+  });
+});
+
 describe("code can throws errors in if if not booleans", () => {
   it("if is number", () => {
     const paramDefs: ParamDef[] = [];
