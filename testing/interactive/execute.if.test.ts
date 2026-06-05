@@ -53,6 +53,55 @@ describe("code can run if statements", () => {
     expect(modified[0].label).toBe("x");
     expect(modified[0].value).toBe("3");
   });
+  it("if with parameter (true)", () => {
+    const paramDefs: ParamDef[] = [{ name: "lorem", type: "boolean" }];
+    const values: string[] = ["true"];
+    const code = [
+      "if lorem",
+      "assign x = 15",
+      "else",
+      "assign x = 3",
+      "endif",
+      "return x",
+    ];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("15");
+  });
+  it("if with parameter (false)", () => {
+    const paramDefs: ParamDef[] = [{ name: "lorem", type: "boolean" }];
+    const values: string[] = ["false"];
+    const code = [
+      "if lorem",
+      "assign x = 15",
+      "else",
+      "assign x = 3",
+      "endif",
+      "return x",
+    ];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("3");
+  });
+  it("endif gets the correct block", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [
+      "if 15 > 3",
+      "assign x = 5",
+      "endif",
+      "if 3 < 5",
+      "assign x = x + 2",
+      "endif",
+      "return x",
+    ];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("7");
+  });
 });
 
 describe("code can throws errors in if if not booleans", () => {

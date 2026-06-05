@@ -47,14 +47,14 @@ function executeInstructions(
       case "assign":
         assignIntoLookup(exprValue, lookup);
         break;
-      case "if":
+      case "if": {
         const result = evaluateExpression(exprValue, lookup);
         if (result.type !== "bool")
           throw new CodeError(
             `Cannot interpret type ${result.type} as a boolean in an if statement.`,
           );
 
-        const indexOfEndif = code.findIndex((a) => a.startsWith("endif"));
+        const indexOfEndif = code.findIndex((a, nI) => nI >= i && a.startsWith("endif"));
         if (indexOfEndif === -1)
           throw new CodeError("Did not find endif statement.");
         if (result.value as boolean) {
@@ -62,7 +62,7 @@ function executeInstructions(
           let breakOut = false;
           do {
             i++;
-            let newSplitString = code[i].split(" ").filter((a) => !!a);
+            const newSplitString = code[i].split(" ").filter((a) => !!a);
             if (newSplitString[0] !== "else") {
               newCode.push(code[i]);
               breakOut = true;
@@ -76,7 +76,7 @@ function executeInstructions(
           let found = false;
           do {
             i++;
-            let newSplitString = code[i].split(" ").filter((a) => !!a);
+            const newSplitString = code[i].split(" ").filter((a) => !!a);
             if (!found && newSplitString[0] === "else") {
               found = true;
             } else if (found && newSplitString[0] !== "endif") {
@@ -90,6 +90,7 @@ function executeInstructions(
         }
         i = indexOfEndif;
         break;
+      }
       default:
         throw new CodeError(`Cannot find keyword ${splitString[0]}.`);
     }

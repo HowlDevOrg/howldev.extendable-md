@@ -49,6 +49,18 @@ describe("code can execute string concatenate on other side of assign", () => {
   });
 });
 
+describe("code can run self assignment", () => {
+  const paramDefs: ParamDef[] = [];
+  const values: string[] = [];
+  it("new variable can be self assigned", () => {
+    const code = [`assign x = 5 + 3`, "assign x = x + 3",  "return x"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("11");
+  });
+});
+
 describe("code can execute equivalence operators on other side of assign (for numbers)", () => {
   const paramDefs: ParamDef[] = [];
   const values: string[] = [];
