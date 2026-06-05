@@ -137,6 +137,16 @@ describe("code can run simple functions with prims", () => {
       code: 'return len("o")',
       check: (val: string) => expect(val).toBe("1"),
     },
+    {
+      name: 'not(false)',
+      code: 'return not(false)',
+      check: (val: string) => expect(val).toBe("true"),
+    },
+    {
+      name: 'not(true)',
+      code: 'return not(true)',
+      check: (val: string) => expect(val).toBe("false"),
+    },
   ];
   functions.forEach((func) => {
     it(func.name, () => {
@@ -257,6 +267,27 @@ describe("code can run string functions with outside numbers", () => {
     expect(modified.length).toBe(1);
     expect(modified[0].label).toBe("");
     expect(modified[0].value).toBe("6");
+  });
+});
+
+describe("code can run boolean functions with outside params", () => {
+  it("not false", () => {
+    const paramDefs: ParamDef[] = [{name: "lorem", type: "boolean"}];
+    const values: string[] = ["false"];
+    const code = ['return not(lorem)'];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("true");
+  });
+  it("not true", () => {
+    const paramDefs: ParamDef[] = [{name: "lorem", type: "boolean"}];
+    const values: string[] = ["true"];
+    const code = ['return not(lorem)'];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("false");
   });
 });
 
@@ -401,6 +432,23 @@ describe("code throws errors on invalid inputs", () => {
       const code = [`return ${func}(true)`];
       expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
         `Can't get string from value true in function ${func}.`,
+      );
+    });
+  });
+
+  const boolFunctions = ["not"];
+  boolFunctions.forEach((func) => {
+    it(`${func} (number)`, () => {
+      const code = [`return ${func}(45.2)`];
+      expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+        `Can't get boolean from value 45.2 in function ${func}.`,
+      );
+    });
+
+    it(`${func} (string)`, () => {
+      const code = [`return ${func}("this")`];
+      expect(() => ExecuteCode(paramDefs, values, code)).toThrowError(
+        `Can't get boolean from value this in function ${func}.`,
       );
     });
   });

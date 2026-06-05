@@ -124,6 +124,11 @@ export function evaluateFunctions(
       const val = evaluateExpression(funcMatch[2], lookup);
       return { label: label, type: "string", value: StructuredReturnToString(val) };
     }
+    // Boolean methods ////////////////////////////////////////////
+    case "not": {
+      const val = getBool(funcMatch[2], lookup, "not");
+      return { label: label, type: "bool", value: !val };
+    }
     default:
       throw new CodeError(`Couldn't find function name ${funcMatch[1]}.`);
   }
@@ -153,4 +158,17 @@ function getString(
       `Can't get string from value ${string.value} in function ${funcName}.`,
     );
   return string.value as string;
+}
+
+function getBool(
+  charString: string,
+  lookup: ObjectWithStructuredValue,
+  funcName: string,
+): boolean {
+  const string = evaluateExpression(charString, lookup);
+  if (string.type !== "bool")
+    throw new CodeError(
+      `Can't get boolean from value ${string.value} in function ${funcName}.`,
+    );
+  return string.value as boolean;
 }
