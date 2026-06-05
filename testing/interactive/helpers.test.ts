@@ -3,7 +3,6 @@ import {
   parseIfElseStatements,
   splitOnOutermostCommas,
 } from "../../lib/logic/Calculator/Helpers/stringHelpers";
-import { evaluateExpression } from "../../lib/logic/Calculator/Helpers/evaluateExpression";
 
 describe("can split return params", () => {
   const tests = [
@@ -128,5 +127,11 @@ describe("internal error for not starting with if", () => {
     const code = ["IF 5 < 3", "assign x = 5", "else", "assign x = 3"];
     const result = parseIfElseStatements(code);
     expect(result.length).toBe(2);
+  });
+  it("endif is included", () => {
+    const code = ["if 3 < 15", "assign 5", "else", "assign x = 3", "endif"];
+    expect(() => parseIfElseStatements(code)).toThrowError(
+      "Internal Error: Parser code should not have endif included.",
+    );
   });
 });

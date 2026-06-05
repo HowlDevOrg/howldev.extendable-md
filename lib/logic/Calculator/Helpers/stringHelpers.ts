@@ -36,6 +36,9 @@ export function parseIfElseStatements(ifElseCode: string[]): string[][] {
     throw new InternalError(
       `If statement does not start with an if statement. Instead started with: ${ifElseCode[0]}.`,
     );
+  if (ifElseCode.includes("endif"))
+    throw new InternalError("Parser code should not have endif included.");
+  
   const wholeReturn: string[][] = [];
   let internalReturn: string[] = [ifElseCode[0]];
   for (let i = 1; i < ifElseCode.length; i++) {
