@@ -6,6 +6,7 @@ import {
 import { CodeError, InternalError, UserError } from "./customErrors";
 import { paramDefAndValueToStructuredOutput } from "./Helpers/stringHelpers";
 import { ExecutionReturn, ObjectWithStructuredValue, ParamDef } from "./types";
+import { evaluateExpression } from "./Helpers/evaluateExpression";
 
 export function ExecuteCode(
   paramDef: ParamDef[],
@@ -37,7 +38,7 @@ function executeInstructions(
     const exprValue = splitString.slice(1).join(" ");
     switch (splitString[0].toLowerCase()) {
       case "return":
-        return { returnValue: getReturnArray(exprValue, lookup), i: -1 };
+        return { returnValue: getReturnArray(exprValue, lookup), i: Infinity };
       case "throw":
         throw new UserError(exprValue);
       case "throwifoutsiderange":
@@ -46,9 +47,51 @@ function executeInstructions(
       case "assign":
         assignIntoLookup(exprValue, lookup);
         break;
+      case "if":
+        const result = evaluateExpression(exprValue, lookup);
+        if (result.type !== "bool")
+          throw new CodeError(
+            `Cannot interpret type ${result.type} as a boolean in an if statement.`,
+          );
+
+        const indexOfEndif = code.findIndex((a) => a.startsWith("endif"));
+        if (indexOfEndif === -1) throw new CodeError("Did not find endif statement.")
+        if (result.value as boolean) {
+          const newCode: string[] = [];
+          let breakOut = false;
+          do {
+            i++;
+            let newSplitString = code[i].split(" ").filter((a) => !!a);
+            if (newSplitString[0] !== "else") {
+              newCode.push(code[i]);
+              breakOut = true;
+            }
+          } while (i < code.length && !breakOut);
+          const { returnValue, i: newI } = executeInstructions(newCode, lookup);
+          if (returnValue) return { returnValue, i: Infinity };
+        } else {
+          const newCode: string[] = [];
+          let breakOut = false;
+          let found = false;
+          do {
+            i++;
+            let newSplitString = code[i].split(" ").filter((a) => !!a);
+            if (!found && newSplitString[0] === "else") {
+              found = true;
+            } else if (found && newSplitString[0] !== "endif") {
+              newCode.push(code[i]);
+            } else if (newSplitString[0] === "endif") {
+              breakOut = true;
+            }
+          } while (i < code.length && !breakOut);
+          const { returnValue, i: newI } = executeInstructions(newCode, lookup);
+          if (returnValue) return { returnValue, i: -1 };
+        }
+        i = indexOfEndif;
+        break;
       default:
         throw new CodeError(`Cannot find keyword ${splitString[0]}.`);
     }
   }
-  return { returnValue: null, i: -1 };
+  return { returnValue: null, i: Infinity };
 }
