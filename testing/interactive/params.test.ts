@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { ParamDefSplitter } from "../../lib/logic/Calculator/ParamDef";
 import { EnumType } from "../../lib/logic/Calculator/types";
 
-describe("params are correctly rendered", () => {
+describe("params can read simple defaults", () => {
   it("single string input works", () => {
     const value = ["start: string"];
     const modified = ParamDefSplitter(value);
@@ -23,6 +23,33 @@ describe("params are correctly rendered", () => {
     expect(modified.length).toBe(1);
     expect(modified[0].name).toBe("start");
     expect(modified[0].type).toBe("boolean");
+  });
+});
+
+describe("simple primitive params can set defaults", () => {
+  it("single string input works", () => {
+    const value = ['start: string = this'];
+    const modified = ParamDefSplitter(value);
+    expect(modified.length).toBe(1);
+    expect(modified[0].name).toBe("start");
+    expect(modified[0].type).toBe("string");
+    expect(modified[0].default).toBe("this");
+  });
+  it("single number input works", () => {
+    const value = ["start: number = 10"];
+    const modified = ParamDefSplitter(value);
+    expect(modified.length).toBe(1);
+    expect(modified[0].name).toBe("start");
+    expect(modified[0].type).toBe("number");
+    expect(modified[0].default).toBe("10");
+  });
+  it("single boolean input works", () => {
+    const value = ["start: boolean = true"];
+    const modified = ParamDefSplitter(value);
+    expect(modified.length).toBe(1);
+    expect(modified[0].name).toBe("start");
+    expect(modified[0].type).toBe("boolean");
+    expect(modified[0].default).toBe("true");
   });
 });
 
@@ -55,7 +82,12 @@ describe("can read enums correctly", () => {
 
 describe("can read multiple params", () => {
   it("can read all four params", () => {
-    const value = ["start: string", "num: number", "checked: boolean", "labels: One | Two | Three"];
+    const value = [
+      "start: string",
+      "num: number",
+      "checked: boolean",
+      "labels: One | Two | Three",
+    ];
     const modified = ParamDefSplitter(value);
     expect(modified.length).toBe(4);
     expect(modified[0].name).toBe("start");
@@ -73,10 +105,14 @@ describe("can read multiple params", () => {
 describe("can read throw errors", () => {
   it("throws on unexpected capitals", () => {
     const value = ["start: String"];
-    expect(() => ParamDefSplitter(value)).toThrowError("Can't determine type or create enum from type name String.");
+    expect(() => ParamDefSplitter(value)).toThrowError(
+      "Can't determine type or create enum from type name String.",
+    );
   });
   it("throws on garbage", () => {
     const value = ["start: lskjdo"];
-    expect(() => ParamDefSplitter(value)).toThrowError("Can't determine type or create enum from type name lskjdo.");
+    expect(() => ParamDefSplitter(value)).toThrowError(
+      "Can't determine type or create enum from type name lskjdo.",
+    );
   });
 });

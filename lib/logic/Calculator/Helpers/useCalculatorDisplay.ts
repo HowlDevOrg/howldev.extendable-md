@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import { ExecuteCode } from "../ExecuteCode";
-import { getDefault } from "./getDefault";
 import { parseParamsAndCode } from "./parseParamsAndCode";
 
 export function useCalculatorDisplay(text: string) {
@@ -12,7 +11,7 @@ export function useCalculatorDisplay(text: string) {
       // This does not create an infinite render loop and this is intended behavior.. I don't know
       // how to fix it in the React system.
       // eslint-disable-next-line
-      setValues(newParams.map(getDefault));
+      setValues(newParams.map(a => a.default));
       return {
         params: newParams,
         code: newCode,
