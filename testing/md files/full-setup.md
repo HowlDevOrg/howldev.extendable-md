@@ -154,11 +154,11 @@ assign val = 1 / value
 case "Milliseconds"
 assign val = 1000 / value 
 case "Microseconds"
-assign 1000000 / value 
+assign val = 1000000 / value 
 case "Nanoseconds"
 assign val = 1000000000 / value 
 case "Picoseconds"
 assign val = 1000000000000 / value 
 endswitch
-return val as Operations Per Second
+return rounddigits(val, 1) as Operations Per Second
 ```
