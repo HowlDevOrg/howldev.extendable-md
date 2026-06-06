@@ -68,6 +68,9 @@ export function evaluateExpression(
     iterations++;
   }
 
+  if (!isNaN(Number(possibleExp)))
+    return extractLabelAndValue(possibleExp.trim(), lookup, label);
+
   opMatch = possibleExp.match(lazyOperatorRegex);
   while (opMatch && iterations < 10) {
     // Operator is a negative sign

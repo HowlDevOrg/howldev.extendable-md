@@ -24,18 +24,16 @@ return rounddigits(val, 1) as Operations Per Second
 ```
 ---
 
-The following features the rounddigits function which I have to use twice because of the ugly way that JS parses numbers to strings and what problems that causes with tiny numbers (1.0e-17), which breaks the operator regex. However, you can get around it (and maybe I'll figure out a clean solution in the future.. but generally don't try to deal with tiny numbers) by using the rounding function multiple times. 
-
-It also features the throwifoutsiderange, which takes in a number and is inclusive on both sides (num1 &lt;= x &lt;= num2). Separated by commas. 
+The following features the rounddigits function and the throwifoutsiderange, which takes in a number and is inclusive on both sides (num1 &lt;= x &lt;= num2). Separated by commas. 
 
 ```calculator
 angle: number
 radius: number = 1
 ---
 throwifoutsiderange angle, 0, 360
-assign x = rounddigits(cos(degtorad(angle)), 5)
-assign y = rounddigits(sin(degtorad(angle)), 5)
-return rounddigits(x * radius, 2) as x, rounddigits(y * radius, 2) as y
+assign x = rounddigits(cos(degtorad(angle)) * radius, 2)
+assign y = rounddigits(sin(degtorad(angle)) * radius, 2)
+return x, y
 ```
 ---
 
