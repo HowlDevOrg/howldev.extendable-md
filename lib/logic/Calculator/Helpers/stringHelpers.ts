@@ -32,14 +32,15 @@ export function GetSingleNumber(str: string): number {
 }
 
 export function parseIfElseStatements(ifElseCode: string[]): string[][] {
-  if (ifElseCode.length === 0) throw new InternalError("Length of ifElse code should not be 0.")
+  if (ifElseCode.length === 0)
+    throw new InternalError("Length of ifElse code should not be 0.");
   if (!ifElseCode[0].trimStart().toLowerCase().startsWith("if"))
     throw new InternalError(
       `If statement does not start with an if statement. Instead started with: ${ifElseCode[0]}.`,
     );
   if (ifElseCode.includes("endif"))
     throw new InternalError("Parser code should not have endif included.");
-  
+
   const wholeReturn: string[][] = [];
   let internalReturn: string[] = [ifElseCode[0]];
   for (let i = 1; i < ifElseCode.length; i++) {

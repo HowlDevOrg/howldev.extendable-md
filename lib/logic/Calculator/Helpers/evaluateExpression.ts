@@ -9,7 +9,10 @@ import {
   prioritizedOperatorRegex,
   lazyOperatorRegex,
 } from "./regex";
-import { StructuredReturnReplacementString, StructuredReturnToString } from "./structuredReturnToString";
+import {
+  StructuredReturnReplacementString,
+  StructuredReturnToString,
+} from "./structuredReturnToString";
 
 export function evaluateExpression(
   possibleExp: string,
@@ -35,36 +38,42 @@ export function evaluateExpression(
   while (funcMatch && iterations < 10) {
     possibleExp = possibleExp.replace(
       funcMatch[0],
-      StructuredReturnReplacementString(evaluateFunctions(funcMatch, label, lookup)),
+      StructuredReturnReplacementString(
+        evaluateFunctions(funcMatch, label, lookup),
+      ),
     );
     funcMatch = possibleExp.match(functionRegex);
     iterations++;
   }
-  
+
   if (iterations === 10) {
     throw new CodeError(
       `Cannot evaluate string ${originalExp}. Too many parenthesis.`,
     );
   }
-  
+
   let opMatch = possibleExp.match(prioritizedOperatorRegex);
   iterations = 0;
   while (opMatch && iterations < 10) {
     possibleExp = possibleExp.replace(
       opMatch[0],
-      StructuredReturnReplacementString(evaluateBinaryOperators(opMatch, label, lookup)),
+      StructuredReturnReplacementString(
+        evaluateBinaryOperators(opMatch, label, lookup),
+      ),
     );
     opMatch = possibleExp.match(prioritizedOperatorRegex);
     iterations++;
   }
-  
+
   opMatch = possibleExp.match(lazyOperatorRegex);
   while (opMatch && iterations < 10) {
     // Operator is a negative sign
     if (!opMatch[1]) break;
     possibleExp = possibleExp.replace(
       opMatch[0],
-      StructuredReturnReplacementString(evaluateBinaryOperators(opMatch, label, lookup)),
+      StructuredReturnReplacementString(
+        evaluateBinaryOperators(opMatch, label, lookup),
+      ),
     );
     opMatch = possibleExp.match(lazyOperatorRegex);
     iterations++;

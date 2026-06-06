@@ -122,7 +122,11 @@ export function evaluateFunctions(
     }
     case "str": {
       const val = evaluateExpression(funcMatch[2], lookup);
-      return { label: label, type: "string", value: StructuredReturnToString(val) };
+      return {
+        label: label,
+        type: "string",
+        value: StructuredReturnToString(val),
+      };
     }
     // Boolean methods ////////////////////////////////////////////
     case "not": {

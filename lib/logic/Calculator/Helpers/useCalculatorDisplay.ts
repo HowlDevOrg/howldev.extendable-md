@@ -9,8 +9,8 @@ export function useCalculatorDisplay(text: string) {
   const { params, code, paramError } = useMemo(() => {
     try {
       const { newParams, newCode } = parseParamsAndCode(text);
-      // This does not create an infinite render loop and this is intended behavior.. I don't know 
-      // how to fix it in the React system. 
+      // This does not create an infinite render loop and this is intended behavior.. I don't know
+      // how to fix it in the React system.
       // eslint-disable-next-line
       setValues(newParams.map(getDefault));
       return {
