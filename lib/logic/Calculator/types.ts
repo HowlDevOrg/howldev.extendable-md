@@ -1,8 +1,8 @@
 export type ParamDef = StringType | NumberType | BoolType | EnumType;
 
-export type StringType = { name: string; type: "string"; default: string };
-export type NumberType = { name: string; type: "number"; default: string };
-export type BoolType = { name: string; type: "boolean"; default: string };
+export type StringType = { name: string; type: "string"; default?: string };
+export type NumberType = { name: string; type: "number"; default?: string };
+export type BoolType = { name: string; type: "boolean"; default?: string };
 export type EnumType = {
   name: string;
   type: "enum";

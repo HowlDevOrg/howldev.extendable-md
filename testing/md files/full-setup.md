@@ -52,7 +52,7 @@ lorem --> this
 lorem --> haha
 ```
 
-Here's a [link to the Org github](https://github.com/HowlDevOrg). You can also put a space and add in a title [for the hover effect](https://github.com/HowlDevOrg for the hover effect). 
+Here's a [link to the Org github](https://github.com/HowlDevOrg). You can also put a space and add in a title [for the hover effect](https://github.com/HowlDevOrg see? The hover effect). 
 And if you just put it in angle brackets, it exists! <https://github.com/HowlDevOrg>
 
 ---
@@ -140,15 +140,21 @@ Alright. What if you could set up a simple calculator? (this may transform into 
 
 So, if you wanted a calculator that could tell you how many operations a second you could run by giving it an enum and a number, it would look like this: 
 
-```interactive
+```calculator
 interval: Seconds | Milliseconds | Microseconds | Nanoseconds | Picoseconds
-value: number
+value: number = 5
 ---
 switch interval
-Seconds: RETURN 1 / value
-Milliseconds: RETURN 1000 / value
-Microseconds: RETURN 1000000 / value
-Nanoseconds: RETURN 1000000000 / value
-Picoseconds: RETURN 1000000000000 / value
-end switch
+case "Seconds"
+assign val = 1 / value 
+case "Milliseconds"
+assign val = 1000 / value 
+case "Microseconds"
+assign val = 1000000 / value 
+case "Nanoseconds"
+assign val = 1000000000 / value 
+case "Picoseconds"
+assign val = 1000000000000 / value 
+endswitch
+return val as Operations Per Second
 ```
