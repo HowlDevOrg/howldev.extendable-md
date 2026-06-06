@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { InteractiveDisplayInputs } from "./CalculatorDisplayInputs";
-import { useCalculatorDisplay } from "./Helpers/useCalculatorDisplay";
+import { useCalculatorDisplay } from "./useCalculatorDisplay";
 
 type CalculatorDisplayProps = {
   text: string;

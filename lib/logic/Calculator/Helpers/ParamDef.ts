@@ -1,6 +1,6 @@
 import { CodeError } from "./customErrors";
-import { getInnerString, isQuotedString } from "./Helpers/stringHelpers";
-import type { ParamDef } from "./types";
+import { getInnerString, isQuotedString } from "./stringHelpers";
+import type { ParamDef } from "../types";
 
 export function ParamDefSplitter(params: string[]): ParamDef[] {
   const result: ParamDef[] = [];

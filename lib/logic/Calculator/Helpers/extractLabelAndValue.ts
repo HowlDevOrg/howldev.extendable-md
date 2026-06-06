@@ -1,6 +1,6 @@
 import { ObjectWithStructuredValue, StructuredReturn } from "../types";
 import { isQuotedString, getInnerString } from "./stringHelpers";
-import { CodeError } from "../customErrors";
+import { CodeError } from "./customErrors";
 
 export function extractLabelAndValue(
   key: string,

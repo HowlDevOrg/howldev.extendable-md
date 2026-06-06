@@ -1,4 +1,4 @@
-import { InternalError } from "../customErrors";
+import { InternalError } from "./customErrors";
 import { ParamDef, StructuredOutput } from "../types";
 
 export function getInnerString(key: string): string {

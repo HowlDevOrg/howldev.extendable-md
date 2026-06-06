@@ -1,6 +1,6 @@
 import { CodeError, InternalError } from "./customErrors";
-import { paramDefAndValueToStructuredOutput } from "./Helpers/stringHelpers";
-import { ExecutionReturn, ObjectWithStructuredValue, ParamDef } from "./types";
+import { paramDefAndValueToStructuredOutput } from "./stringHelpers";
+import { ExecutionReturn, ObjectWithStructuredValue, ParamDef } from "../types";
 import { executeInstructions } from "./executeInstructions";
 
 export function ExecuteCode(

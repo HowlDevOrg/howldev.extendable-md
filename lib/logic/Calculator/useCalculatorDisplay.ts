@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { ExecuteCode } from "../ExecuteCode";
-import { parseParamsAndCode } from "./parseParamsAndCode";
+import { ExecuteCode } from "./Helpers/ExecuteCode";
+import { parseParamsAndCode } from "./Helpers/parseParamsAndCode";
 
 export function useCalculatorDisplay(text: string) {
   const [values, setValues] = useState<string[]>([]);

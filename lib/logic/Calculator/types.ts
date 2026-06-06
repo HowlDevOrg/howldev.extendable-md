@@ -7,7 +7,7 @@ export type EnumType = {
   name: string;
   type: "enum";
   values: string[];
-  default: string;
+  default?: string;
 };
 
 export type StructuredOutput = {

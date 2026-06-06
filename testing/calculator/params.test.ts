@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ParamDefSplitter } from "../../lib/logic/Calculator/ParamDef";
+import { ParamDefSplitter } from "../../lib/logic/Calculator/Helpers/ParamDef";
 import { EnumType } from "../../lib/logic/Calculator/types";
 
 describe("params can read simple defaults", () => {

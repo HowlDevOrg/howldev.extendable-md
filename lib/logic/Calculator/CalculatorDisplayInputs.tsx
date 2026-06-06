@@ -1,4 +1,4 @@
-import { InternalError } from "./customErrors";
+import { InternalError } from "./Helpers/customErrors";
 import { ParamDef, EnumType } from "./types";
 
 type InteractiveDisplayInputsProps = {

@@ -1,4 +1,4 @@
-import { CodeError } from "../customErrors";
+import { CodeError } from "./customErrors";
 import { ObjectWithStructuredValue, StructuredReturn } from "../types";
 import { evaluateExpression } from "./evaluateExpression";
 

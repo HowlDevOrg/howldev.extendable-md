@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ExecuteCode } from "../../lib/logic/Calculator/ExecuteCode";
+import { ExecuteCode } from "../../lib/logic/Calculator/Helpers/ExecuteCode";
 import { ParamDef } from "../../lib/logic/Calculator/types";
 
 describe("code can run if statements", () => {
