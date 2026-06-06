@@ -29,10 +29,8 @@ export function executeInstructions(
           throw new CodeError("Did not find endif statement.");
         
         const statements = parseIfElseStatements(code.slice(i, indexOfEndif));
-        // console.log("Statements", statements)
         for (const codeArray of statements) {
           const fsa = codeArray[0].split(" ").filter((a) => !!a);
-          // console.log("Fsa", fsa)
           if (fsa[0].toLowerCase() !== "else") {
             const newExprValue = fsa.slice(1).join(" ");
             const evaluation = evaluateExpression(newExprValue, lookup);
@@ -50,7 +48,6 @@ export function executeInstructions(
             }
           } else {
             const newCode = codeArray.slice(1);
-            // console.log("newCode in else", newCode)
             const returnValue = executeInstructions(newCode, lookup);
             if (returnValue) return returnValue;
           }
