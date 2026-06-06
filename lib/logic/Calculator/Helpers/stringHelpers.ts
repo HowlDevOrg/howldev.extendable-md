@@ -18,17 +18,13 @@ export function paramDefAndValueToStructuredOutput(
     case "boolean":
       return { value: value === "true" ? true : false, type: "bool" };
     case "number":
-      return { value: GetSingleNumber(value), type: "number" };
+      if (!isNaN(Number(value))) {
+        return { value: Number(value), type: "number" };
+      }
+      throw new InternalError(`Could not parse ${value} as number.`);
     case "enum":
       return { value: value, type: "string" };
   }
-}
-
-export function GetSingleNumber(str: string): number {
-  if (!isNaN(Number(str))) {
-    return Number(str);
-  }
-  throw new InternalError(`Could not parse ${str} as number.`);
 }
 
 export function parseIfElseStatements(ifElseCode: string[]): string[][] {
@@ -43,10 +39,10 @@ export function parseIfElseStatements(ifElseCode: string[]): string[][] {
 
   const wholeReturn: string[][] = [];
   let internalReturn: string[] = [ifElseCode[0]];
+  const splitItems = ["else", "elsif"];
   for (let i = 1; i < ifElseCode.length; i++) {
     if (
-      ifElseCode[i].trimStart().toLowerCase().startsWith("else") ||
-      ifElseCode[i].trimStart().toLowerCase().startsWith("elsif")
+      splitItems.includes(ifElseCode[i].trimStart().toLowerCase().split(" ")[0])
     ) {
       wholeReturn.push(internalReturn);
       internalReturn = [];

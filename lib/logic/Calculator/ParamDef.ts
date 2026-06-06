@@ -9,22 +9,13 @@ export function ParamDefSplitter(params: string[]): ParamDef[] {
       throw new CodeError(`Unknown split result on parameter ${i}.`);
     switch (parts[1]) {
       case "string":
-        result.push({
-          name: parts[0],
-          type: "string",
-        });
+        result.push({ name: parts[0], type: "string" });
         break;
       case "number":
-        result.push({
-          name: parts[0],
-          type: "number",
-        });
+        result.push({ name: parts[0], type: "number" });
         break;
       case "boolean":
-        result.push({
-          name: parts[0],
-          type: "boolean",
-        });
+        result.push({ name: parts[0], type: "boolean" });
         break;
       default: {
         const possibleEnums = parts[1].split("|").map((a) => a.trim());
@@ -34,11 +25,7 @@ export function ParamDefSplitter(params: string[]): ParamDef[] {
           );
         }
 
-        result.push({
-          name: parts[0],
-          type: "enum",
-          values: possibleEnums,
-        });
+        result.push({ name: parts[0], type: "enum", values: possibleEnums });
       }
     }
   }

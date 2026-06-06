@@ -27,7 +27,7 @@ export class CodeError extends Error {
  * Returns an error with "User Error: " prefixed
  * to error messages.
  *
- * Used for custom exceptions of the writer..
+ * Used for custom exceptions of the writer.
  */
 export class UserError extends Error {
   constructor(str: string) {
