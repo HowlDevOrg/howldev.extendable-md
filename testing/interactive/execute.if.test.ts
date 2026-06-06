@@ -291,7 +291,7 @@ describe("code can throws errors in if if not booleans", () => {
   });
 });
 
-describe("code can throws errors if not finding correct lines", () => {
+describe("code can throws errors if not finding correct lines (if)", () => {
   it("no endif", () => {
     const paramDefs: ParamDef[] = [];
     const values: string[] = [];

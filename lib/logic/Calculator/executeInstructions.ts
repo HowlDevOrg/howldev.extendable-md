@@ -33,7 +33,11 @@ export function executeInstructions(
         if (indexOfEndif === -1)
           throw new CodeError("Did not find endif statement.");
 
-        const statements = parseIfElseStatements(code.slice(i, indexOfEndif));
+        const statements = parseIfElseStatements(
+          code.slice(i, indexOfEndif),
+          "if",
+          ["else", "elsif"],
+        );
         for (const codeArray of statements) {
           const fsa = codeArray[0].split(" ").filter((a) => !!a);
           if (fsa[0].toLowerCase() !== "else") {

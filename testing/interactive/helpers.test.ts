@@ -107,7 +107,7 @@ describe("can split if/elsif/else statements", () => {
   ];
   tests.forEach((test) => {
     it(`split for ${test.label}`, () => {
-      const modified = parseIfElseStatements(test.code);
+      const modified = parseIfElseStatements(test.code, "if", ["else", "elsif"]);
       expect(modified.length).toBe(test.results.length);
       for (const i in test.results) {
         expect(modified[i]).toStrictEqual(test.results[i]);
@@ -119,18 +119,18 @@ describe("can split if/elsif/else statements", () => {
 describe("internal error for not starting with if", () => {
   it("starts with assign", () => {
     const code = ["assign 5", "else", "assign x = 3"];
-    expect(() => parseIfElseStatements(code)).toThrowError(
-      "Internal Error: If statement does not start with an if statement. Instead started with: assign 5.",
+    expect(() => parseIfElseStatements(code, "if", ["else", "elsif"])).toThrowError(
+      "Internal Error: If statement does not start with a(n) if statement. Instead started with: assign 5.",
     );
   });
   it("doesn't throw error for capital IF", () => {
     const code = ["IF 5 < 3", "assign x = 5", "else", "assign x = 3"];
-    const result = parseIfElseStatements(code);
+    const result = parseIfElseStatements(code, "if", ["else", "elsif"]);
     expect(result.length).toBe(2);
   });
   it("endif is included", () => {
     const code = ["if 3 < 15", "assign 5", "else", "assign x = 3", "endif"];
-    expect(() => parseIfElseStatements(code)).toThrowError(
+    expect(() => parseIfElseStatements(code, "if", ["else", "elsif"])).toThrowError(
       "Internal Error: Parser code should not have endif included.",
     );
   });

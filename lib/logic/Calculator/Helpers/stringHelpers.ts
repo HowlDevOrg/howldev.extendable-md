@@ -27,19 +27,22 @@ export function paramDefAndValueToStructuredOutput(
   }
 }
 
-export function parseIfElseStatements(ifElseCode: string[]): string[][] {
+export function parseIfElseStatements(
+  ifElseCode: string[],
+  start: string,
+  splitItems: string[],
+): string[][] {
   if (ifElseCode.length === 0)
     throw new InternalError("Length of ifElse code should not be 0.");
-  if (!ifElseCode[0].trimStart().toLowerCase().startsWith("if"))
+  if (!ifElseCode[0].trimStart().toLowerCase().startsWith(start))
     throw new InternalError(
-      `If statement does not start with an if statement. Instead started with: ${ifElseCode[0]}.`,
+      `${start.charAt(0).toUpperCase() + start.slice(1)} statement does not start with a(n) ${start} statement. Instead started with: ${ifElseCode[0]}.`,
     );
   if (ifElseCode.includes("endif"))
     throw new InternalError("Parser code should not have endif included.");
 
   const wholeReturn: string[][] = [];
   let internalReturn: string[] = [ifElseCode[0]];
-  const splitItems = ["else", "elsif"];
   for (let i = 1; i < ifElseCode.length; i++) {
     if (
       splitItems.includes(ifElseCode[i].trimStart().toLowerCase().split(" ")[0])
