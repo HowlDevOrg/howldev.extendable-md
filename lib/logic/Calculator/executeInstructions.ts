@@ -1,6 +1,6 @@
-import { UserError, CodeError } from "./customErrors";
+import { UserError, CodeError, InternalError } from "./customErrors";
 import { evaluateExpression } from "./Helpers/evaluateExpression";
-import { parseIfElseStatements } from "./Helpers/stringHelpers";
+import { parseBlockStatements } from "./Helpers/stringHelpers";
 import {
   getReturnArray,
   throwIfOutsideRange,
@@ -33,7 +33,7 @@ export function executeInstructions(
         if (indexOfEndif === -1)
           throw new CodeError("Did not find endif statement.");
 
-        const statements = parseIfElseStatements(
+        const statements = parseBlockStatements(
           code.slice(i, indexOfEndif),
           "if",
           ["else", "elsif"],
@@ -62,6 +62,49 @@ export function executeInstructions(
           }
         }
         i = indexOfEndif;
+        break;
+      }
+      case "switch": {
+        const indexOfEndSwitch = code.findIndex(
+          (a, nI) => nI >= i && a.startsWith("endswitch"),
+        );
+        if (indexOfEndSwitch === -1)
+          throw new CodeError("Did not find endswitch statement.");
+
+        const switchExpr = code[i]
+          .split(" ")
+          .filter((a) => !!a)
+          .slice(1)
+          .join(" ");
+
+        const switchValue = evaluateExpression(switchExpr, lookup);
+        const statements = parseBlockStatements(
+          code.slice(i + 1, indexOfEndSwitch),
+          "case",
+          ["case"],
+        );
+        for (const codeArray of statements) {
+          const fsa = codeArray[0].split(" ").filter((a) => !!a);
+          if (fsa[0].toLowerCase() !== "case")
+            throw new InternalError(
+              `Switch statement found ${fsa[0]} instead of case statements.`,
+            );
+
+          const newExprValue = fsa.slice(1).join(" ");
+          const evaluation = evaluateExpression(newExprValue, lookup);
+          if (evaluation.type !== switchValue.type) {
+            throw new CodeError(
+              `Types do not match in switch expression: ${switchValue.type} (switch) and ${evaluation.type} (case).`,
+            );
+          }
+          if (evaluation.value === switchValue.value) {
+            const newCode = codeArray.slice(1);
+            const returnValue = executeInstructions(newCode, lookup);
+            if (returnValue) return returnValue;
+            break;
+          }
+        }
+        i = indexOfEndSwitch;
         break;
       }
       default:

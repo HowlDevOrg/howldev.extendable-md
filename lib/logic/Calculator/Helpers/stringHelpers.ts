@@ -27,7 +27,7 @@ export function paramDefAndValueToStructuredOutput(
   }
 }
 
-export function parseIfElseStatements(
+export function parseBlockStatements(
   ifElseCode: string[],
   start: string,
   splitItems: string[],
