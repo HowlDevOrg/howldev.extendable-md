@@ -34,7 +34,7 @@ export function CalculatorDisplay({ text }: CalculatorDisplayProps) {
   return (
     <div className="calculator-display">
       {paramError ? (
-        <p style={{ color: "red" }}>Param parsing error: {paramError}</p>
+        <p style={{ color: "red" }}>{paramError}</p>
       ) : (
         <div className="calculator-params">
           <InteractiveDisplayInputs
@@ -45,7 +45,7 @@ export function CalculatorDisplay({ text }: CalculatorDisplayProps) {
         </div>
       )}
       {runtimeError ? (
-        <p style={{ color: "red" }}>Code syntax error: {runtimeError}</p>
+        <p style={{ color: "red" }}>{runtimeError}</p>
       ) : (
         <div className="calculator-result">{result}</div>
       )}

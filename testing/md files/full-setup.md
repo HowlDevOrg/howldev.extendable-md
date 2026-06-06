@@ -142,15 +142,19 @@ So, if you wanted a calculator that could tell you how many operations a second 
 
 ```calculator
 interval: Seconds | Milliseconds | Microseconds | Nanoseconds | Picoseconds
-value: number = 5
+value: number = 1
 ---
+if value <= 0
+throw Value cannot be less than or equal to 0.
+endif
+
 switch interval
 case "Seconds"
 assign val = 1 / value 
 case "Milliseconds"
 assign val = 1000 / value 
 case "Microseconds"
-assign val = 1000000 / value 
+assign 1000000 / value 
 case "Nanoseconds"
 assign val = 1000000000 / value 
 case "Picoseconds"
