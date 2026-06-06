@@ -104,6 +104,95 @@ describe("code can run if statements", () => {
   });
 });
 
+describe("code can run elsif statements", () => {
+  it("can run simple elsif (true)", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [
+      "if 2 > 3",
+      "assign x = 5",
+      "elsif 5 > 3",
+      "assign x = 13",
+      "endif",
+      "return x",
+    ];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("13");
+  });
+  it("can run simple elsif (false)", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [
+      "if 5 > 3",
+      "assign x = 5",
+      "elsif 2 > 3",
+      "assign x = 13",
+      "endif",
+      "return x",
+    ];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("5");
+  });
+  it("can run simple elsif with else (true)", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [
+      "if 5 < 3",
+      "assign x = 5",
+      "elsif 2 < 3",
+      "assign x = 13",
+      "else",
+      "assign x = 2",
+      "endif",
+      "return x",
+    ];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("13");
+  });
+  it("can run simple elsif with else (false)", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [
+      "if 5 > 3",
+      "assign x = 5",
+      "elsif 2 > 3",
+      "assign x = 13",
+      "else",
+      "assign x = 2",
+      "endif",
+      "return x",
+    ];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("5");
+  });
+  it("can run simple elsif passthrough to else", () => {
+    const paramDefs: ParamDef[] = [];
+    const values: string[] = [];
+    const code = [
+      "if 5 < 3",
+      "assign x = 5",
+      "elsif 2 > 3",
+      "assign x = 13",
+      "else",
+      "assign x = 2",
+      "endif",
+      "return x",
+    ];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("x");
+    expect(modified[0].value).toBe("2");
+  });
+});
+
 describe("code can run multiple lines", () => {
   it("can run multiple statements inside lone if", () => {
     const paramDefs: ParamDef[] = [];
