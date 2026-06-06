@@ -28,7 +28,7 @@ describe("params can read simple defaults", () => {
 
 describe("simple primitive params can set defaults", () => {
   it("single string input works", () => {
-    const value = ['start: string = this'];
+    const value = ['start: string = "this"'];
     const modified = ParamDefSplitter(value);
     expect(modified.length).toBe(1);
     expect(modified[0].name).toBe("start");
@@ -113,6 +113,51 @@ describe("can read throw errors", () => {
     const value = ["start: lskjdo"];
     expect(() => ParamDefSplitter(value)).toThrowError(
       "Can't determine type or create enum from type name lskjdo.",
+    );
+  });
+});
+
+describe("can throw errors on bad defaults", () => {
+  it("throws on empty string (default)", () => {
+    const value = ["start: string = "];
+    expect(() => ParamDefSplitter(value)).toThrowError(
+      "Parameter start should not be set to its default.",
+    );
+  });
+  it("throws on non-quoted string", () => {
+    const value = ["start: string = this"];
+    expect(() => ParamDefSplitter(value)).toThrowError(
+      "Parameter start is not parsable to a string (needs quotes).",
+    );
+  });
+  it("throws on false (default)", () => {
+    const value = ["start: boolean = false"];
+    expect(() => ParamDefSplitter(value)).toThrowError(
+      "Parameter start should not be set to its default.",
+    );
+  });
+  it("throws on invalid boolean", () => {
+    const value = ["start: boolean = this"];
+    expect(() => ParamDefSplitter(value)).toThrowError(
+      "Parameter start is not parsable to a boolean (either true or false).",
+    );
+  });
+  it("throws on 0 (default)", () => {
+    const value = ["start: number = 0"];
+    expect(() => ParamDefSplitter(value)).toThrowError(
+      "Parameter start should not be set to its default.",
+    );
+  });
+  it("throws on invalid number", () => {
+    const value = ["start: number = this"];
+    expect(() => ParamDefSplitter(value)).toThrowError(
+      "Parameter start is not parsable to a number.",
+    );
+  });
+  it("throws on multiple equals", () => {
+    const value = ["start: number = this = 5"];
+    expect(() => ParamDefSplitter(value)).toThrowError(
+      "Parameter start has more than one equals sign.",
     );
   });
 });
