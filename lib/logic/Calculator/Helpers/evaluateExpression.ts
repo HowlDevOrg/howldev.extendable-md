@@ -52,6 +52,9 @@ export function evaluateExpression(
     );
   }
 
+  if (!isNaN(Number(possibleExp)))
+    return extractLabelAndValue(possibleExp.trim(), lookup, label);
+
   let opMatch = possibleExp.match(prioritizedOperatorRegex);
   iterations = 0;
   while (opMatch && iterations < 10) {

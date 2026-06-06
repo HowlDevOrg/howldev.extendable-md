@@ -237,6 +237,20 @@ describe("code can run simple math functions with inside and outside operators",
     expect(modified[0].label).toBe("");
     expect(modified[0].value).toBe("32");
   });
+  it("sin with very small values", () => {
+    const code = ["return sin(degtorad(180))"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("1.2246467991473532e-16");
+  });
+  it("cos with very small values", () => {
+    const code = ["return cos(degtorad(90))"];
+    const modified = ExecuteCode(paramDefs, values, code);
+    expect(modified.length).toBe(1);
+    expect(modified[0].label).toBe("");
+    expect(modified[0].value).toBe("6.123233995736766e-17");
+  });
 });
 
 describe("code can run string functions with concats", () => {
