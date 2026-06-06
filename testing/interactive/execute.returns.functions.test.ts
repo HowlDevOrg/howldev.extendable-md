@@ -48,6 +48,11 @@ describe("code can run simple functions with prims", () => {
       check: (val: string) => expect(val).toBe("200"),
     },
     {
+      name: "rounddigits(3.14159, 2)",
+      code: "return rounddigits(3.14159, 2)",
+      check: (val: string) => expect(val).toBe("3.14"),
+    },
+    {
       name: "floor(1.5)",
       code: "return floor(1.5)",
       check: (val: string) => expect(val).toBe("1"),

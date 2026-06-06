@@ -47,6 +47,18 @@ export function evaluateFunctions(
       const round = getNumber(funcMatch[2], lookup, "round");
       return { label: label, type: "number", value: Math.round(round) };
     }
+    case "rounddigits": {
+      const roundDigitSplit = funcMatch[2].split(",").map((a) => a.trim());
+      if (roundDigitSplit.length != 2)
+        throw new CodeError("RoundDigits needs 2 number operands.");
+      const round1 = getNumber(roundDigitSplit[0], lookup, "rounddigits");
+      const round2 = getNumber(roundDigitSplit[1], lookup, "rounddigits");
+      return {
+        label: label,
+        type: "number",
+        value: Math.round(round1 * Math.pow(10, round2)) / Math.pow(10, round2),
+      };
+    }
     case "floor": {
       const floor = getNumber(funcMatch[2], lookup, "floor");
       return { label: label, type: "number", value: Math.floor(floor) };
