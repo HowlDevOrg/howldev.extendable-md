@@ -2,22 +2,6 @@ import { CodeError } from "../customErrors";
 import { ObjectWithStructuredValue, StructuredReturn } from "../types";
 import { evaluateExpression } from "./evaluateExpression";
 
-const VALID_OPERATORS = [
-  "+",
-  "-",
-  "*",
-  "/",
-  "%",
-  "<",
-  ">",
-  "<=",
-  ">=",
-  "!=",
-  "==",
-  "||",
-  "&&",
-];
-
 export function evaluateBinaryOperators(
   opMatch: RegExpMatchArray,
   label: string,
@@ -28,12 +12,6 @@ export function evaluateBinaryOperators(
   if (num1.type !== num2.type) {
     throw new CodeError(
       `Can't execute operator ${opMatch[2]} on types ${num1.type} and ${num2.type}.`,
-    );
-  }
-
-  if (!VALID_OPERATORS.includes(opMatch[2])) {
-    throw new CodeError(
-      `Unknown operator error: Could not find operator ${opMatch[2]}`,
     );
   }
 
