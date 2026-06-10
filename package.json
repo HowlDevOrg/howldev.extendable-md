@@ -1,6 +1,6 @@
 {
   "name": "@howldev/extendable-md",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "",
   "repository": {"url": "https://github.com/HowlDevOrg/howldev.extendable-md"},
   "main": "./dist/index.cjs",

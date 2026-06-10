@@ -92,3 +92,23 @@ assign empty = isEmpty(str1)
 assign notEmpty = isNotEmpty(str2)
 return len, combination, empty, notEmpty
 ```
+---
+
+Below is a speed calculator that shows off conditional outputs (where the function can return different things/amounts of things based on the parameters of the inputs). This is shown off with a boolean input, and if you check it, you can see how much faster you can move at a given mph than at a 60 mph travel time, or how much time in a journey you would save.
+
+These are really just showcases, I don't claim to have great ideas for how to use this, I just hope one of these inspires you for how you want to use this functionality. 
+
+```calculator
+mph: number = 60
+runAgainst: boolean
+minutesAt60: number = 40
+---
+assign spm = rounddigits((60 / mph) * 60, 2)
+
+if runAgainst
+assign laterSpeed = rounddigits((60 / mph) * minutesAt60, 2)
+return spm as Seconds Per Mile, laterSpeed as New Time
+else 
+return spm as Seconds Per Mile
+endif
+```

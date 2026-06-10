@@ -65,6 +65,8 @@ export function App() {
         >
           <MarkdownDisplay
             text={text}
+            // Opt-in for the Calculator code block feature
+            // enableInteractiveCalculator={true}
           />
         </div>
       </div>
