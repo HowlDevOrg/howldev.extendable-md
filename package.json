@@ -2,7 +2,9 @@
   "name": "@howldev/extendable-md",
   "version": "0.2.0",
   "description": "",
-  "repository": {"url": "https://github.com/HowlDevOrg/howldev.extendable-md"},
+  "repository": {
+    "url": "git+https://github.com/HowlDevOrg/howldev.extendable-md.git"
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
